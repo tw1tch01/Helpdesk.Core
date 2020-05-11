@@ -4,7 +4,6 @@ using Helpdesk.Domain.Enums;
 using Helpdesk.Services.Common;
 using Helpdesk.Services.Common.Results;
 using Helpdesk.Services.Notifications;
-using Helpdesk.Services.Tickets.Events.AssignTicket;
 using Helpdesk.Services.Tickets.Events.CloseTicket;
 using Helpdesk.Services.Tickets.Results.Invalid;
 using Helpdesk.Services.Tickets.Results.Valid;
