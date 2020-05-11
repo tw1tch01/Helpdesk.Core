@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace Domain.Common
+namespace Helpdesk.Domain.Common
 {
     public interface IModifiedAudit
     {
-        string ModifiedBy { get; set; }
-        DateTime ModifiedOn { get; set; }
+        int ModifiedBy { get; set; }
+        DateTimeOffset ModifiedOn { get; set; }
         string ModifiedProcess { get; set; }
     }
 }

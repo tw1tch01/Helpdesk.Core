@@ -4,6 +4,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <AssemblyName>Helpdesk.DomainModels.UnitTests</AssemblyName>
+
+    <RootNamespace>Helpdesk.DomainModels.UnitTests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

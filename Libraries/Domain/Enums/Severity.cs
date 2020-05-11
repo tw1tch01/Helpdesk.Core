@@ -1,4 +1,4 @@
-﻿namespace Domain.Enums
+﻿namespace Helpdesk.Domain.Enums
 {
     public enum Severity
     {

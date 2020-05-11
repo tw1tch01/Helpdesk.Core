@@ -1,13 +1,15 @@
-﻿namespace Domain.Enums
+﻿namespace Helpdesk.Domain.Enums
 {
     public enum TicketStatus
     {
-        Todo = 0,
-        InProgress = 1,
-        OnHold = 2,
-        AwaitingFeedback = 3,
-        AwaitingApproval = 4,
-        Completed = 5,
-        Overdue = 6
+        Open,
+        Overdue,
+        Resolved,
+        Closed,
+        PendingApproval,
+        Approved,
+        PendingFeedback,
+        InProgress,
+        OnHold
     }
 }
