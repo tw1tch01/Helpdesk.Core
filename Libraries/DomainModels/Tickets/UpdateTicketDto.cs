@@ -4,7 +4,7 @@ using AutoMapper;
 using Helpdesk.Domain.Entities;
 using Helpdesk.Domain.Enums;
 using Helpdesk.DomainModels.Common;
-using Todo.DomainModels.Mappings;
+using Helpdesk.DomainModels.Mappings;
 
 namespace Helpdesk.DomainModels.Tickets
 {

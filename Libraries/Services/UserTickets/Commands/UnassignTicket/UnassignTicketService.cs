@@ -29,7 +29,7 @@ namespace Helpdesk.Services.UserTickets.Commands.UnassignTicket
 
         public virtual async Task<ProcessResult> Unassign(int ticketId, int userId)
         {
-            var userTicket = await _repository.SingleAsync(new GetUserTicketById(ticketId, userId));
+            var userTicket = await _repository.SingleAsync(new GetUserTicketByTicketAndUserId(ticketId, userId));
 
             if (userTicket == null) return new UserNotAssignedToTicketResult(ticketId, userId);
 

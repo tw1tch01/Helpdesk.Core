@@ -1,6 +1,7 @@
 ﻿using System;
+using AutoMapper;
 using Helpdesk.Domain.Entities;
-using Todo.DomainModels.Mappings;
+using Helpdesk.DomainModels.Mappings;
 
 namespace Helpdesk.DomainModels.Tickets
 {
@@ -9,7 +10,12 @@ namespace Helpdesk.DomainModels.Tickets
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTimeOffset DueDate { get; set; }
-        public int? ClientId { get; set; }
+        public int ClientId { get; set; }
         public int? ProjectId { get; set; }
+
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap<OpenTicketDto, Ticket>();
+        }
     }
 }

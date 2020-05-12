@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
-using Helpdesk.Services.Common.Results;
+using Helpdesk.Services.Tickets.Results;
 
 namespace Helpdesk.Services.Tickets.Commands.CloseTicket
 {
     public interface ICloseTicketService
     {
-        Task<ProcessResult> Close(int ticketId, int userId);
+        Task<CloseTicketResult> Close(int ticketId, int userId);
     }
 }

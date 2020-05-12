@@ -1,7 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using Helpdesk.Domain.Common;
-using Todo.DomainModels.Mappings;
+using Helpdesk.DomainModels.Mappings;
 
 namespace Helpdesk.DomainModels.Common
 {

@@ -51,7 +51,7 @@ namespace Helpdesk.Services.UserTickets.Commands.AssignTicket
 
             if (await _repository.SingleAsync(new GetUserById(userId).AsNoTracking()) == null) return new UserNotFoundResult(userId);
 
-            if (await _repository.GetAsync(new GetUserTicketById(ticketId, userId).AsNoTracking()) != null) return new UserAlreadyAssignedToTicketResult(ticketId, userId);
+            if (await _repository.GetAsync(new GetUserTicketByTicketAndUserId(ticketId, userId).AsNoTracking()) != null) return new UserAlreadyAssignedToTicketResult(ticketId, userId);
 
             await _workflowService.Process(new BeforeTicketAssignedWorkflow(ticketId, userId));
 

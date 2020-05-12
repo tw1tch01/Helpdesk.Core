@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Helpdesk.Domain.Common;
 using Helpdesk.Domain.Enums;
 
@@ -31,7 +30,7 @@ namespace Helpdesk.Domain.Entities
         public DateTimeOffset? ApprovedOn { get; set; }
         public int? ApprovedBy { get; set; }
         public DateTimeOffset? FeedbackRequestedOn { get; set; }
-        public int? ClientId { get; set; }
+        public int ClientId { get; set; }
         public int? ProjectId { get; set; }
 
         #region Navigational Properties
@@ -123,20 +122,6 @@ namespace Helpdesk.Domain.Entities
             ApprovalRequestedOn = null;
         }
 
-        public virtual void AssignTo(int userId)
-        {
-            AssignedUsers.Add(new UserTicket
-            {
-                TicketId = TicketId,
-                UserId = userId
-            });
-        }
-
-        public virtual void Unassign(int userId)
-        {
-            AssignedUsers.Remove(AssignedUsers.Single(u => u.UserId == userId));
-        }
-
         public virtual void RequestFeedback()
         {
             FeedbackRequestedOn = DateTimeOffset.UtcNow;
@@ -147,32 +132,6 @@ namespace Helpdesk.Domain.Entities
             FeedbackRequestedOn = null;
         }
 
-        public virtual void Link(int toTicketId, TicketLinkType linkType)
-        {
-            LinkedTickets.Add(new TicketLink
-            {
-                FromTicketId = TicketId,
-                ToTicketId = toTicketId,
-                LinkType = linkType
-            });
-        }
-
-        public virtual TicketLinkType? IsLinkedTo(int ticketId)
-        {
-            var linkedTicket = LinkedTickets.FirstOrDefault(lt => lt.ToTicketId == ticketId);
-            if (linkedTicket == null) return null;
-            return linkedTicket.LinkType;
-        }
-
         #endregion Public Methods
-
-        #region Internal Methods
-
-        internal virtual bool HasStarted()
-        {
-            return StartedOn.HasValue;
-        }
-
-        #endregion Internal Methods
     }
 }

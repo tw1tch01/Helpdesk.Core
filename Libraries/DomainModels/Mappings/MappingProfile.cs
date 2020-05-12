@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using AutoMapper;
 
-namespace Todo.DomainModels.Mappings
+namespace Helpdesk.DomainModels.Mappings
 {
     public class MappingProfile : Profile
     {

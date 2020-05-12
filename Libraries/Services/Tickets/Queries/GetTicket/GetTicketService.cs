@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using Data.Repositories;
 using Helpdesk.DomainModels.Tickets;
+using Helpdesk.Services.Clients.Specifications;
 using Helpdesk.Services.Common;
+using Helpdesk.Services.Projects.Specifications;
 using Helpdesk.Services.Tickets.Specifications;
 using Helpdesk.Services.Users.Specifications;
 
@@ -28,18 +29,17 @@ namespace Helpdesk.Services.Tickets.Queries.GetTicket
 
             if (ticket == null) return null;
 
-            var subQueries = new List<Task>();
+            await _repository.GetAsync(new GetClientById(ticket.ClientId).Include(c => c.Organization));
+            if (ticket.ProjectId.HasValue) await _repository.GetAsync(new GetProjectById(ticket.ProjectId.Value));
 
-            if (ticket.ClientId.HasValue) subQueries.Add(_repository.SingleAsync(new GetTicketById(ticketId)));
-            if (ticket.ProjectId.HasValue) subQueries.Add(_repository.SingleAsync(new GetTicketById(ticketId)));
-            if (ticket.ProjectId.HasValue) subQueries.Add(_repository.SingleAsync(new GetTicketById(ticketId)));
+            //if (ticket.ClientId.HasValue) await _repository.SingleAsync(new GetTicketById(ticketId)));
+            //if (ticket.ProjectId.HasValue) await _repository.SingleAsync(new GetTicketById(ticketId)));
+            //if (ticket.ProjectId.HasValue) await _repository.SingleAsync(new GetTicketById(ticketId)));
 
-            if (ticket.ResolvedBy.HasValue) subQueries.Add(_repository.SingleAsync(new GetUserById(ticket.ResolvedBy.Value)));
-            else if (ticket.ClosedBy.HasValue) subQueries.Add(_repository.SingleAsync(new GetUserById(ticket.ClosedBy.Value)));
-            else if (ticket.ApprovedBy.HasValue) subQueries.Add(_repository.SingleAsync(new GetUserById(ticket.ApprovedBy.Value)));
-            else if (ticket.ApprovalUserId.HasValue) subQueries.Add(_repository.SingleAsync(new GetUserById(ticket.ApprovalUserId.Value)));
-
-            await Task.WhenAll(subQueries);
+            if (ticket.ResolvedBy.HasValue) await _repository.SingleAsync(new GetUserById(ticket.ResolvedBy.Value));
+            else if (ticket.ClosedBy.HasValue) await _repository.SingleAsync(new GetUserById(ticket.ClosedBy.Value));
+            else if (ticket.ApprovedBy.HasValue) await _repository.SingleAsync(new GetUserById(ticket.ApprovedBy.Value));
+            else if (ticket.ApprovalUserId.HasValue) await _repository.SingleAsync(new GetUserById(ticket.ApprovalUserId.Value));
 
             var details = _mapper.Map<FullTicketDetails>(ticket);
 

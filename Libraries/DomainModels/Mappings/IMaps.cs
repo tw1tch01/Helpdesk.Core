@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 
-namespace Todo.DomainModels.Mappings
+namespace Helpdesk.DomainModels.Mappings
 {
     public interface IMaps<T>
     {
-        void Mapping(Profile profile) => profile.CreateMap(typeof(T), GetType());
+        void Mapping(Profile profile);
     }
 }

@@ -7,9 +7,48 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="TicketLinks\Commands\LinkTicket\**" />
+    <Compile Remove="TicketLinks\Commands\UnlinkTicket\**" />
+    <Compile Remove="Tickets\Commands\ApproveTicket\**" />
+    <Compile Remove="Tickets\Commands\PauseTicket\**" />
+    <Compile Remove="Tickets\Commands\ReopenTicket\**" />
+    <Compile Remove="Tickets\Commands\RequestApproval\**" />
+    <Compile Remove="Tickets\Commands\ResolveTicket\**" />
+    <Compile Remove="Tickets\Commands\StartTicket\**" />
+    <Compile Remove="Tickets\Commands\UpdateTicket\**" />
+    <Compile Remove="UserTickets\Commands\AssignTicket\**" />
+    <Compile Remove="UserTickets\Commands\UnassignTicket\**" />
+    <EmbeddedResource Remove="TicketLinks\Commands\LinkTicket\**" />
+    <EmbeddedResource Remove="TicketLinks\Commands\UnlinkTicket\**" />
+    <EmbeddedResource Remove="Tickets\Commands\ApproveTicket\**" />
+    <EmbeddedResource Remove="Tickets\Commands\PauseTicket\**" />
+    <EmbeddedResource Remove="Tickets\Commands\ReopenTicket\**" />
+    <EmbeddedResource Remove="Tickets\Commands\RequestApproval\**" />
+    <EmbeddedResource Remove="Tickets\Commands\ResolveTicket\**" />
+    <EmbeddedResource Remove="Tickets\Commands\StartTicket\**" />
+    <EmbeddedResource Remove="Tickets\Commands\UpdateTicket\**" />
+    <EmbeddedResource Remove="UserTickets\Commands\AssignTicket\**" />
+    <EmbeddedResource Remove="UserTickets\Commands\UnassignTicket\**" />
+    <None Remove="TicketLinks\Commands\LinkTicket\**" />
+    <None Remove="TicketLinks\Commands\UnlinkTicket\**" />
+    <None Remove="Tickets\Commands\ApproveTicket\**" />
+    <None Remove="Tickets\Commands\PauseTicket\**" />
+    <None Remove="Tickets\Commands\ReopenTicket\**" />
+    <None Remove="Tickets\Commands\RequestApproval\**" />
+    <None Remove="Tickets\Commands\ResolveTicket\**" />
+    <None Remove="Tickets\Commands\StartTicket\**" />
+    <None Remove="Tickets\Commands\UpdateTicket\**" />
+    <None Remove="UserTickets\Commands\AssignTicket\**" />
+    <None Remove="UserTickets\Commands\UnassignTicket\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Common\Specifications\" />
-    <Folder Include="Tickets\Queries\LookupTickets\" />
-    <Folder Include="Users\Results\Valid\" />
+    <Folder Include="TicketLinks\Commands\" />
+    <Folder Include="TicketLinks\Results\" />
+    <Folder Include="Users\Results\" />
+    <Folder Include="UserTickets\Commands\" />
+    <Folder Include="UserTickets\Results\" />
   </ItemGroup>
 
   <ItemGroup>

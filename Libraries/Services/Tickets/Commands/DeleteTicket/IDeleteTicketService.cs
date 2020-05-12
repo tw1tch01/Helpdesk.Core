@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
-using Helpdesk.Services.Common.Results;
+using Helpdesk.Services.Tickets.Results;
 
 namespace Helpdesk.Services.Tickets.Commands.DeleteTicket
 {
     public interface IDeleteTicketService
     {
-        Task<ProcessResult> Delete(int ticketId);
+        Task<DeleteTicketResult> Delete(int ticketId);
     }
 }
