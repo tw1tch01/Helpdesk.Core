@@ -12,7 +12,6 @@ using Helpdesk.Services.Notifications;
 using Helpdesk.Services.Projects.Specifications;
 using Helpdesk.Services.Tickets.Events.OpenTicket;
 using Helpdesk.Services.Tickets.Results;
-using Helpdesk.Services.Tickets.Results.Enums;
 using Helpdesk.Services.Workflows;
 
 namespace Helpdesk.Services.Tickets.Commands.OpenTicket
@@ -42,29 +41,19 @@ namespace Helpdesk.Services.Tickets.Commands.OpenTicket
 
             var validationResult = ValidateDto(ticketDto);
 
-            if (!validationResult.IsValid) return new OpenTicketResult(validationResult.Errors);
+            if (!validationResult.IsValid) return OpenTicketResult.ValidationFailure(validationResult.Errors);
 
             var client = await _repository.SingleAsync(new GetClientById(ticketDto.ClientId));
 
-            if (client == null) return new OpenTicketResult(TicketOpenResult.ClientNotFound)
-            {
-                ClientId = client.ClientId
-            };
+            if (client == null) return OpenTicketResult.ClientNotFound(ticketDto.ClientId);
 
             if (ticketDto.ProjectId.HasValue)
             {
                 var project = await _repository.SingleAsync(new GetProjectById(ticketDto.ProjectId.Value));
 
-                if (project == null) return new OpenTicketResult(TicketOpenResult.ProjectNotFound)
-                {
-                    ProjectId = ticketDto.ProjectId.Value
-                };
+                if (project == null) return OpenTicketResult.ProjectNotFound(ticketDto.ProjectId.Value);
 
-                if (client.OrganizationId != project.OrganizationId) return new OpenTicketResult(TicketOpenResult.ProjectInaccessible)
-                {
-                    ClientId = client.ClientId,
-                    ProjectId = project.ProjectId
-                };
+                if (client.OrganizationId != project.OrganizationId) return OpenTicketResult.ProjectInaccessible(client.ClientId, project.ProjectId);
             }
 
             var ticket = _mapper.Map<Ticket>(ticketDto);
@@ -76,12 +65,7 @@ namespace Helpdesk.Services.Tickets.Commands.OpenTicket
             var notification = _notificationService.Queue(new TicketOpenedNotification(ticket.TicketId));
             await Task.WhenAll(workflow, notification);
 
-            return new OpenTicketResult(TicketOpenResult.Opened)
-            {
-                TicketId = ticket.TicketId,
-                ClientId = ticket.ClientId,
-                ProjectId = ticket.ProjectId
-            };
+            return OpenTicketResult.Opened(ticket);
         }
 
         private ValidationResult ValidateDto(OpenTicketDto ticketDto)

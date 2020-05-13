@@ -1,8 +1,10 @@
-﻿using Helpdesk.Services.Tickets.Results.Enums;
+﻿using Helpdesk.Services.Common.Results;
+using Helpdesk.Services.Tickets.Results.Enums;
+using Helpdesk.Services.Workflows;
 
 namespace Helpdesk.Services.Tickets.Results
 {
-    public class DeleteTicketResult
+    public class DeleteTicketResult : IProcessResult<TicketDeleteResult>, IWorkflowResult
     {
         public DeleteTicketResult(TicketDeleteResult result)
         {
@@ -12,6 +14,9 @@ namespace Helpdesk.Services.Tickets.Results
         public TicketDeleteResult Result { get; }
         public string Message => GetMessage();
         public int TicketId { get; set; }
+        public IWorkflowProcess Workflow { get; private set; }
+
+        #region Methods
 
         internal static DeleteTicketResult TicketNotFound(int ticketId)
         {
@@ -29,14 +34,23 @@ namespace Helpdesk.Services.Tickets.Results
             };
         }
 
-        private string GetMessage()
+        internal static DeleteTicketResult WorkflowFailed(int ticketId, IWorkflowProcess workflow)
         {
-            return Result switch
+            return new DeleteTicketResult(TicketDeleteResult.WorkflowFailed)
             {
-                TicketDeleteResult.Deleted => TicketResultMessages.Deleted,
-                TicketDeleteResult.TicketNotFound => TicketResultMessages.TicketNotFound,
-                _ => Result.ToString()
+                TicketId = ticketId,
+                Workflow = workflow
             };
         }
+
+        private string GetMessage() => Result switch
+        {
+            TicketDeleteResult.Deleted => ResultMessages.Deleted,
+            TicketDeleteResult.TicketNotFound => ResultMessages.TicketNotFound,
+            TicketDeleteResult.WorkflowFailed => ResultMessages.WorkflowFailed,
+            _ => Result.ToString()
+        };
+
+        #endregion Methods
     }
 }

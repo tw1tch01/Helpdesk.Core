@@ -6,6 +6,7 @@ using Helpdesk.Services.Tickets.Events.DeleteTicket;
 using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Tickets.Specifications;
 using Helpdesk.Services.Workflows;
+using Helpdesk.Services.Workflows.Enums;
 
 namespace Helpdesk.Services.Tickets.Commands.DeleteTicket
 {
@@ -25,13 +26,14 @@ namespace Helpdesk.Services.Tickets.Commands.DeleteTicket
             _workflowService = workflowService;
         }
 
-        public virtual async Task<DeleteTicketResult> Delete(int ticketId)
+        public virtual async Task<DeleteTicketResult> Delete(int ticketId, int userId)
         {
             var ticket = await _repository.SingleAsync(new GetTicketById(ticketId));
 
             if (ticket == null) return DeleteTicketResult.TicketNotFound(ticketId);
 
-            await _workflowService.Process(new BeforeTicketDeletedWorkflow(ticketId));
+            var beforeWorkflow = await _workflowService.Process(new BeforeTicketDeletedWorkflow(ticketId));
+            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return DeleteTicketResult.WorkflowFailed(ticketId, beforeWorkflow);
 
             _repository.Remove(ticket);
             await _repository.SaveAsync();

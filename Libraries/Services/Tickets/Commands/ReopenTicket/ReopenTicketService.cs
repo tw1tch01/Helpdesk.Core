@@ -1,13 +1,12 @@
 ﻿using System.Threading.Tasks;
 using Data.Repositories;
 using Helpdesk.Services.Common;
-using Helpdesk.Services.Common.Results;
 using Helpdesk.Services.Notifications;
 using Helpdesk.Services.Tickets.Events.ReopenTicket;
-using Helpdesk.Services.Tickets.Results.Invalid;
-using Helpdesk.Services.Tickets.Results.Valid;
+using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Tickets.Specifications;
 using Helpdesk.Services.Workflows;
+using Helpdesk.Services.Workflows.Enums;
 
 namespace Helpdesk.Services.Tickets.Commands.ReopenTicket
 {
@@ -27,13 +26,14 @@ namespace Helpdesk.Services.Tickets.Commands.ReopenTicket
             _workflowService = workflowService;
         }
 
-        public virtual async Task<ProcessResult> Reopen(int ticketId)
+        public virtual async Task<ReopenTicketResult> Reopen(int ticketId)
         {
             var ticket = await _repository.SingleAsync(new GetTicketById(ticketId));
 
-            if (ticket == null) return new TicketNotFoundResult(ticketId);
+            if (ticket == null) return ReopenTicketResult.TicketNotFound(ticketId);
 
-            await _workflowService.Process(new BeforeTicketReopenedWorkflow(ticketId));
+            var beforeWorkflow = await _workflowService.Process(new BeforeTicketReopenedWorkflow(ticketId));
+            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return ReopenTicketResult.WorkflowFailed(ticketId, beforeWorkflow);
 
             ticket.Reopen();
             await _repository.SaveAsync();
@@ -42,7 +42,7 @@ namespace Helpdesk.Services.Tickets.Commands.ReopenTicket
             var notification = _notificationService.Queue(new TicketReopenedNotification(ticketId));
             await Task.WhenAll(workflow, notification);
 
-            return new TicketReopenedResult(ticketId);
+            return ReopenTicketResult.Reopened(ticketId);
         }
     }
 }

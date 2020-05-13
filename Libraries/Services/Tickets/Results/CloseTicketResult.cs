@@ -1,10 +1,12 @@
 ﻿using System;
 using Helpdesk.Domain.Entities;
+using Helpdesk.Services.Common.Results;
 using Helpdesk.Services.Tickets.Results.Enums;
+using Helpdesk.Services.Workflows;
 
 namespace Helpdesk.Services.Tickets.Results
 {
-    public class CloseTicketResult
+    public class CloseTicketResult : IProcessResult<TicketCloseResult>, IWorkflowResult
     {
         public CloseTicketResult(TicketCloseResult result)
         {
@@ -13,12 +15,15 @@ namespace Helpdesk.Services.Tickets.Results
 
         public TicketCloseResult Result { get; }
         public string Message => GetMessage();
-        public int TicketId { get; set; }
-        public int UserId { get; set; }
-        public DateTimeOffset? ResolvedOn { get; set; }
-        public int? ResolvedBy { get; set; }
-        public DateTimeOffset? ClosedOn { get; set; }
-        public int? ClosedBy { get; set; }
+        public int TicketId { get; private set; }
+        public int UserId { get; private set; }
+        public DateTimeOffset? ResolvedOn { get; private set; }
+        public int? ResolvedBy { get; private set; }
+        public DateTimeOffset? ClosedOn { get; private set; }
+        public int? ClosedBy { get; private set; }
+        public IWorkflowProcess Workflow { get; private set; }
+
+        #region Methods
 
         internal static CloseTicketResult TicketNotFound(int ticketId)
         {
@@ -33,8 +38,8 @@ namespace Helpdesk.Services.Tickets.Results
             return new CloseTicketResult(TicketCloseResult.TicketAlreadyResolved)
             {
                 TicketId = ticket.TicketId,
-                ResolvedBy = ticket.ResolvedBy,
-                ResolvedOn = ticket.ResolvedOn
+                ResolvedBy = ticket.ResolvedBy.Value,
+                ResolvedOn = ticket.ResolvedOn.Value
             };
         }
 
@@ -43,8 +48,8 @@ namespace Helpdesk.Services.Tickets.Results
             return new CloseTicketResult(TicketCloseResult.TicketAlreadyClosed)
             {
                 TicketId = ticket.TicketId,
-                ClosedBy = ticket.ClosedBy,
-                ClosedOn = ticket.ClosedOn
+                ClosedBy = ticket.ClosedBy.Value,
+                ClosedOn = ticket.ClosedOn.Value
             };
         }
 
@@ -62,22 +67,31 @@ namespace Helpdesk.Services.Tickets.Results
             return new CloseTicketResult(TicketCloseResult.Closed)
             {
                 TicketId = ticket.TicketId,
-                ClosedBy = ticket.ClosedBy,
-                ClosedOn = ticket.ClosedOn
+                ClosedBy = ticket.ClosedBy.Value,
+                ClosedOn = ticket.ClosedOn.Value
             };
         }
 
-        private string GetMessage()
+        internal static CloseTicketResult WorkflowFailed(int ticketId, IWorkflowProcess workflow)
         {
-            return Result switch
+            return new CloseTicketResult(TicketCloseResult.WorkflowFailed)
             {
-                TicketCloseResult.Closed => TicketResultMessages.Closed,
-                TicketCloseResult.TicketNotFound => TicketResultMessages.TicketNotFound,
-                TicketCloseResult.TicketAlreadyResolved => TicketResultMessages.TicketAlreadyResolved,
-                TicketCloseResult.TicketAlreadyClosed => TicketResultMessages.TicketAlreadyClosed,
-                TicketCloseResult.UserNotFound => TicketResultMessages.UserNotFound,
-                _ => Result.ToString()
+                TicketId = ticketId,
+                Workflow = workflow
             };
         }
+
+        private string GetMessage() => Result switch
+        {
+            TicketCloseResult.Closed => ResultMessages.Closed,
+            TicketCloseResult.TicketNotFound => ResultMessages.TicketNotFound,
+            TicketCloseResult.TicketAlreadyResolved => ResultMessages.TicketAlreadyResolved,
+            TicketCloseResult.TicketAlreadyClosed => ResultMessages.TicketAlreadyClosed,
+            TicketCloseResult.UserNotFound => ResultMessages.UserNotFound,
+            TicketCloseResult.WorkflowFailed => ResultMessages.WorkflowFailed,
+            _ => Result.ToString()
+        };
+
+        #endregion Methods
     }
 }

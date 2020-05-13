@@ -1,12 +1,12 @@
 ﻿namespace Helpdesk.Services.Tickets.Results.Enums
 {
-    public enum TicketCloseResult
+    public enum TicketStartResult
     {
-        Closed,
+        Started,
         TicketNotFound,
         TicketAlreadyResolved,
         TicketAlreadyClosed,
-        UserNotFound,
-        WorkflowFailed
+        TicketAlreadyStarted,
+        WorkflowFailed,
     }
 }

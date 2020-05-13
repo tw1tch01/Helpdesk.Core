@@ -1,5 +1,6 @@
 ﻿using Helpdesk.DomainModels.Tickets.Events;
 using Helpdesk.Services.Workflows;
+using Helpdesk.Services.Workflows.Enums;
 
 namespace Helpdesk.Services.Tickets.Events.CloseTicket
 {
@@ -9,5 +10,8 @@ namespace Helpdesk.Services.Tickets.Events.CloseTicket
             : base(ticketId, userId)
         {
         }
+
+        public WorkflowResult Result { get; set; }
+        public string Message { get; set; }
     }
 }

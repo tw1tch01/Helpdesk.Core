@@ -10,12 +10,14 @@ namespace Helpdesk.Services.Workflows
         {
         }
 
-        public async Task Process(IWorkflowProcess request)
+        public async Task<IWorkflowProcess> Process(IWorkflowProcess request)
         {
             if (request is INotification)
             {
                 await Publish(request);
             }
+
+            return request;
         }
     }
 }

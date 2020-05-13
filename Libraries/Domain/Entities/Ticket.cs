@@ -72,6 +72,7 @@ namespace Helpdesk.Domain.Entities
         public virtual void Start()
         {
             StartedOn = DateTimeOffset.UtcNow;
+            PausedOn = null;
         }
 
         public virtual void Pause()

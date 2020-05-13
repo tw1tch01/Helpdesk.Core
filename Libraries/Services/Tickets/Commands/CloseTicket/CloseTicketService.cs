@@ -8,6 +8,7 @@ using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Tickets.Specifications;
 using Helpdesk.Services.Users.Specifications;
 using Helpdesk.Services.Workflows;
+using Helpdesk.Services.Workflows.Enums;
 
 namespace Helpdesk.Services.Tickets.Commands.CloseTicket
 {
@@ -46,7 +47,8 @@ namespace Helpdesk.Services.Tickets.Commands.CloseTicket
 
             if (user == null) return CloseTicketResult.UserNotFound(ticketId, userId);
 
-            await _workflowService.Process(new BeforeTicketClosedWorkflow(ticketId, userId));
+            var beforeWorkflow = await _workflowService.Process(new BeforeTicketClosedWorkflow(ticketId, userId));
+            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return CloseTicketResult.WorkflowFailed(ticketId, beforeWorkflow);
 
             ticket.Close(userId);
             await _repository.SaveAsync();

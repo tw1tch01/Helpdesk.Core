@@ -5,6 +5,6 @@ namespace Helpdesk.Services.Tickets.Commands.DeleteTicket
 {
     public interface IDeleteTicketService
     {
-        Task<DeleteTicketResult> Delete(int ticketId);
+        Task<DeleteTicketResult> Delete(int ticketId, int userId);
     }
 }

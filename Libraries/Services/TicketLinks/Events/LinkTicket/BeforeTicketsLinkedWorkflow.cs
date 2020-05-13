@@ -1,6 +1,7 @@
 ﻿using Helpdesk.Domain.Enums;
 using Helpdesk.DomainModels.TicketLinks.Events;
 using Helpdesk.Services.Workflows;
+using Helpdesk.Services.Workflows.Enums;
 
 namespace Helpdesk.Services.TicketLinks.Events.LinkTicket
 {
@@ -10,5 +11,8 @@ namespace Helpdesk.Services.TicketLinks.Events.LinkTicket
             : base(fromTicketId, toTicketId, linkType)
         {
         }
+
+        public WorkflowResult Result { get; set; }
+        public string Message { get; set; }
     }
 }

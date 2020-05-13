@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
-using Helpdesk.Services.Common.Results;
+using Helpdesk.Services.Tickets.Results;
 
 namespace Helpdesk.Services.Tickets.Commands.PauseTicket
 {
     public interface IPauseTicketService
     {
-        Task<ProcessResult> Pause(int ticketId);
+        Task<PauseTicketResult> Pause(int ticketId);
     }
 }

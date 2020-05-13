@@ -6,13 +6,12 @@ using FluentValidation.Results;
 using Helpdesk.DomainModels.Tickets;
 using Helpdesk.DomainModels.Tickets.Validation;
 using Helpdesk.Services.Common;
-using Helpdesk.Services.Common.Results;
 using Helpdesk.Services.Notifications;
 using Helpdesk.Services.Tickets.Events.UpdateTicket;
-using Helpdesk.Services.Tickets.Results.Invalid;
-using Helpdesk.Services.Tickets.Results.Valid;
+using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Tickets.Specifications;
 using Helpdesk.Services.Workflows;
+using Helpdesk.Services.Workflows.Enums;
 
 namespace Helpdesk.Services.Tickets.Commands.UpdateTicket
 {
@@ -35,21 +34,22 @@ namespace Helpdesk.Services.Tickets.Commands.UpdateTicket
             _workflowService = workflowService;
         }
 
-        public virtual async Task<ProcessResult> Update(int ticketId, UpdateTicketDto ticketDto)
+        public virtual async Task<UpdateTicketResult> Update(int ticketId, UpdateTicketDto ticketDto)
         {
             if (ticketDto == null) throw new ArgumentNullException(nameof(ticketDto));
 
             var validationResult = ValidateDto(ticketDto);
 
-            if (!validationResult.IsValid) return new ValidationFailureResult(validationResult.Errors);
+            if (!validationResult.IsValid) return UpdateTicketResult.ValidationFailure(ticketId, validationResult.Errors);
 
             var ticket = await _repository.SingleAsync(new GetTicketById(ticketId));
 
-            if (ticket == null) return new TicketNotFoundResult(ticketId);
+            if (ticket == null) return UpdateTicketResult.TicketNotFound(ticketId);
 
             var changes = ticketDto.GetChanges(ticket);
 
-            await _workflowService.Process(new BeforeTicketUpdateWorkflow(ticketId, changes));
+            var beforeWorkflow = await _workflowService.Process(new BeforeTicketUpdateWorkflow(ticketId, changes));
+            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return UpdateTicketResult.WorkflowFailed(ticketId, beforeWorkflow);
 
             _mapper.Map(ticketDto, ticket);
             await _repository.SaveAsync();
@@ -58,7 +58,7 @@ namespace Helpdesk.Services.Tickets.Commands.UpdateTicket
             var notification = _notificationService.Queue(new TicketUpdatedNotification(ticketId, changes));
             await Task.WhenAll(workflow, notification);
 
-            return new TicketUpdatedResult(ticketId, changes);
+            return UpdateTicketResult.Updated(ticket, changes);
         }
 
         #region Private Methods

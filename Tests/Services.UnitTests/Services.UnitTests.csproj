@@ -16,4 +16,8 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.0-preview-20200428-01" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Tickets\Commands\" />
+  </ItemGroup>
+
 </Project>

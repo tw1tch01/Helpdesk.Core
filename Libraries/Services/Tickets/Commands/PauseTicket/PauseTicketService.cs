@@ -2,14 +2,13 @@
 using Data.Repositories;
 using Helpdesk.Domain.Enums;
 using Helpdesk.Services.Common;
-using Helpdesk.Services.Common.Results;
 using Helpdesk.Services.Notifications;
 using Helpdesk.Services.Tickets.Events.PauseTicket;
 using Helpdesk.Services.Tickets.Events.ReopenTicket;
-using Helpdesk.Services.Tickets.Results.Invalid;
-using Helpdesk.Services.Tickets.Results.Valid;
+using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Tickets.Specifications;
 using Helpdesk.Services.Workflows;
+using Helpdesk.Services.Workflows.Enums;
 
 namespace Helpdesk.Services.Tickets.Commands.PauseTicket
 {
@@ -29,25 +28,26 @@ namespace Helpdesk.Services.Tickets.Commands.PauseTicket
             _workflowService = workflowService;
         }
 
-        public virtual async Task<ProcessResult> Pause(int ticketId)
+        public virtual async Task<PauseTicketResult> Pause(int ticketId)
         {
             var ticket = await _repository.SingleAsync(new GetTicketById(ticketId));
 
-            if (ticket == null) return new TicketNotFoundResult(ticketId);
+            if (ticket == null) return PauseTicketResult.TicketNotFound(ticketId);
 
             switch (ticket.GetStatus())
             {
                 case TicketStatus.Resolved:
-                    return new TicketAlreadyResolvedResult(ticketId, ticket.ResolvedBy.Value);
+                    return PauseTicketResult.TicketAlreadyResolved(ticket);
 
                 case TicketStatus.Closed:
-                    return new TicketAlreadyClosedResult(ticketId, ticket.ClosedBy.Value);
+                    return PauseTicketResult.TicketAlreadyClosed(ticket);
 
                 case TicketStatus.OnHold:
-                    return new TicketAlreadyOnHoldResult(ticketId);
+                    return PauseTicketResult.TicketAlreadyPaused(ticket);
             }
 
-            await _workflowService.Process(new BeforeTicketPausedWorkflow(ticketId));
+            var beforeWorkflow = await _workflowService.Process(new BeforeTicketPausedWorkflow(ticketId));
+            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return PauseTicketResult.WorkflowFailed(ticketId, beforeWorkflow);
 
             ticket.Pause();
             await _repository.SaveAsync();
@@ -56,7 +56,7 @@ namespace Helpdesk.Services.Tickets.Commands.PauseTicket
             var notification = _notificationService.Queue(new TicketPausedNotification(ticketId));
             await Task.WhenAll(workflow, notification);
 
-            return new TicketPausedResult(ticketId);
+            return PauseTicketResult.Paused(ticket);
         }
     }
 }

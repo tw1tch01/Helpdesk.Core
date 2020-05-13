@@ -1,8 +1,8 @@
 ﻿namespace Helpdesk.Services.Tickets.Results.Enums
 {
-    public enum TicketDeleteResult
+    public enum TicketReopenResult
     {
-        Deleted,
+        Reopened,
         TicketNotFound,
         WorkflowFailed
     }

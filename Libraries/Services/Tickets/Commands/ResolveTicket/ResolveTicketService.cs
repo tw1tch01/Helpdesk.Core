@@ -2,15 +2,13 @@
 using Data.Repositories;
 using Helpdesk.Domain.Enums;
 using Helpdesk.Services.Common;
-using Helpdesk.Services.Common.Results;
 using Helpdesk.Services.Notifications;
 using Helpdesk.Services.Tickets.Events.ResolveTicket;
-using Helpdesk.Services.Tickets.Results.Invalid;
-using Helpdesk.Services.Tickets.Results.Valid;
+using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Tickets.Specifications;
-using Helpdesk.Services.Users.Results.Invalid;
 using Helpdesk.Services.Users.Specifications;
 using Helpdesk.Services.Workflows;
+using Helpdesk.Services.Workflows.Enums;
 
 namespace Helpdesk.Services.Tickets.Commands.ResolveTicket
 {
@@ -30,26 +28,27 @@ namespace Helpdesk.Services.Tickets.Commands.ResolveTicket
             _workflowService = workflowService;
         }
 
-        public virtual async Task<ProcessResult> Resolve(int ticketId, int userId)
+        public virtual async Task<ResolveTicketResult> Resolve(int ticketId, int userId)
         {
             var ticket = await _repository.SingleAsync(new GetTicketById(ticketId));
 
-            if (ticket == null) return new TicketNotFoundResult(ticketId);
+            if (ticket == null) return ResolveTicketResult.TicketNotFound(ticketId);
 
             switch (ticket.GetStatus())
             {
                 case TicketStatus.Resolved:
-                    return new TicketAlreadyResolvedResult(ticketId, ticket.ResolvedBy.Value);
+                    return ResolveTicketResult.TicketAlreadyResolved(ticket);
 
                 case TicketStatus.Closed:
-                    return new TicketAlreadyResolvedResult(ticketId, ticket.ResolvedBy.Value);
+                    return ResolveTicketResult.TicketAlreadyClosed(ticket);
             }
 
             var user = await _repository.SingleAsync(new GetUserById(userId));
 
-            if (user == null) return new UserNotFoundResult(userId);
+            if (user == null) return ResolveTicketResult.UserNotFound(ticketId, userId);
 
-            await _workflowService.Process(new BeforeTicketResolvedWorkflow(ticketId, userId));
+            var beforeWorkflow = await _workflowService.Process(new BeforeTicketResolvedWorkflow(ticketId, userId));
+            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return ResolveTicketResult.WorkflowFailed(ticketId, beforeWorkflow);
 
             ticket.Resolve(userId);
             await _repository.SaveAsync();
@@ -58,7 +57,7 @@ namespace Helpdesk.Services.Tickets.Commands.ResolveTicket
             var notification = _notificationService.Queue(new TicketResolvedNotification(ticketId, userId));
             await Task.WhenAll(workflow, notification);
 
-            return new TicketResolvedResult(ticketId, userId);
+            return ResolveTicketResult.Resolved(ticket);
         }
     }
 }
