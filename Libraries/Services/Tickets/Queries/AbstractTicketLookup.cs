@@ -15,10 +15,6 @@ namespace Helpdesk.Services.Tickets.Queries
     {
         protected LinqSpecification<Ticket> _specification;
 
-        protected AbstractTicketsLookup()
-        {
-        }
-
         protected AbstractTicketsLookup(LinqSpecification<Ticket> defaultSpecifcation)
         {
             _specification = defaultSpecifcation;
@@ -75,7 +71,44 @@ namespace Helpdesk.Services.Tickets.Queries
 
         private void FilterByStatus(TicketStatus status)
         {
-            AndSpecification(new GetTicketByStatus(status));
+            switch (status)
+            {
+                case TicketStatus.Open:
+                    AndSpecification(new GetOpenTickets());
+                    break;
+
+                case TicketStatus.Overdue:
+                    AndSpecification(new GetOverdueTickets());
+                    break;
+
+                case TicketStatus.Resolved:
+                    AndSpecification(new GetResolvedTickets());
+                    break;
+
+                case TicketStatus.Closed:
+                    AndSpecification(new GetClosedTickets());
+                    break;
+
+                case TicketStatus.PendingApproval:
+                    AndSpecification(new GetPendingApprovalTickets());
+                    break;
+
+                case TicketStatus.Approved:
+                    AndSpecification(new GetApprovedTickets());
+                    break;
+
+                case TicketStatus.PendingFeedback:
+                    AndSpecification(new GetPendingFeedbackTickets());
+                    break;
+
+                case TicketStatus.InProgress:
+                    AndSpecification(new GetInProgressTickets());
+                    break;
+
+                case TicketStatus.OnHold:
+                    AndSpecification(new GetOnHoldTickets());
+                    break;
+            }
         }
 
         private void FilterBySeverity(Severity severity)
