@@ -26,7 +26,7 @@ namespace Helpdesk.Services.Tickets.Specifications
                                   && !ticket.ApprovalRequestedOn.HasValue
                                   && !ticket.FeedbackRequestedOn.HasValue
                                   && !ticket.PausedOn.HasValue
-                                  && ticket.StartedOn.HasValue;
+                                  && !ticket.StartedOn.HasValue;
 
                 case TicketStatus.Overdue:
                     return ticket => !ticket.ResolvedOn.HasValue

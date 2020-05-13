@@ -71,7 +71,7 @@ namespace Helpdesk.Domain.Entities
 
         public virtual void Start()
         {
-            StartedOn = DateTimeOffset.UtcNow;
+            if (!StartedOn.HasValue) StartedOn = DateTimeOffset.UtcNow;
             PausedOn = null;
         }
 

@@ -6,11 +6,11 @@ using Helpdesk.Domain.Entities;
 
 namespace Helpdesk.Services.Tickets.Specifications
 {
-    public class GetTicketWithinIds : LinqSpecification<Ticket>
+    public class GetTicketByIds : LinqSpecification<Ticket>
     {
         private readonly IList<int> _ticketIds;
 
-        public GetTicketWithinIds(IList<int> ticketIds)
+        public GetTicketByIds(IList<int> ticketIds)
         {
             _ticketIds = ticketIds;
         }

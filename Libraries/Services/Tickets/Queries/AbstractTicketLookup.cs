@@ -70,7 +70,7 @@ namespace Helpdesk.Services.Tickets.Queries
 
         private void WithinTicketIds(IList<int> ticketIds)
         {
-            AndSpecification(new GetTicketWithinIds(ticketIds));
+            AndSpecification(new GetTicketByIds(ticketIds));
         }
 
         private void FilterByStatus(TicketStatus status)

@@ -10,11 +10,8 @@ namespace Helpdesk.Services.Extensions
         {
             if (!failures?.Any() ?? true) return new Dictionary<string, List<string>>();
 
-            return (from failure in failures
-                    group failure by failure.PropertyName into gr
-                    let errors = gr.Select(a => a.ErrorMessage).Distinct()
-                    where errors != null && errors.Any()
-                    select new KeyValuePair<string, IEnumerable<string>>(gr.Key, errors)).ToDictionary(k => k.Key, v => v.Value.ToList());
+            return failures.GroupBy(g => g.PropertyName)
+                .ToDictionary(g => g.Key, g => g.Select(v => v.ErrorMessage).Distinct().ToList());
         }
     }
 }

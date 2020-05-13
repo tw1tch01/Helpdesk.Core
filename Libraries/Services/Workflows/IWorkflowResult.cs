@@ -1,6 +1,4 @@
-﻿using Helpdesk.Services.Workflows;
-
-namespace Helpdesk.Services.Common.Results
+﻿namespace Helpdesk.Services.Workflows
 {
     public interface IWorkflowResult
     {
