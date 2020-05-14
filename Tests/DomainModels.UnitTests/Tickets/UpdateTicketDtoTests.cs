@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace Helpdesk.DomainModels.UnitTests.Tickets
 {
     [TestFixture]
-    public class OpenTicketDtoTests
+    public class UpdateTicketDtoTests
     {
         private readonly IFixture _fixture = new Fixture();
         private IMapper _mapper;
@@ -28,7 +28,7 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets
         [Test]
         public void NullObjectReturnsNull()
         {
-            OpenTicketDto dto = null;
+            UpdateTicketDto dto = null;
             var item = _mapper.Map<Ticket>(dto);
             Assert.IsNull(item);
         }
@@ -36,15 +36,13 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets
         [Test]
         public void MapsOpenTicketDtoToTicket()
         {
-            var dto = new OpenTicketDto
+            var dto = new UpdateTicketDto
             {
                 Name = _fixture.Create<string>(),
                 Description = _fixture.Create<string>(),
-                Severity = _fixture.Create<Severity>(),
-                Priority = _fixture.Create<Priority>(),
-                DueDate = _fixture.Create<DateTimeOffset>(),
-                ClientId = _fixture.Create<int>(),
-                ProjectId = _fixture.Create<int?>()
+                Severity = _fixture.Create<Severity?>(),
+                Priority = _fixture.Create<Priority?>(),
+                DueDate = _fixture.Create<DateTimeOffset?>()
             };
             var ticket = _mapper.Map<Ticket>(dto);
 
@@ -57,8 +55,6 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets
                 Assert.AreEqual(dto.Severity, ticket.Severity);
                 Assert.AreEqual(dto.Priority, ticket.Priority);
                 Assert.AreEqual(dto.DueDate, ticket.DueDate);
-                Assert.AreEqual(dto.ClientId, ticket.ClientId);
-                Assert.AreEqual(dto.ProjectId, ticket.ProjectId);
             });
         }
     }

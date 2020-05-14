@@ -36,6 +36,8 @@ namespace Helpdesk.DomainModels.Tickets
 
         public void Mapping(Profile profile)
         {
+            profile.CreateMap<FullTicketDetails, Ticket>()
+                .ForMember(m => m.TicketId, o => o.MapFrom(m => m.TicketId));
         }
     }
 }

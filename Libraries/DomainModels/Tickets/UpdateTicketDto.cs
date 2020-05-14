@@ -12,7 +12,7 @@ namespace Helpdesk.DomainModels.Tickets
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public DateTime? DueDate { get; set; }
+        public DateTimeOffset? DueDate { get; set; }
         public bool UpdateDueDate { get; set; }
         public Severity? Severity { get; set; }
         public Priority? Priority { get; set; }
