@@ -33,11 +33,16 @@ namespace Helpdesk.DomainModels.Tickets
         public DateTimeOffset FeedbackRequestedOn { get; set; }
         public IList<AssignedUserDetails> Assignees { get; set; } = new List<AssignedUserDetails>();
         public IList<TicketLinkDetails> LinkedTickets { get; set; } = new List<TicketLinkDetails>();
-
+        
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<FullTicketDetails, Ticket>()
-                .ForMember(m => m.TicketId, o => o.MapFrom(m => m.TicketId));
+            profile.CreateMap<Ticket, FullTicketDetails>(MemberList.Destination)
+                .ForMember(m => m.Created, o => o.MapFrom(m => m))
+                .ForMember(m => m.Modified, o => o.MapFrom(m => m))
+                .ForMember(m => m.UserAction, o => o.Ignore())
+                .ForMember(m => m.Assignees, o => o.Ignore())
+                .ForMember(m => m.Client, o => o.Ignore())
+                .ForMember(m => m.Project, o => o.Ignore());
         }
     }
 }

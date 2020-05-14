@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using Data.Specifications;
 using Helpdesk.Domain.Entities;
+
+[assembly: InternalsVisibleTo("Helpdesk.Services.UnitTests")]
 
 namespace Helpdesk.Services.Projects.Specifications
 {
     public class GetProjectById : LinqSpecification<Project>
     {
-        private readonly int _projectId;
+        internal readonly int _projectId;
 
         public GetProjectById(int projectId)
         {

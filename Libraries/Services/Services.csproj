@@ -50,7 +50,6 @@
     <Folder Include="TicketLinks\Commands\" />
     <Folder Include="TicketLinks\Events\" />
     <Folder Include="TicketLinks\Results\" />
-    <Folder Include="Tickets\Factories\" />
     <Folder Include="Users\Results\" />
     <Folder Include="UserTickets\Commands\" />
     <Folder Include="UserTickets\Events\" />

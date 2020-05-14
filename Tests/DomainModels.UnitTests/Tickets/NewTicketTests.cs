@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace Helpdesk.DomainModels.UnitTests.Tickets
 {
     [TestFixture]
-    public class OpenTicketDtoTests
+    public class NewTicketTests
     {
         private readonly IFixture _fixture = new Fixture();
         private IMapper _mapper;
@@ -28,37 +28,37 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets
         [Test]
         public void NullObjectReturnsNull()
         {
-            OpenTicketDto dto = null;
-            var item = _mapper.Map<Ticket>(dto);
+            NewTicket newTicket = null;
+            var item = _mapper.Map<Ticket>(newTicket);
             Assert.IsNull(item);
         }
 
         [Test]
         public void MapsOpenTicketDtoToTicket()
         {
-            var dto = new OpenTicketDto
+            var newTicket = new NewTicket
             {
                 Name = _fixture.Create<string>(),
                 Description = _fixture.Create<string>(),
                 Severity = _fixture.Create<Severity>(),
                 Priority = _fixture.Create<Priority>(),
-                DueDate = _fixture.Create<DateTimeOffset>(),
+                DueDate = _fixture.Create<DateTimeOffset?>(),
                 ClientId = _fixture.Create<int>(),
                 ProjectId = _fixture.Create<int?>()
             };
-            var ticket = _mapper.Map<Ticket>(dto);
+            var ticket = _mapper.Map<Ticket>(newTicket);
 
             Assert.Multiple(() =>
             {
                 Assert.IsNotNull(ticket);
                 Assert.IsInstanceOf<Ticket>(ticket);
-                Assert.AreEqual(dto.Name, ticket.Name);
-                Assert.AreEqual(dto.Description, ticket.Description);
-                Assert.AreEqual(dto.Severity, ticket.Severity);
-                Assert.AreEqual(dto.Priority, ticket.Priority);
-                Assert.AreEqual(dto.DueDate, ticket.DueDate);
-                Assert.AreEqual(dto.ClientId, ticket.ClientId);
-                Assert.AreEqual(dto.ProjectId, ticket.ProjectId);
+                Assert.AreEqual(newTicket.Name, ticket.Name);
+                Assert.AreEqual(newTicket.Description, ticket.Description);
+                Assert.AreEqual(newTicket.Severity, ticket.Severity);
+                Assert.AreEqual(newTicket.Priority, ticket.Priority);
+                Assert.AreEqual(newTicket.DueDate, ticket.DueDate);
+                Assert.AreEqual(newTicket.ClientId, ticket.ClientId);
+                Assert.AreEqual(newTicket.ProjectId, ticket.ProjectId);
             });
         }
     }

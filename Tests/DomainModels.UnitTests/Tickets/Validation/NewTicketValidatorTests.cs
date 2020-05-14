@@ -6,15 +6,15 @@ using NUnit.Framework;
 namespace Helpdesk.DomainModels.UnitTests.Tickets.Validation
 {
     [TestFixture]
-    public class OpenTicketValidatorTests
+    public class NewTicketValidatorTests
     {
         private readonly IFixture _fixture = new Fixture();
-        private OpenTicketValidator _validator;
+        private NewTicketValidator _validator;
 
         [SetUp]
         public void Setup()
         {
-            _validator = new OpenTicketValidator();
+            _validator = new NewTicketValidator();
         }
 
         [TestCase(null)]

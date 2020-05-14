@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using Data.Specifications;
 using Helpdesk.Domain.Entities;
+
+[assembly: InternalsVisibleTo("Helpdesk.Services.UnitTests")]
 
 namespace Helpdesk.Services.Clients.Specifications
 {
     public class GetClientById : LinqSpecification<Client>
     {
-        private readonly int _clientId;
+        internal readonly int _clientId;
 
         public GetClientById(int clientId)
         {

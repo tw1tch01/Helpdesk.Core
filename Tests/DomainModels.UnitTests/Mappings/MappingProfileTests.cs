@@ -7,7 +7,7 @@ namespace Helpdesk.DomainModels.UnitTests.Mappings
     [TestFixture]
     public class MappingProfileTests
     {
-        //[Test]
+        [Test]
         public void ConfigurationIsValid()
         {
             var configProvider = new MapperConfiguration(opt =>

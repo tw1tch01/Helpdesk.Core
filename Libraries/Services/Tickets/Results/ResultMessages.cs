@@ -1,4 +1,8 @@
-﻿namespace Helpdesk.Services.Tickets.Results
+﻿using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Helpdesk.Services.UnitTests")]
+
+namespace Helpdesk.Services.Tickets.Results
 {
     internal static class ResultMessages
     {

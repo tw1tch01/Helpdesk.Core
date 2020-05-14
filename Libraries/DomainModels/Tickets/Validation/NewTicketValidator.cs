@@ -2,9 +2,9 @@
 
 namespace Helpdesk.DomainModels.Tickets.Validation
 {
-    public class OpenTicketValidator : AbstractValidator<OpenTicketDto>
+    public class NewTicketValidator : AbstractValidator<NewTicket>
     {
-        public OpenTicketValidator()
+        public NewTicketValidator()
         {
             RuleFor(r => r.Name).NotEmpty().MaximumLength(64);
             RuleFor(r => r.Description).NotEmpty();

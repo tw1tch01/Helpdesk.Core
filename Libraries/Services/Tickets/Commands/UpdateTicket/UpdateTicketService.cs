@@ -34,7 +34,7 @@ namespace Helpdesk.Services.Tickets.Commands.UpdateTicket
             _workflowService = workflowService;
         }
 
-        public virtual async Task<UpdateTicketResult> Update(int ticketId, UpdateTicketDto ticketDto)
+        public virtual async Task<UpdateTicketResult> Update(int ticketId, DomainModels.Tickets.UpdateTicket ticketDto)
         {
             if (ticketDto == null) throw new ArgumentNullException(nameof(ticketDto));
 
@@ -63,7 +63,7 @@ namespace Helpdesk.Services.Tickets.Commands.UpdateTicket
 
         #region Private Methods
 
-        private ValidationResult ValidateDto(UpdateTicketDto ticketDto)
+        private ValidationResult ValidateDto(DomainModels.Tickets.UpdateTicket ticketDto)
         {
             var validator = new UpdateTicketValidator();
             var result = validator.Validate(ticketDto);

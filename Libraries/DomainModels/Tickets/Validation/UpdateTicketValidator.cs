@@ -2,7 +2,7 @@
 
 namespace Helpdesk.DomainModels.Tickets.Validation
 {
-    public class UpdateTicketValidator : AbstractValidator<UpdateTicketDto>
+    public class UpdateTicketValidator : AbstractValidator<UpdateTicket>
     {
         public UpdateTicketValidator()
         {

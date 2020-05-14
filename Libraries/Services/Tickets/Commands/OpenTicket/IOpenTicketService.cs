@@ -6,6 +6,6 @@ namespace Helpdesk.Services.Tickets.Commands.OpenTicket
 {
     public interface IOpenTicketService
     {
-        Task<OpenTicketResult> Open(OpenTicketDto ticketDto);
+        Task<OpenTicketResult> Open(NewTicket newTicket);
     }
 }
