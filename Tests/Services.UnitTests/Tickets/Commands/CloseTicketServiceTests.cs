@@ -165,7 +165,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
 
             await service.Close(It.IsAny<int>(), It.IsAny<int>());
 
-            mockFactory.Verify(v => v.WorkflowFailed(It.IsAny<int>(), mockBeforeTicketClosedWorkflow.Object), Times.Once, "Should return the factory's WorkflowFailed method.");
+            mockFactory.Verify(v => v.WorkflowFailed(It.IsAny<int>(), It.IsAny<int>(), mockBeforeTicketClosedWorkflow.Object), Times.Once, "Should return the factory's WorkflowFailed method.");
         }
 
         [Test]

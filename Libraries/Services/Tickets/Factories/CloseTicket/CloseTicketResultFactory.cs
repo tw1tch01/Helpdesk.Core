@@ -1,6 +1,6 @@
-﻿using System;
-using Helpdesk.Domain.Entities;
+﻿using Helpdesk.Domain.Entities;
 using Helpdesk.Services.Tickets.Results;
+using Helpdesk.Services.Tickets.Results.Enums;
 using Helpdesk.Services.Workflows;
 
 namespace Helpdesk.Services.Tickets.Factories.CloseTicket
@@ -9,32 +9,60 @@ namespace Helpdesk.Services.Tickets.Factories.CloseTicket
     {
         public CloseTicketResult Closed(Ticket ticket)
         {
-            throw new NotImplementedException();
+            return new CloseTicketResult(TicketCloseResult.Closed)
+            {
+                TicketId = ticket.TicketId,
+                UserId = ticket.ClosedBy.Value,
+                ClosedBy = ticket.ClosedBy.Value,
+                ClosedOn = ticket.ClosedOn.Value
+            };
         }
 
         public CloseTicketResult TicketAlreadyClosed(Ticket ticket)
         {
-            throw new NotImplementedException();
+            return new CloseTicketResult(TicketCloseResult.TicketAlreadyClosed)
+            {
+                TicketId = ticket.TicketId,
+                ClosedBy = ticket.ClosedBy.Value,
+                ClosedOn = ticket.ClosedOn.Value
+            };
         }
 
         public CloseTicketResult TicketAlreadyResolved(Ticket ticket)
         {
-            throw new NotImplementedException();
+            return new CloseTicketResult(TicketCloseResult.TicketAlreadyResolved)
+            {
+                TicketId = ticket.TicketId,
+                ResolvedBy = ticket.ResolvedBy.Value,
+                ResolvedOn = ticket.ResolvedOn.Value
+            };
         }
 
         public CloseTicketResult TicketNotFound(int ticketId)
         {
-            throw new NotImplementedException();
+            return new CloseTicketResult(TicketCloseResult.TicketNotFound)
+            {
+                TicketId = ticketId
+            };
         }
 
         public CloseTicketResult UserNotFound(int ticketId, int userId)
         {
-            throw new NotImplementedException();
+            return new CloseTicketResult(TicketCloseResult.UserNotFound)
+            {
+                TicketId = ticketId,
+                UserId = userId
+            };
         }
 
-        public CloseTicketResult WorkflowFailed(int ticketId, IWorkflowProcess beforeWorkflow)
+        public CloseTicketResult WorkflowFailed(int ticketId, int userId, IWorkflowProcess workflow)
         {
-            throw new NotImplementedException();
+            return new CloseTicketResult(TicketCloseResult.WorkflowFailed)
+            {
+                TicketId = ticketId,
+                UserId = userId,
+                Workflow = workflow
+            };
         }
     }
 }

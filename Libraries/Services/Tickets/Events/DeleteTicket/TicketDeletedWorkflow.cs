@@ -6,8 +6,8 @@ namespace Helpdesk.Services.Tickets.Events.DeleteTicket
 {
     public class TicketDeletedWorkflow : TicketDeletedEvent, IWorkflowProcess
     {
-        public TicketDeletedWorkflow(int ticketId)
-            : base(ticketId)
+        public TicketDeletedWorkflow(int ticketId, int userId)
+            : base(ticketId, userId)
         {
         }
 

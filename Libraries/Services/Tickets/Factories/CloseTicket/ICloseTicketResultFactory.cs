@@ -16,6 +16,6 @@ namespace Helpdesk.Services.Tickets.Factories.CloseTicket
 
         CloseTicketResult UserNotFound(int ticketId, int userId);
 
-        CloseTicketResult WorkflowFailed(int ticketId, IWorkflowProcess beforeWorkflow);
+        CloseTicketResult WorkflowFailed(int ticketId, int userId, IWorkflowProcess workflow);
     }
 }

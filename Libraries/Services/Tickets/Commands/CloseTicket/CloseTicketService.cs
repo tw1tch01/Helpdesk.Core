@@ -52,7 +52,7 @@ namespace Helpdesk.Services.Tickets.Commands.CloseTicket
             if (user == null) return _factory.UserNotFound(ticketId, userId);
 
             var beforeWorkflow = await _workflowService.Process(new BeforeTicketClosedWorkflow(ticketId, userId));
-            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return _factory.WorkflowFailed(ticketId, beforeWorkflow);
+            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return _factory.WorkflowFailed(ticketId, userId, beforeWorkflow);
 
             ticket.Close(userId);
             await _repository.SaveAsync();
