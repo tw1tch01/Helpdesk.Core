@@ -5,6 +5,6 @@ namespace Helpdesk.Services.Tickets.Commands.PauseTicket
 {
     public interface IPauseTicketService
     {
-        Task<PauseTicketResult> Pause(int ticketId);
+        Task<PauseTicketResult> Pause(int ticketId, int userId);
     }
 }

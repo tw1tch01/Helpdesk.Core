@@ -127,26 +127,30 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         [Test]
         public async Task Close_BeforeTicketIsClosed_VerifyBeforeTicketClosedWorkflowIsProcessed()
         {
+            var ticketId = _fixture.Create<int>();
+            var userId = _fixture.Create<int>();
             var mockTicket = new Mock<Ticket>();
             var mockContext = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
 
             mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(mockTicket.Object);
             mockContext.Setup(s => s.SingleAsync(It.IsAny<GetUserById>())).ReturnsAsync(new User());
-            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketClosedWorkflow>())).ReturnsAsync(new BeforeTicketClosedWorkflow(It.IsAny<int>(), It.IsAny<int>()));
+            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketClosedWorkflow>())).ReturnsAsync(new BeforeTicketClosedWorkflow(ticketId, userId));
 
             var service = CreateService(
                 mockContext: mockContext,
                 mockWorkflowService: mockWorkflowService);
 
-            await service.Close(It.IsAny<int>(), It.IsAny<int>());
+            await service.Close(ticketId, userId);
 
-            mockWorkflowService.Verify(v => v.Process(It.IsAny<BeforeTicketClosedWorkflow>()), Times.Once, "Should call the workflow service's Process method for BeforeTicketClosedWorkflow.");
+            mockWorkflowService.Verify(v => v.Process(It.Is<BeforeTicketClosedWorkflow>(w => w.TicketId == ticketId && w.UserId == userId)), Times.Once, "Should call the workflow service's Process method for BeforeTicketClosedWorkflow.");
         }
 
         [Test]
         public async Task Close_WhenBeforeTicketClosedWorkflowIsNotSuccessful_VerifyFactoryWorkflowFailedIsReturned()
         {
+            var ticketId = _fixture.Create<int>();
+            var userId = _fixture.Create<int>();
             var mockTicket = new Mock<Ticket>();
             var mockBeforeTicketClosedWorkflow = new Mock<BeforeTicketClosedWorkflow>(It.IsAny<int>(), It.IsAny<int>());
             var mockContext = new Mock<IContextRepository<ITicketContext>>();
@@ -163,14 +167,15 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
                 mockWorkflowService: mockWorkflowService,
                 mockFactory: mockFactory);
 
-            await service.Close(It.IsAny<int>(), It.IsAny<int>());
+            await service.Close(ticketId, userId);
 
-            mockFactory.Verify(v => v.WorkflowFailed(It.IsAny<int>(), It.IsAny<int>(), mockBeforeTicketClosedWorkflow.Object), Times.Once, "Should return the factory's WorkflowFailed method.");
+            mockFactory.Verify(v => v.WorkflowFailed(ticketId, userId, mockBeforeTicketClosedWorkflow.Object), Times.Once, "Should return the factory's WorkflowFailed method.");
         }
 
         [Test]
         public async Task Close_WhenTicketCanBeClosed_VerifyTicketCloseMethodIsCalled()
         {
+            var userId = _fixture.Create<int>();
             var mockTicket = new Mock<Ticket>();
             var mockContext = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
@@ -183,9 +188,9 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
                 mockContext: mockContext,
                 mockWorkflowService: mockWorkflowService);
 
-            await service.Close(It.IsAny<int>(), It.IsAny<int>());
+            await service.Close(It.IsAny<int>(), userId);
 
-            mockTicket.Verify(v => v.Close(It.IsAny<int>()), Times.Once, "Should call the ticket's Close method.");
+            mockTicket.Verify(v => v.Close(userId), Times.Once, "Should call the ticket's Close method.");
         }
 
         [Test]
@@ -210,6 +215,8 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         [Test]
         public async Task Close_WhenTicketIsClosed_VerifyTickeClosedWorkflowIsProcessed()
         {
+            var ticketId = _fixture.Create<int>();
+            var userId = _fixture.Create<int>();
             var mockContext = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
 
@@ -223,14 +230,16 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
                 mockContext: mockContext,
                 mockWorkflowService: mockWorkflowService);
 
-            await service.Close(It.IsAny<int>(), It.IsAny<int>());
+            await service.Close(ticketId, userId);
 
-            mockWorkflowService.Verify(v => v.Process(It.Is<TicketClosedWorkflow>(a => a.TicketId == ticket.TicketId && a.UserId == user.UserId)), Times.Once, "Should process a new TicketClosedWorkflow.");
+            mockWorkflowService.Verify(v => v.Process(It.Is<TicketClosedWorkflow>(w => w.TicketId == ticketId && w.UserId == userId)), Times.Once, "Should process a new TicketClosedWorkflow.");
         }
 
         [Test]
         public async Task Close_WhenTicketIsClosed_VerifyTickeClosedNotificationIsQueued()
         {
+            var ticketId = _fixture.Create<int>();
+            var userId = _fixture.Create<int>();
             var mockContext = new Mock<IContextRepository<ITicketContext>>();
             var mockNotificationService = new Mock<INotificationService>();
             var mockWorkflowService = new Mock<IWorkflowService>();
@@ -246,9 +255,9 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
                 mockNotificationService: mockNotificationService,
                 mockWorkflowService: mockWorkflowService);
 
-            await service.Close(It.IsAny<int>(), It.IsAny<int>());
+            await service.Close(ticketId, userId);
 
-            mockNotificationService.Verify(v => v.Queue(It.Is<TicketClosedNotification>(a => a.TicketId == ticket.TicketId && a.UserId == user.UserId)), Times.Once, "Should queue a new TicketClosedNotification.");
+            mockNotificationService.Verify(v => v.Queue(It.Is<TicketClosedNotification>(n => n.TicketId == ticketId && n.UserId == userId)), Times.Once, "Should queue a new TicketClosedNotification.");
         }
 
         [Test]

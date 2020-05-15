@@ -1,5 +1,4 @@
 ﻿using System;
-using Helpdesk.Domain.Entities;
 using Helpdesk.Services.Common.Results;
 using Helpdesk.Services.Tickets.Results.Enums;
 using Helpdesk.Services.Workflows;
@@ -14,71 +13,26 @@ namespace Helpdesk.Services.Tickets.Results
         }
 
         public TicketStartResult Result { get; }
+
         public string Message => GetMessage();
-        public int TicketId { get; private set; }
-        public DateTimeOffset? StartedOn { get; private set; }
-        public int? ResolvedBy { get; private set; }
-        public DateTimeOffset? ResolvedOn { get; private set; }
-        public int? ClosedBy { get; private set; }
-        public DateTimeOffset? ClosedOn { get; private set; }
-        public IWorkflowProcess Workflow { get; private set; }
+
+        public int TicketId { get; internal set; }
+
+        public int? UserId { get; internal set; }
+
+        public DateTimeOffset? StartedOn { get; internal set; }
+
+        public int? ResolvedBy { get; internal set; }
+
+        public DateTimeOffset? ResolvedOn { get; internal set; }
+
+        public int? ClosedBy { get; internal set; }
+
+        public DateTimeOffset? ClosedOn { get; internal set; }
+
+        public IWorkflowProcess Workflow { get; internal set; }
 
         #region Methods
-
-        internal static StartTicketResult Started(Ticket ticket)
-        {
-            return new StartTicketResult(TicketStartResult.Started)
-            {
-                TicketId = ticket.TicketId,
-                StartedOn = ticket.StartedOn
-            };
-        }
-
-        internal static StartTicketResult TicketNotFound(int ticketId)
-        {
-            return new StartTicketResult(TicketStartResult.TicketNotFound)
-            {
-                TicketId = ticketId
-            };
-        }
-
-        internal static StartTicketResult TicketAlreadyResolved(Ticket ticket)
-        {
-            return new StartTicketResult(TicketStartResult.TicketAlreadyResolved)
-            {
-                TicketId = ticket.TicketId,
-                ResolvedBy = ticket.ResolvedBy.Value,
-                ResolvedOn = ticket.ResolvedOn.Value
-            };
-        }
-
-        internal static StartTicketResult TicketAlreadyClosed(Ticket ticket)
-        {
-            return new StartTicketResult(TicketStartResult.TicketAlreadyClosed)
-            {
-                TicketId = ticket.TicketId,
-                ClosedBy = ticket.ClosedBy.Value,
-                ClosedOn = ticket.ClosedOn.Value
-            };
-        }
-
-        internal static StartTicketResult TicketAlreadyStarted(Ticket ticket)
-        {
-            return new StartTicketResult(TicketStartResult.TicketAlreadyStarted)
-            {
-                TicketId = ticket.TicketId,
-                StartedOn = ticket.StartedOn.Value,
-            };
-        }
-
-        internal static StartTicketResult WorkflowFailed(int ticketId, IWorkflowProcess workflow)
-        {
-            return new StartTicketResult(TicketStartResult.WorkflowFailed)
-            {
-                TicketId = ticketId,
-                Workflow = workflow
-            };
-        }
 
         private string GetMessage() => Result switch
         {

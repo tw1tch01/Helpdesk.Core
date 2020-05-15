@@ -18,6 +18,8 @@ namespace Helpdesk.Services.Tickets.Results
 
         public int TicketId { get; internal set; }
 
+        public int? UserId { get; internal set; }
+
         public DateTimeOffset? ResolvedOn { get; internal set; }
 
         public int? ResolvedBy { get; internal set; }

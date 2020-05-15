@@ -4,7 +4,6 @@ using Helpdesk.Domain.Enums;
 using Helpdesk.Services.Common;
 using Helpdesk.Services.Notifications;
 using Helpdesk.Services.Tickets.Events.PauseTicket;
-using Helpdesk.Services.Tickets.Events.ReopenTicket;
 using Helpdesk.Services.Tickets.Factories.PauseTicket;
 using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Tickets.Specifications;
@@ -32,7 +31,7 @@ namespace Helpdesk.Services.Tickets.Commands.PauseTicket
             _factory = factory;
         }
 
-        public virtual async Task<PauseTicketResult> Pause(int ticketId)
+        public virtual async Task<PauseTicketResult> Pause(int ticketId, int userId)
         {
             var ticket = await _repository.SingleAsync(new GetTicketById(ticketId));
 
@@ -50,14 +49,14 @@ namespace Helpdesk.Services.Tickets.Commands.PauseTicket
                     return _factory.TicketAlreadyPaused(ticket);
             }
 
-            var beforeWorkflow = await _workflowService.Process(new BeforeTicketPausedWorkflow(ticketId));
-            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return _factory.WorkflowFailed(ticketId, beforeWorkflow);
+            var beforeWorkflow = await _workflowService.Process(new BeforeTicketPausedWorkflow(ticketId, userId));
+            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return _factory.WorkflowFailed(ticketId, userId, beforeWorkflow);
 
             ticket.Pause();
             await _repository.SaveAsync();
 
-            var workflow = _workflowService.Process(new TicketPausedWorkflow(ticketId));
-            var notification = _notificationService.Queue(new TicketPausedNotification(ticketId));
+            var workflow = _workflowService.Process(new TicketPausedWorkflow(ticketId, userId));
+            var notification = _notificationService.Queue(new TicketPausedNotification(ticketId, userId));
             await Task.WhenAll(workflow, notification);
 
             return _factory.Paused(ticket);

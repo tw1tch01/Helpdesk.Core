@@ -16,6 +16,6 @@ namespace Helpdesk.Services.Tickets.Factories.PauseTicket
 
         PauseTicketResult TicketNotFound(int ticketId);
 
-        PauseTicketResult WorkflowFailed(int ticketId, IWorkflowProcess workflow);
+        PauseTicketResult WorkflowFailed(int ticketId, int userId, IWorkflowProcess workflow);
     }
 }

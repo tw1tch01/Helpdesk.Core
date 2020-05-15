@@ -61,7 +61,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
                 ClientId = _fixture.Create<int>()
             };
             var mockContext = new Mock<IContextRepository<ITicketContext>>();
-            var mockFactory = new Mock<IOpenTicketResultFactory>();
             var mockValidator = new Mock<IValidator<NewTicket>>();
             var mockValidationResult = new Mock<ValidationResult>();
 
@@ -70,7 +69,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
 
             var service = CreateService(
                 mockContext: mockContext,
-                mockFactory: mockFactory,
                 mockValidator: mockValidator);
 
             var result = await service.Open(newTicket);
@@ -92,7 +90,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
 
             mockValidator.Setup(m => m.ValidateAsync(newTicket, It.IsAny<CancellationToken>())).ReturnsAsync(mockValidationResult.Object);
             mockValidationResult.Setup(m => m.IsValid).Returns(true);
-            mockContext.Setup(m => m.SingleAsync(It.Is<GetClientById>(c => c._clientId == newTicket.ClientId))).ReturnsAsync((Client)null);
+            mockContext.Setup(m => m.SingleAsync(It.IsAny<GetClientById>())).ReturnsAsync((Client)null);
 
             var service = CreateService(
                 mockContext: mockContext,
@@ -113,7 +111,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             };
             var mockContext = new Mock<IContextRepository<ITicketContext>>();
             var mockMapper = new Mock<IMapper>();
-            var mockFactory = new Mock<IOpenTicketResultFactory>();
             var mockValidator = new Mock<IValidator<NewTicket>>();
             var mockValidationResult = new Mock<ValidationResult>();
 
@@ -125,7 +122,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             var service = CreateService(
                 mockContext: mockContext,
                 mockMapper: mockMapper,
-                mockFactory: mockFactory,
                 mockValidator: mockValidator);
 
             var result = await service.Open(newTicket);
@@ -141,7 +137,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
                 ProjectId = _fixture.Create<int>()
             };
             var mockContext = new Mock<IContextRepository<ITicketContext>>();
-            var mockFactory = new Mock<IOpenTicketResultFactory>();
             var mockValidator = new Mock<IValidator<NewTicket>>();
             var mockValidationResult = new Mock<ValidationResult>();
 
@@ -151,7 +146,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
 
             var service = CreateService(
                 mockContext: mockContext,
-                mockFactory: mockFactory,
                 mockValidator: mockValidator);
 
             var result = await service.Open(newTicket);
@@ -223,7 +217,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             var ticket = new Ticket();
             var mockContext = new Mock<IContextRepository<ITicketContext>>();
             var mockMapper = new Mock<IMapper>();
-            var mockFactory = new Mock<IOpenTicketResultFactory>();
             var mockValidator = new Mock<IValidator<NewTicket>>();
             var mockValidationResult = new Mock<ValidationResult>();
 
@@ -235,7 +228,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             var service = CreateService(
                 mockContext: mockContext,
                 mockMapper: mockMapper,
-                mockFactory: mockFactory,
                 mockValidator: mockValidator);
 
             var result = await service.Open(newTicket);
@@ -250,7 +242,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             var ticket = new Ticket();
             var mockContext = new Mock<IContextRepository<ITicketContext>>();
             var mockMapper = new Mock<IMapper>();
-            var mockFactory = new Mock<IOpenTicketResultFactory>();
             var mockValidator = new Mock<IValidator<NewTicket>>();
             var mockValidationResult = new Mock<ValidationResult>();
 
@@ -262,7 +253,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             var service = CreateService(
                 mockContext: mockContext,
                 mockMapper: mockMapper,
-                mockFactory: mockFactory,
                 mockValidator: mockValidator);
 
             var result = await service.Open(newTicket);

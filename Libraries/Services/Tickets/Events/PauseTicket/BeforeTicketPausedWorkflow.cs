@@ -6,8 +6,8 @@ namespace Helpdesk.Services.Tickets.Events.PauseTicket
 {
     public class BeforeTicketPausedWorkflow : TicketPausedEvent, IWorkflowProcess
     {
-        public BeforeTicketPausedWorkflow(int ticketId)
-            : base(ticketId)
+        public BeforeTicketPausedWorkflow(int ticketId, int userId)
+            : base(ticketId, userId)
         {
         }
 

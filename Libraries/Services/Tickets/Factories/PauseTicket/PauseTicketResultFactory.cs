@@ -53,11 +53,12 @@ namespace Helpdesk.Services.Tickets.Factories.PauseTicket
             };
         }
 
-        public PauseTicketResult WorkflowFailed(int ticketId, IWorkflowProcess workflow)
+        public PauseTicketResult WorkflowFailed(int ticketId, int userId, IWorkflowProcess workflow)
         {
             return new PauseTicketResult(TicketPauseResult.WorkflowFailed)
             {
                 TicketId = ticketId,
+                UserId = userId,
                 Workflow = workflow
             };
         }

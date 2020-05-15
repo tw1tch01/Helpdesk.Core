@@ -5,8 +5,8 @@ namespace Helpdesk.Services.Tickets.Events.StartTicket
 {
     public class TicketStartedNotification : TicketStartedEvent, INotificationProcess
     {
-        public TicketStartedNotification(int ticketId)
-            : base(ticketId)
+        public TicketStartedNotification(int ticketId, int userId)
+            : base(ticketId, userId)
         {
         }
     }

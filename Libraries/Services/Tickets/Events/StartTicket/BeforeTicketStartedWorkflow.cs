@@ -6,12 +6,13 @@ namespace Helpdesk.Services.Tickets.Events.StartTicket
 {
     public class BeforeTicketStartedWorkflow : TicketStartedEvent, IWorkflowProcess
     {
-        public BeforeTicketStartedWorkflow(int ticketId)
-            : base(ticketId)
+        public BeforeTicketStartedWorkflow(int ticketId, int userId)
+            : base(ticketId, userId)
         {
         }
 
-        public WorkflowResult Result { get; set; }
-        public string Message { get; set; }
+        public virtual WorkflowResult Result { get; set; }
+
+        public virtual string Message { get; set; }
     }
 }

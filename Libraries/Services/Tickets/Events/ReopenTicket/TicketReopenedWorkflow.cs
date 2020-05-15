@@ -4,10 +4,10 @@ using Helpdesk.Services.Workflows.Enums;
 
 namespace Helpdesk.Services.Tickets.Events.ReopenTicket
 {
-    public class TicketReopenedWorkflow : TicketPausedEvent, IWorkflowProcess
+    public class TicketReopenedWorkflow : TicketReopenedEvent, IWorkflowProcess
     {
-        public TicketReopenedWorkflow(int ticketId)
-            : base(ticketId)
+        public TicketReopenedWorkflow(int ticketId, int userId)
+            : base(ticketId, userId)
         {
         }
 

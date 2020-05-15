@@ -5,8 +5,8 @@ namespace Helpdesk.Services.Tickets.Events.PauseTicket
 {
     public class TicketPausedNotification : TicketPausedEvent, INotificationProcess
     {
-        public TicketPausedNotification(int ticketId)
-            : base(ticketId)
+        public TicketPausedNotification(int ticketId, int userId)
+            : base(ticketId, userId)
         {
         }
     }

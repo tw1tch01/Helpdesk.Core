@@ -5,6 +5,6 @@ namespace Helpdesk.Services.Tickets.Commands.StartTicket
 {
     public interface IStartTicketService
     {
-        Task<StartTicketResult> Start(int ticketId);
+        Task<StartTicketResult> Start(int ticketId, int userId);
     }
 }

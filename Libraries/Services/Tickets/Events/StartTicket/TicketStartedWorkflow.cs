@@ -6,8 +6,8 @@ namespace Helpdesk.Services.Tickets.Events.StartTicket
 {
     public class TicketStartedWorkflow : TicketStartedEvent, IWorkflowProcess
     {
-        public TicketStartedWorkflow(int ticketId)
-            : base(ticketId)
+        public TicketStartedWorkflow(int ticketId, int userId)
+            : base(ticketId, userId)
         {
         }
 

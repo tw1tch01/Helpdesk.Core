@@ -3,8 +3,8 @@ using Data.Repositories;
 using Helpdesk.Domain.Enums;
 using Helpdesk.Services.Common;
 using Helpdesk.Services.Notifications;
-using Helpdesk.Services.Tickets.Events.ReopenTicket;
 using Helpdesk.Services.Tickets.Events.StartTicket;
+using Helpdesk.Services.Tickets.Factories.StartTicket;
 using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Tickets.Specifications;
 using Helpdesk.Services.Workflows;
@@ -17,46 +17,49 @@ namespace Helpdesk.Services.Tickets.Commands.StartTicket
         private readonly IContextRepository<ITicketContext> _repository;
         private readonly INotificationService _notificationService;
         private readonly IWorkflowService _workflowService;
+        private readonly IStartTicketResultFactory _factory;
 
         public StartTicketService(
             IContextRepository<ITicketContext> repository,
             INotificationService notificationService,
-            IWorkflowService workflowService)
+            IWorkflowService workflowService,
+            IStartTicketResultFactory factory)
         {
             _repository = repository;
             _notificationService = notificationService;
             _workflowService = workflowService;
+            _factory = factory;
         }
 
-        public virtual async Task<StartTicketResult> Start(int ticketId)
+        public virtual async Task<StartTicketResult> Start(int ticketId, int userId)
         {
             var ticket = await _repository.SingleAsync(new GetTicketById(ticketId));
 
-            if (ticket == null) return StartTicketResult.TicketNotFound(ticketId);
+            if (ticket == null) return _factory.TicketNotFound(ticketId);
 
             switch (ticket.GetStatus())
             {
                 case TicketStatus.Resolved:
-                    return StartTicketResult.TicketAlreadyResolved(ticket);
+                    return _factory.TicketAlreadyResolved(ticket);
 
                 case TicketStatus.Closed:
-                    return StartTicketResult.TicketAlreadyClosed(ticket);
+                    return _factory.TicketAlreadyClosed(ticket);
 
                 case TicketStatus.InProgress:
-                    return StartTicketResult.TicketAlreadyStarted(ticket);
+                    return _factory.TicketAlreadyStarted(ticket);
             }
 
-            var beforeWorkflow = await _workflowService.Process(new BeforeTicketStartedWorkflow(ticketId));
-            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return StartTicketResult.WorkflowFailed(ticketId, beforeWorkflow);
+            var beforeWorkflow = await _workflowService.Process(new BeforeTicketStartedWorkflow(ticketId, userId));
+            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return _factory.WorkflowFailed(ticketId, userId, beforeWorkflow);
 
             ticket.Start();
             await _repository.SaveAsync();
 
-            var workflow = _workflowService.Process(new TicketReopenedWorkflow(ticketId));
-            var notification = _notificationService.Queue(new TicketStartedNotification(ticketId));
+            var workflow = _workflowService.Process(new TicketStartedWorkflow(ticketId, userId));
+            var notification = _notificationService.Queue(new TicketStartedNotification(ticketId, userId));
             await Task.WhenAll(workflow, notification);
 
-            return StartTicketResult.Started(ticket);
+            return _factory.Started(ticket);
         }
     }
 }
