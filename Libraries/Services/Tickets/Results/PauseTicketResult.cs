@@ -1,5 +1,4 @@
 ﻿using System;
-using Helpdesk.Domain.Entities;
 using Helpdesk.Services.Common.Results;
 using Helpdesk.Services.Tickets.Results.Enums;
 using Helpdesk.Services.Workflows;
@@ -14,71 +13,24 @@ namespace Helpdesk.Services.Tickets.Results
         }
 
         public TicketPauseResult Result { get; }
+
         public string Message => GetMessage();
 
-        public int TicketId { get; private set; }
-        public DateTimeOffset? ResolvedOn { get; private set; }
-        public int? ResolvedBy { get; private set; }
-        public int? ClosedBy { get; private set; }
-        public DateTimeOffset? ClosedOn { get; private set; }
-        public DateTimeOffset? PausedOn { get; private set; }
+        public int TicketId { get; internal set; }
 
-        public IWorkflowProcess Workflow { get; private set; }
+        public DateTimeOffset? ResolvedOn { get; internal set; }
 
-        internal static PauseTicketResult TicketNotFound(int ticketId)
-        {
-            return new PauseTicketResult(TicketPauseResult.TicketNotFound)
-            {
-                TicketId = ticketId
-            };
-        }
+        public int? ResolvedBy { get; internal set; }
 
-        internal static PauseTicketResult TicketAlreadyResolved(Ticket ticket)
-        {
-            return new PauseTicketResult(TicketPauseResult.TicketAlreadyResolved)
-            {
-                TicketId = ticket.TicketId,
-                ResolvedBy = ticket.ResolvedBy.Value,
-                ResolvedOn = ticket.ResolvedOn.Value,
-            };
-        }
+        public int? ClosedBy { get; internal set; }
 
-        internal static PauseTicketResult TicketAlreadyClosed(Ticket ticket)
-        {
-            return new PauseTicketResult(TicketPauseResult.TicketAlreadyClosed)
-            {
-                TicketId = ticket.TicketId,
-                ClosedBy = ticket.ClosedBy.Value,
-                ClosedOn = ticket.ClosedOn.Value,
-            };
-        }
+        public DateTimeOffset? ClosedOn { get; internal set; }
 
-        internal static PauseTicketResult TicketAlreadyPaused(Ticket ticket)
-        {
-            return new PauseTicketResult(TicketPauseResult.TicketAlreadyPaused)
-            {
-                TicketId = ticket.TicketId,
-                PausedOn = ticket.PausedOn.Value
-            };
-        }
+        public DateTimeOffset? PausedOn { get; internal set; }
 
-        internal static PauseTicketResult WorkflowFailed(int ticketId, IWorkflowProcess workflow)
-        {
-            return new PauseTicketResult(TicketPauseResult.WorkflowFailed)
-            {
-                TicketId = ticketId,
-                Workflow = workflow
-            };
-        }
+        public IWorkflowProcess Workflow { get; internal set; }
 
-        internal static PauseTicketResult Paused(Ticket ticket)
-        {
-            return new PauseTicketResult(TicketPauseResult.Paused)
-            {
-                TicketId = ticket.TicketId,
-                PausedOn = ticket.PausedOn.Value
-            };
-        }
+        #region Methods
 
         private string GetMessage() => Result switch
         {
@@ -90,5 +42,7 @@ namespace Helpdesk.Services.Tickets.Results
             TicketPauseResult.WorkflowFailed => ResultMessages.WorkflowFailed,
             _ => Result.ToString(),
         };
+
+        #endregion Methods
     }
 }

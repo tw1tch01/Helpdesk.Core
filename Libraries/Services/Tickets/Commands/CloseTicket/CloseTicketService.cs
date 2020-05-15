@@ -47,7 +47,7 @@ namespace Helpdesk.Services.Tickets.Commands.CloseTicket
                     return _factory.TicketAlreadyClosed(ticket);
             }
 
-            var user = await _repository.SingleAsync(new GetUserById(userId));
+            var user = await _repository.SingleAsync(new GetUserById(userId).AsNoTracking());
 
             if (user == null) return _factory.UserNotFound(ticketId, userId);
 

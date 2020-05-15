@@ -46,7 +46,7 @@ namespace Helpdesk.Services.Tickets.Commands.DeleteTicket
             var notification = _notificationService.Queue(new TicketDeletedNotification(ticketId, userId));
             await Task.WhenAll(workflow, notification);
 
-            return DeleteTicketResult.Deleted(ticketId);
+            return _factory.Deleted(ticketId, userId);
         }
     }
 }

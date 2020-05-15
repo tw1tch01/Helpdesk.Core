@@ -11,7 +11,8 @@ namespace Helpdesk.Services.Tickets.Events.PauseTicket
         {
         }
 
-        public WorkflowResult Result { get; set; }
-        public string Message { get; set; }
+        public virtual WorkflowResult Result { get; set; }
+
+        public virtual string Message { get; set; }
     }
 }

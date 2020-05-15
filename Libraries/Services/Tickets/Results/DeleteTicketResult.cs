@@ -12,36 +12,16 @@ namespace Helpdesk.Services.Tickets.Results
         }
 
         public TicketDeleteResult Result { get; }
+
         public string Message => GetMessage();
-        public int TicketId { get; set; }
-        public IWorkflowProcess Workflow { get; private set; }
+
+        public int TicketId { get; internal set; }
+
+        public int? UserId { get; internal set; }
+
+        public IWorkflowProcess Workflow { get; internal set; }
 
         #region Methods
-
-        internal static DeleteTicketResult TicketNotFound(int ticketId)
-        {
-            return new DeleteTicketResult(TicketDeleteResult.TicketNotFound)
-            {
-                TicketId = ticketId
-            };
-        }
-
-        internal static DeleteTicketResult Deleted(int ticketId)
-        {
-            return new DeleteTicketResult(TicketDeleteResult.Deleted)
-            {
-                TicketId = ticketId
-            };
-        }
-
-        internal static DeleteTicketResult WorkflowFailed(int ticketId, IWorkflowProcess workflow)
-        {
-            return new DeleteTicketResult(TicketDeleteResult.WorkflowFailed)
-            {
-                TicketId = ticketId,
-                Workflow = workflow
-            };
-        }
 
         private string GetMessage() => Result switch
         {

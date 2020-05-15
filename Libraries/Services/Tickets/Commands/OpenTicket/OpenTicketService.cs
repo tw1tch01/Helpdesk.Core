@@ -49,13 +49,13 @@ namespace Helpdesk.Services.Tickets.Commands.OpenTicket
 
             if (!validationResult.IsValid) return _factory.ValidationFailure(validationResult.Errors);
 
-            var client = await _repository.SingleAsync(new GetClientById(newTicket.ClientId));
+            var client = await _repository.SingleAsync(new GetClientById(newTicket.ClientId).AsNoTracking());
 
             if (client == null) return _factory.ClientNotFound(newTicket.ClientId);
 
             if (newTicket.ProjectId.HasValue)
             {
-                var project = await _repository.SingleAsync(new GetProjectById(newTicket.ProjectId.Value));
+                var project = await _repository.SingleAsync(new GetProjectById(newTicket.ProjectId.Value).AsNoTracking());
 
                 if (project == null) return _factory.ProjectNotFound(newTicket.ProjectId.Value);
 
