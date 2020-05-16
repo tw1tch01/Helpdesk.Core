@@ -28,7 +28,7 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets
         [Test]
         public void NullObjectReturnsNull()
         {
-            UpdateTicket dto = null;
+            UpdateTicketDto dto = null;
             var item = _mapper.Map<Ticket>(dto);
             Assert.IsNull(item);
         }
@@ -36,7 +36,7 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets
         [Test]
         public void MapsOpenTicketDtoToTicket()
         {
-            var dto = new UpdateTicket
+            var dto = new UpdateTicketDto
             {
                 Name = _fixture.Create<string>(),
                 Description = _fixture.Create<string>(),
@@ -59,7 +59,7 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets
         [Test]
         public void WhenUpdateDueDateIsTrue_MapsDueDate()
         {
-            var dto = new UpdateTicket
+            var dto = new UpdateTicketDto
             {
                 DueDate = _fixture.Create<DateTimeOffset?>(),
                 UpdateDueDate = true
@@ -72,7 +72,7 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets
         [Test]
         public void WhenUpdateDueDateIsFalse_DoesNotMapDueDate()
         {
-            var dto = new UpdateTicket
+            var dto = new UpdateTicketDto
             {
                 DueDate = _fixture.Create<DateTimeOffset>(),
                 UpdateDueDate = false

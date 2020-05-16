@@ -8,7 +8,7 @@ using Helpdesk.DomainModels.Mappings;
 
 namespace Helpdesk.DomainModels.Tickets
 {
-    public class UpdateTicket : IMaps<Ticket>
+    public class UpdateTicketDto : IMaps<Ticket>
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -38,7 +38,7 @@ namespace Helpdesk.DomainModels.Tickets
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<UpdateTicket, Ticket>(MemberList.None)
+            profile.CreateMap<UpdateTicketDto, Ticket>(MemberList.None)
                 .ForMember(m => m.Name, o => o.Condition(c => !string.IsNullOrWhiteSpace(c.Name)))
                 .ForMember(m => m.Description, o => o.Condition(c => !string.IsNullOrWhiteSpace(c.Description)))
                 .ForMember(m => m.DueDate, o => o.Condition(c => c.UpdateDueDate))

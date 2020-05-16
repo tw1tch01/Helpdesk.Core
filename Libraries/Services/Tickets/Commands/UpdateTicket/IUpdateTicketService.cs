@@ -6,6 +6,6 @@ namespace Helpdesk.Services.Tickets.Commands.UpdateTicket
 {
     public interface IUpdateTicketService
     {
-        Task<UpdateTicketResult> Update(int ticketId, DomainModels.Tickets.UpdateTicket ticketDto);
+        Task<UpdateTicketResult> Update(int ticketId, DomainModels.Tickets.UpdateTicketDto ticketDto);
     }
 }

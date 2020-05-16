@@ -6,14 +6,14 @@ using Helpdesk.Services.Workflows.Enums;
 
 namespace Helpdesk.Services.Tickets.Events.UpdateTicket
 {
-    public class BeforeTicketUpdateWorkflow : TicketUpdateEvent, IWorkflowProcess
+    public class BeforeTicketUpdatedWorkflow : TicketUpdateEvent, IWorkflowProcess
     {
-        public BeforeTicketUpdateWorkflow(int ticketId, IReadOnlyDictionary<string, ValueChange> changes)
+        public BeforeTicketUpdatedWorkflow(int ticketId, IReadOnlyDictionary<string, ValueChange> changes)
             : base(ticketId, changes)
         {
         }
 
-        public WorkflowResult Result { get; set; }
-        public string Message { get; set; }
+        public virtual WorkflowResult Result { get; set; }
+        public virtual string Message { get; set; }
     }
 }
