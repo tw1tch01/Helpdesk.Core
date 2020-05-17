@@ -2,6 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>Helpdesk.Domain</AssemblyName>
+    <RootNamespace>Helpdesk.Domain</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Entities\Privilege.cs" />
+    <Compile Remove="Entities\Role.cs" />
+    <Compile Remove="Entities\RolePrivilege.cs" />
+    <Compile Remove="Entities\UserRole.cs" />
+  </ItemGroup>
 
 </Project>

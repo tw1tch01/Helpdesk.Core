@@ -1,2 +1,2 @@
-# helpdesk.core
- Core functionality for the helpdesk application
+# Helpdesk.Core
+ Core functionality for the Helpdesk application
