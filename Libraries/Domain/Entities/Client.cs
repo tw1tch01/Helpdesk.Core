@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Helpdesk.Domain.Common;
 
 namespace Helpdesk.Domain.Entities
@@ -21,11 +20,6 @@ namespace Helpdesk.Domain.Entities
 
         public virtual Organization Organization { get; set; }
         public virtual ICollection<Ticket> Tickets { get; private set; }
-
-        public object GetDisplayName()
-        {
-            throw new NotImplementedException();
-        }
 
         #endregion Navigational Properties
     }

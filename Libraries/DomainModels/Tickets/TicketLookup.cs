@@ -36,7 +36,7 @@ namespace Helpdesk.DomainModels.Tickets
                 .ForMember(m => m.LinkedTickets, o => o.MapFrom(m => m.LinkedTickets.Count))
                 .ForMember(m => m.ClientId, o => o.MapFrom(m => m.ClientId))
                 .ForMember(m => m.Client, o => o.Condition(m => m.Client != null))
-                .ForMember(m => m.Client, o => o.MapFrom(m => m.Client.GetDisplayName()))
+                .ForMember(m => m.Client, o => o.MapFrom(m => $"{m.Client.FirstName} {m.Client.LastName}"))
                 .ForMember(m => m.ProjectId, o => o.MapFrom(m => m.ProjectId))
                 .ForMember(m => m.Project, o => o.Condition(m => m.Project != null))
                 .ForMember(m => m.Project, o => o.MapFrom(m => m.Project.Name))

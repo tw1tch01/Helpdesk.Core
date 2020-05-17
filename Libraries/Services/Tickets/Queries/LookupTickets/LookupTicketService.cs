@@ -14,7 +14,7 @@ using Helpdesk.Services.UserTickets.Specifications;
 
 namespace Helpdesk.Services.Tickets.Queries.LookupTickets
 {
-    public class LookupTicketService : AbstractTicketsLookup, ILookupTicketsService, IPagedLookupTicketsService
+    public class LookupTicketService : AbstractTicketsLookup, ILookupTicketsService
     {
         private const int _defaultPageSize = 25;
         private const int _maximumPageSize = 50;

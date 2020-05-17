@@ -23,9 +23,9 @@ namespace Helpdesk.DomainModels.Tickets
 
             var changes = new Dictionary<string, ValueChange>();
 
-            if (!string.IsNullOrWhiteSpace(Name)) changes.Add(nameof(Ticket.Name), new ValueChange(ticket.Name, Name));
+            if (!string.IsNullOrWhiteSpace(Name) && Name != ticket.Name) changes.Add(nameof(Ticket.Name), new ValueChange(ticket.Name, Name));
 
-            if (!string.IsNullOrWhiteSpace(Description)) changes.Add(nameof(Ticket.Description), new ValueChange(ticket.Name, Description));
+            if (!string.IsNullOrWhiteSpace(Description) && Description != ticket.Description) changes.Add(nameof(Ticket.Description), new ValueChange(ticket.Name, Description));
 
             if (UpdateDueDate && DueDate != ticket.DueDate) changes.Add(nameof(Ticket.DueDate), new ValueChange(ticket.DueDate, DueDate));
 

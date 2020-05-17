@@ -107,32 +107,6 @@ namespace Helpdesk.Domain.Entities
             FeedbackRequestedOn = null;
         }
 
-        public virtual void RequestApproval(int userId)
-        {
-            ApprovalUserId = userId;
-            ApprovalRequestedOn = DateTimeOffset.UtcNow;
-            ApprovedBy = null;
-            ApprovedOn = null;
-        }
-
-        public virtual void Approve(int userId)
-        {
-            ApprovedBy = userId;
-            ApprovedOn = DateTimeOffset.UtcNow;
-            ApprovalUserId = null;
-            ApprovalRequestedOn = null;
-        }
-
-        public virtual void RequestFeedback()
-        {
-            FeedbackRequestedOn = DateTimeOffset.UtcNow;
-        }
-
-        public virtual void FeedbackReceived()
-        {
-            FeedbackRequestedOn = null;
-        }
-
         #endregion Public Methods
     }
 }
