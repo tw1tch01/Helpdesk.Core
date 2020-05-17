@@ -2,6 +2,55 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>Helpdesk.Services</AssemblyName>
+    <RootNamespace>Helpdesk.Services</RootNamespace>
+    <Authors>Robert Breedt</Authors>
+    <Product>Helpdesk.Core</Product>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="TicketLinks\Commands\LinkTicket\**" />
+    <Compile Remove="TicketLinks\Commands\UnlinkTicket\**" />
+    <Compile Remove="TicketLinks\Events\LinkTicket\**" />
+    <Compile Remove="TicketLinks\Events\UnlinkTicket\**" />
+    <Compile Remove="Tickets\Commands\ApproveTicket\**" />
+    <Compile Remove="Tickets\Commands\RequestApproval\**" />
+    <Compile Remove="Tickets\Events\ApproveTicket\**" />
+    <Compile Remove="Tickets\Events\RequestApproval\**" />
+    <EmbeddedResource Remove="TicketLinks\Commands\LinkTicket\**" />
+    <EmbeddedResource Remove="TicketLinks\Commands\UnlinkTicket\**" />
+    <EmbeddedResource Remove="TicketLinks\Events\LinkTicket\**" />
+    <EmbeddedResource Remove="TicketLinks\Events\UnlinkTicket\**" />
+    <EmbeddedResource Remove="Tickets\Commands\ApproveTicket\**" />
+    <EmbeddedResource Remove="Tickets\Commands\RequestApproval\**" />
+    <EmbeddedResource Remove="Tickets\Events\ApproveTicket\**" />
+    <EmbeddedResource Remove="Tickets\Events\RequestApproval\**" />
+    <None Remove="TicketLinks\Commands\LinkTicket\**" />
+    <None Remove="TicketLinks\Commands\UnlinkTicket\**" />
+    <None Remove="TicketLinks\Events\LinkTicket\**" />
+    <None Remove="TicketLinks\Events\UnlinkTicket\**" />
+    <None Remove="Tickets\Commands\ApproveTicket\**" />
+    <None Remove="Tickets\Commands\RequestApproval\**" />
+    <None Remove="Tickets\Events\ApproveTicket\**" />
+    <None Remove="Tickets\Events\RequestApproval\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Common\Specifications\" />
+    <Folder Include="TicketLinks\Commands\" />
+    <Folder Include="TicketLinks\Events\" />
+    <Folder Include="TicketLinks\Results\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Data" Version="1.5.3" />
+    <PackageReference Include="FluentValidation" Version="8.6.2" />
+    <PackageReference Include="MediatR" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DomainModels\DomainModels.csproj" />
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+  </ItemGroup>
 
 </Project>
