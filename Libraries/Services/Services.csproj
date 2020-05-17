@@ -4,6 +4,8 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>Helpdesk.Services</AssemblyName>
     <RootNamespace>Helpdesk.Services</RootNamespace>
+    <Authors>Robert Breedt</Authors>
+    <Product>Helpdesk.Core</Product>
   </PropertyGroup>
 
   <ItemGroup>
