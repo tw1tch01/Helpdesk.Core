@@ -7,10 +7,12 @@ namespace Helpdesk.Services.Common.Specifications
 {
     public class CreatedBy<T> : LinqSpecification<T> where T : class, ICreatedAudit
     {
-        private readonly int _createdBy;
+        private readonly string _createdBy;
 
-        public CreatedBy(int createdBy)
+        public CreatedBy(string createdBy)
         {
+            if (string.IsNullOrWhiteSpace(createdBy)) throw new ArgumentException("Value cannot be null, empty or whitespace.", nameof(createdBy));
+
             _createdBy = createdBy;
         }
 

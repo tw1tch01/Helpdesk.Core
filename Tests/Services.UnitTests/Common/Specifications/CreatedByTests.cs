@@ -1,4 +1,5 @@
-﻿using AutoFixture;
+﻿using System;
+using AutoFixture;
 using Helpdesk.Domain.Common;
 using Helpdesk.Services.Common.Specifications;
 using Moq;
@@ -11,12 +12,33 @@ namespace Helpdesk.Services.UnitTests.Common.Specifications
     {
         private readonly IFixture _fixture = new Fixture();
 
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        public void IsSatisfiedBy_WhenValueIsNullOrWhitespace_ThrowsArgumentException(string value)
+        {
+            Assert.Throws<ArgumentException>(() => new CreatedBy<ICreatedAudit>(value));
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        public void IsSatisfiedBy_WhenCreatedByIsNull_ReturnsFalse(string value)
+        {
+            var createdBy = _fixture.Create<string>();
+            var mockEntity = new Mock<ICreatedAudit>();
+            mockEntity.Setup(a => a.CreatedBy).Returns(value);
+            var specification = new CreatedBy<ICreatedAudit>(createdBy);
+            var satisified = specification.IsSatisfiedBy(mockEntity.Object);
+            Assert.IsFalse(satisified);
+        }
+
         [Test]
         public void IsSatisfiedBy_WhenCreatedByDoesNotMatchValue_ReturnsFalse()
         {
-            var createdBy = _fixture.Create<int>();
+            var createdBy = _fixture.Create<string>();
             var mockEntity = new Mock<ICreatedAudit>();
-            mockEntity.Setup(a => a.CreatedBy).Returns(_fixture.Create<int>());
+            mockEntity.Setup(a => a.CreatedBy).Returns(_fixture.Create<string>());
             var specification = new CreatedBy<ICreatedAudit>(createdBy);
             var satisified = specification.IsSatisfiedBy(mockEntity.Object);
             Assert.IsFalse(satisified);
@@ -25,7 +47,7 @@ namespace Helpdesk.Services.UnitTests.Common.Specifications
         [Test]
         public void IsSatisfiedBy_WhenCreatedByMatchesValue_ReturnsTrue()
         {
-            var createdBy = _fixture.Create<int>();
+            var createdBy = _fixture.Create<string>();
             var mockEntity = new Mock<ICreatedAudit>();
             mockEntity.Setup(a => a.CreatedBy).Returns(createdBy);
             var specification = new CreatedBy<ICreatedAudit>(createdBy);
