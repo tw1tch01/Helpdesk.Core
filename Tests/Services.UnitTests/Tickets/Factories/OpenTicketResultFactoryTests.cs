@@ -2,7 +2,7 @@
 using AutoFixture;
 using FluentValidation.Results;
 using Helpdesk.Domain.Entities;
-using Helpdesk.Services.Tickets.Factories;
+using Helpdesk.Services.Tickets.Factories.OpenTicket;
 using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Tickets.Results.Enums;
 using NUnit.Framework;

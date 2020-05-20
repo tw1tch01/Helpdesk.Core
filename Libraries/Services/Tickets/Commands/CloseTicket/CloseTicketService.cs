@@ -7,7 +7,6 @@ using Helpdesk.Services.Tickets.Events.CloseTicket;
 using Helpdesk.Services.Tickets.Factories.CloseTicket;
 using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Tickets.Specifications;
-using Helpdesk.Services.Users.Specifications;
 using Helpdesk.Services.Workflows;
 using Helpdesk.Services.Workflows.Enums;
 
@@ -47,9 +46,9 @@ namespace Helpdesk.Services.Tickets.Commands.CloseTicket
                     return _factory.TicketAlreadyClosed(ticket);
             }
 
-            var user = await _repository.SingleAsync(new GetUserById(userId).AsNoTracking());
+            //var user = await _repository.SingleAsync(new GetUserById(userId).AsNoTracking());
 
-            if (user == null) return _factory.UserNotFound(ticketId, userId);
+            //if (user == null) return _factory.UserNotFound(ticketId, userId);
 
             var beforeWorkflow = await _workflowService.Process(new BeforeTicketClosedWorkflow(ticketId, userId));
             if (beforeWorkflow.Result != WorkflowResult.Succeeded) return _factory.WorkflowFailed(ticketId, userId, beforeWorkflow);

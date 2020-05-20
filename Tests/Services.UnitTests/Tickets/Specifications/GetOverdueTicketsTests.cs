@@ -45,33 +45,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Specifications
         }
 
         [Test]
-        public void IsSatisfiedBy_WhenTicketIsPendingApproval_ReturnsFalse()
-        {
-            var ticket = CreateTicket(approvalRequestedOn: DateTimeOffset.UtcNow);
-            var spec = new GetOverdueTickets();
-            var result = spec.IsSatisfiedBy(ticket);
-            Assert.IsFalse(result, "Should return false when status is PendingApproval.");
-        }
-
-        [Test]
-        public void IsSatisfiedBy_WhenTicketIsApproved_ReturnsFalse()
-        {
-            var ticket = CreateTicket(approvedOn: DateTimeOffset.UtcNow);
-            var spec = new GetOverdueTickets();
-            var result = spec.IsSatisfiedBy(ticket);
-            Assert.IsFalse(result, "Should return false when status is Approved.");
-        }
-
-        [Test]
-        public void IsSatisfiedBy_WhenTicketIsPendingFeedback_ReturnsFalse()
-        {
-            var ticket = CreateTicket(feedbackRequestedOn: DateTimeOffset.UtcNow);
-            var spec = new GetOverdueTickets();
-            var result = spec.IsSatisfiedBy(ticket);
-            Assert.IsFalse(result, "Should return false when status is PendingFeedback.");
-        }
-
-        [Test]
         public void IsSatisfiedBy_WhenTicketIsInProgress_ReturnsFalse()
         {
             var ticket = CreateTicket(startedOn: DateTimeOffset.UtcNow);
@@ -94,10 +67,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Specifications
             DateTimeOffset? startedOn = null,
             DateTimeOffset? pausedOn = null,
             DateTimeOffset? resolvedOn = null,
-            DateTimeOffset? closedOn = null,
-            DateTimeOffset? approvalRequestedOn = null,
-            DateTimeOffset? approvedOn = null,
-            DateTimeOffset? feedbackRequestedOn = null)
+            DateTimeOffset? closedOn = null)
         {
             return new Ticket()
             {
@@ -105,10 +75,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Specifications
                 StartedOn = startedOn,
                 PausedOn = pausedOn,
                 ResolvedOn = resolvedOn,
-                ClosedOn = closedOn,
-                ApprovalRequestedOn = approvalRequestedOn,
-                ApprovedOn = approvedOn,
-                FeedbackRequestedOn = feedbackRequestedOn
+                ClosedOn = closedOn
             };
         }
     }

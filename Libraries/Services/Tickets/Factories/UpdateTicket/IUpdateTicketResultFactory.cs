@@ -15,6 +15,6 @@ namespace Helpdesk.Services.Tickets.Factories.UpdateTicket
 
         UpdateTicketResult ValidationFailure(int ticketId, IList<ValidationFailure> errors);
 
-        UpdateTicketResult WorkflowFailed(int ticketId, IWorkflowProcess beforeWorkflow);
+        UpdateTicketResult WorkflowFailed(int ticketId, IWorkflowProcess workflow);
     }
 }

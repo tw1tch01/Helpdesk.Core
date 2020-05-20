@@ -7,10 +7,12 @@ namespace Helpdesk.Services.Common.Specifications
 {
     public class ModifiedBy<T> : LinqSpecification<T> where T : class, IModifiedAudit
     {
-        private readonly int _modifiedBy;
+        private readonly string _modifiedBy;
 
-        public ModifiedBy(int modifiedBy)
+        public ModifiedBy(string modifiedBy)
         {
+            if (string.IsNullOrWhiteSpace(modifiedBy)) throw new ArgumentException("Value cannot be null, empty or whitespace.", nameof(modifiedBy));
+
             _modifiedBy = modifiedBy;
         }
 

@@ -9,7 +9,6 @@ using Helpdesk.Services.Tickets.Commands.CloseTicket;
 using Helpdesk.Services.Tickets.Events.CloseTicket;
 using Helpdesk.Services.Tickets.Factories.CloseTicket;
 using Helpdesk.Services.Tickets.Specifications;
-using Helpdesk.Services.Users.Specifications;
 using Helpdesk.Services.Workflows;
 using Helpdesk.Services.Workflows.Enums;
 using Moq;
@@ -91,20 +90,20 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             mockFactory.Verify(v => v.TicketAlreadyClosed(mockTicket.Object), Times.Once, "Should return the factory's TicketAlreadyClosed method.");
         }
 
-        [Test]
-        public async Task Close_VerifyThatSingleAsyncForGetUserByIdIsCalled()
-        {
-            var userId = _fixture.Create<int>();
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+        //[Test]
+        //public async Task Close_VerifyThatSingleAsyncForGetUserByIdIsCalled()
+        //{
+        //    var userId = _fixture.Create<int>();
+        //    var mockContext = new Mock<IContextRepository<ITicketContext>>();
 
-            mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
+        //    mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
 
-            var service = CreateService(mockContext: mockContext);
+        //    var service = CreateService(mockContext: mockContext);
 
-            await service.Close(It.IsAny<int>(), userId);
+        //    await service.Close(It.IsAny<int>(), userId);
 
-            mockContext.Verify(v => v.SingleAsync(It.Is<GetUserById>(t => t._userId == userId)), Times.Once, "Should call the context's SingleAsync method exactly once for GetTicketById.");
-        }
+        //    mockContext.Verify(v => v.SingleAsync(It.Is<GetUserById>(t => t._userId == userId)), Times.Once, "Should call the context's SingleAsync method exactly once for GetTicketById.");
+        //}
 
         [Test]
         public async Task Close_WhenUserRecordIsNull_VerifyFactoryUserNotFoundIsReturned()
@@ -134,7 +133,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             var mockWorkflowService = new Mock<IWorkflowService>();
 
             mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(mockTicket.Object);
-            mockContext.Setup(s => s.SingleAsync(It.IsAny<GetUserById>())).ReturnsAsync(new User());
+            //mockContext.Setup(s => s.SingleAsync(It.IsAny<GetUserById>())).ReturnsAsync(new User());
             mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketClosedWorkflow>())).ReturnsAsync(new BeforeTicketClosedWorkflow(ticketId, userId));
 
             var service = CreateService(
@@ -159,7 +158,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
 
             mockBeforeTicketClosedWorkflow.SetupGet(s => s.Result).Returns(WorkflowResult.Failed);
             mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(mockTicket.Object);
-            mockContext.Setup(s => s.SingleAsync(It.IsAny<GetUserById>())).ReturnsAsync(new User());
+            //mockContext.Setup(s => s.SingleAsync(It.IsAny<GetUserById>())).ReturnsAsync(new User());
             mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketClosedWorkflow>())).ReturnsAsync(mockBeforeTicketClosedWorkflow.Object);
 
             var service = CreateService(
@@ -181,7 +180,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             var mockWorkflowService = new Mock<IWorkflowService>();
 
             mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(mockTicket.Object);
-            mockContext.Setup(s => s.SingleAsync(It.IsAny<GetUserById>())).ReturnsAsync(new User());
+            //mockContext.Setup(s => s.SingleAsync(It.IsAny<GetUserById>())).ReturnsAsync(new User());
             mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketClosedWorkflow>())).ReturnsAsync(new BeforeTicketClosedWorkflow(It.IsAny<int>(), It.IsAny<int>()));
 
             var service = CreateService(
@@ -200,7 +199,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             var mockWorkflowService = new Mock<IWorkflowService>();
 
             mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
-            mockContext.Setup(s => s.SingleAsync(It.IsAny<GetUserById>())).ReturnsAsync(new User());
+            //mockContext.Setup(s => s.SingleAsync(It.IsAny<GetUserById>())).ReturnsAsync(new User());
             mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketClosedWorkflow>())).ReturnsAsync(new BeforeTicketClosedWorkflow(It.IsAny<int>(), It.IsAny<int>()));
 
             var service = CreateService(
@@ -221,9 +220,8 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             var mockWorkflowService = new Mock<IWorkflowService>();
 
             var ticket = new Ticket();
-            var user = new User();
             mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(ticket);
-            mockContext.Setup(s => s.SingleAsync(It.IsAny<GetUserById>())).ReturnsAsync(user);
+            //mockContext.Setup(s => s.SingleAsync(It.IsAny<GetUserById>())).ReturnsAsync(new User());
             mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketClosedWorkflow>())).ReturnsAsync(new BeforeTicketClosedWorkflow(It.IsAny<int>(), It.IsAny<int>()));
 
             var service = CreateService(
@@ -245,9 +243,8 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             var mockWorkflowService = new Mock<IWorkflowService>();
 
             var ticket = new Ticket();
-            var user = new User();
             mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(ticket);
-            mockContext.Setup(s => s.SingleAsync(It.IsAny<GetUserById>())).ReturnsAsync(user);
+            //mockContext.Setup(s => s.SingleAsync(It.IsAny<GetUserById>())).ReturnsAsync(new User());
             mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketClosedWorkflow>())).ReturnsAsync(new BeforeTicketClosedWorkflow(It.IsAny<int>(), It.IsAny<int>()));
 
             var service = CreateService(
@@ -268,9 +265,8 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             var mockFactory = new Mock<ICloseTicketResultFactory>();
 
             var ticket = new Ticket();
-            var user = new User();
             mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(ticket);
-            mockContext.Setup(s => s.SingleAsync(It.IsAny<GetUserById>())).ReturnsAsync(user);
+            //mockContext.Setup(s => s.SingleAsync(It.IsAny<GetUserById>())).ReturnsAsync(new User());
             mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketClosedWorkflow>())).ReturnsAsync(new BeforeTicketClosedWorkflow(It.IsAny<int>(), It.IsAny<int>()));
 
             var service = CreateService(

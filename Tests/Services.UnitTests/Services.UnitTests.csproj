@@ -11,6 +11,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Projects\**" />
+    <EmbeddedResource Remove="Projects\**" />
+    <None Remove="Projects\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Tickets\Specifications\GetApprovedTicketsTests.cs" />
+    <Compile Remove="Tickets\Specifications\GetPendingApprovalTicketsTests.cs" />
+    <Compile Remove="Tickets\Specifications\GetPendingFeedbackTicketsTests.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoFixture" Version="4.11.0" />
     <PackageReference Include="Moq" Version="4.14.1" />
     <PackageReference Include="nunit" Version="3.12.0" />

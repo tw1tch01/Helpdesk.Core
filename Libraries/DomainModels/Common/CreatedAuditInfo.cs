@@ -7,7 +7,7 @@ namespace Helpdesk.DomainModels.Common
 {
     public class CreatedAuditInfo : IMaps<ICreatedAudit>
     {
-        public int By { get; set; }
+        public string By { get; set; }
         public DateTimeOffset On { get; set; }
         public string Process { get; set; }
 
