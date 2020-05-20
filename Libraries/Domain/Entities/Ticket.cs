@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Helpdesk.Domain.Common;
 using Helpdesk.Domain.Enums;
 
@@ -9,8 +8,8 @@ namespace Helpdesk.Domain.Entities
     {
         public Ticket()
         {
-            AssignedUsers = new HashSet<UserTicket>();
-            LinkedTickets = new HashSet<TicketLink>();
+            //AssignedUsers = new HashSet<UserTicket>();
+            //LinkedTickets = new HashSet<TicketLink>();
         }
 
         public int TicketId { get; set; }
@@ -25,24 +24,26 @@ namespace Helpdesk.Domain.Entities
         public int? ResolvedBy { get; set; }
         public DateTimeOffset? ClosedOn { get; set; }
         public int? ClosedBy { get; set; }
-        public DateTimeOffset? ApprovalRequestedOn { get; set; }
-        public int? ApprovalUserId { get; set; }
-        public DateTimeOffset? ApprovedOn { get; set; }
-        public int? ApprovedBy { get; set; }
-        public DateTimeOffset? FeedbackRequestedOn { get; set; }
+
+        //public DateTimeOffset? ApprovalRequestedOn { get; set; }
+        //public int? ApprovalUserId { get; set; }
+        //public DateTimeOffset? ApprovedOn { get; set; }
+        //public int? ApprovedBy { get; set; }
+        //public DateTimeOffset? FeedbackRequestedOn { get; set; }
         public int ClientId { get; set; }
+
         public int? ProjectId { get; set; }
 
         #region Navigational Properties
 
-        public virtual ICollection<UserTicket> AssignedUsers { get; private set; }
-        public virtual ICollection<TicketLink> LinkedTickets { get; private set; }
-        public virtual User ResolvedByUser { get; set; }
-        public virtual User ClosedByUser { get; set; }
-        public virtual User ApprovalUser { get; set; }
-        public virtual User ApprovedByUser { get; set; }
-        public virtual Client Client { get; set; }
-        public virtual Project Project { get; set; }
+        //public virtual ICollection<UserTicket> AssignedUsers { get; private set; }
+        //public virtual ICollection<TicketLink> LinkedTickets { get; private set; }
+        //public virtual User ResolvedByUser { get; set; }
+        //public virtual User ClosedByUser { get; set; }
+        //public virtual User ApprovalUser { get; set; }
+        //public virtual User ApprovedByUser { get; set; }
+        //public virtual Client Client { get; set; }
+        //public virtual Project Project { get; set; }
 
         #endregion Navigational Properties
 
@@ -54,11 +55,11 @@ namespace Helpdesk.Domain.Entities
 
             if (ClosedOn.HasValue) return TicketStatus.Closed;
 
-            if (ApprovedOn.HasValue) return TicketStatus.Approved;
+            //if (ApprovedOn.HasValue) return TicketStatus.Approved;
 
-            if (ApprovalRequestedOn.HasValue) return TicketStatus.PendingApproval;
+            //if (ApprovalRequestedOn.HasValue) return TicketStatus.PendingApproval;
 
-            if (FeedbackRequestedOn.HasValue) return TicketStatus.PendingFeedback;
+            //if (FeedbackRequestedOn.HasValue) return TicketStatus.PendingFeedback;
 
             if (PausedOn.HasValue) return TicketStatus.OnHold;
 
@@ -100,11 +101,11 @@ namespace Helpdesk.Domain.Entities
             ClosedBy = null;
             StartedOn = null;
             PausedOn = null;
-            ApprovalRequestedOn = null;
-            ApprovalUserId = null;
-            ApprovedOn = null;
-            ApprovedBy = null;
-            FeedbackRequestedOn = null;
+            //ApprovalRequestedOn = null;
+            //ApprovalUserId = null;
+            //ApprovedOn = null;
+            //ApprovedBy = null;
+            //FeedbackRequestedOn = null;
         }
 
         #endregion Public Methods

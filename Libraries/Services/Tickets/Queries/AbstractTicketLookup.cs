@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Data.Specifications;
+using FluentValidation.Validators;
 using Helpdesk.Domain.Entities;
 using Helpdesk.Domain.Enums;
 using Helpdesk.DomainModels.Tickets;
@@ -89,18 +90,6 @@ namespace Helpdesk.Services.Tickets.Queries
                     AndSpecification(new GetClosedTickets());
                     break;
 
-                case TicketStatus.PendingApproval:
-                    AndSpecification(new GetPendingApprovalTickets());
-                    break;
-
-                case TicketStatus.Approved:
-                    AndSpecification(new GetApprovedTickets());
-                    break;
-
-                case TicketStatus.PendingFeedback:
-                    AndSpecification(new GetPendingFeedbackTickets());
-                    break;
-
                 case TicketStatus.InProgress:
                     AndSpecification(new GetInProgressTickets());
                     break;
@@ -108,6 +97,9 @@ namespace Helpdesk.Services.Tickets.Queries
                 case TicketStatus.OnHold:
                     AndSpecification(new GetOnHoldTickets());
                     break;
+
+                default:
+                    throw new NotImplementedException(status.ToString());
             }
         }
 

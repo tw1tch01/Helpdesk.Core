@@ -11,9 +11,6 @@ namespace Helpdesk.Services.Tickets.Specifications
         {
             return ticket => !ticket.ResolvedOn.HasValue
                           && !ticket.ClosedOn.HasValue
-                          && !ticket.ApprovedOn.HasValue
-                          && !ticket.ApprovalRequestedOn.HasValue
-                          && !ticket.FeedbackRequestedOn.HasValue
                           && ticket.PausedOn.HasValue;
         }
     }

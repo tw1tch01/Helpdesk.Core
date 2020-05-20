@@ -6,40 +6,41 @@
     <RootNamespace>Helpdesk.Services</RootNamespace>
     <Authors>Robert Breedt</Authors>
     <Product>Helpdesk.Core</Product>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="TicketLinks\Commands\LinkTicket\**" />
-    <Compile Remove="TicketLinks\Commands\UnlinkTicket\**" />
-    <Compile Remove="TicketLinks\Events\LinkTicket\**" />
-    <Compile Remove="TicketLinks\Events\UnlinkTicket\**" />
+    <Compile Remove="Clients\**" />
+    <Compile Remove="Projects\**" />
+    <Compile Remove="TicketLinks\**" />
     <Compile Remove="Tickets\Commands\ApproveTicket\**" />
     <Compile Remove="Tickets\Commands\RequestApproval\**" />
     <Compile Remove="Tickets\Events\ApproveTicket\**" />
     <Compile Remove="Tickets\Events\RequestApproval\**" />
-    <EmbeddedResource Remove="TicketLinks\Commands\LinkTicket\**" />
-    <EmbeddedResource Remove="TicketLinks\Commands\UnlinkTicket\**" />
-    <EmbeddedResource Remove="TicketLinks\Events\LinkTicket\**" />
-    <EmbeddedResource Remove="TicketLinks\Events\UnlinkTicket\**" />
+    <Compile Remove="Users\**" />
+    <Compile Remove="UserTickets\**" />
+    <EmbeddedResource Remove="Clients\**" />
+    <EmbeddedResource Remove="Projects\**" />
+    <EmbeddedResource Remove="TicketLinks\**" />
     <EmbeddedResource Remove="Tickets\Commands\ApproveTicket\**" />
     <EmbeddedResource Remove="Tickets\Commands\RequestApproval\**" />
     <EmbeddedResource Remove="Tickets\Events\ApproveTicket\**" />
     <EmbeddedResource Remove="Tickets\Events\RequestApproval\**" />
-    <None Remove="TicketLinks\Commands\LinkTicket\**" />
-    <None Remove="TicketLinks\Commands\UnlinkTicket\**" />
-    <None Remove="TicketLinks\Events\LinkTicket\**" />
-    <None Remove="TicketLinks\Events\UnlinkTicket\**" />
+    <EmbeddedResource Remove="Users\**" />
+    <EmbeddedResource Remove="UserTickets\**" />
+    <None Remove="Clients\**" />
+    <None Remove="Projects\**" />
+    <None Remove="TicketLinks\**" />
     <None Remove="Tickets\Commands\ApproveTicket\**" />
     <None Remove="Tickets\Commands\RequestApproval\**" />
     <None Remove="Tickets\Events\ApproveTicket\**" />
     <None Remove="Tickets\Events\RequestApproval\**" />
+    <None Remove="Users\**" />
+    <None Remove="UserTickets\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Common\Specifications\" />
-    <Folder Include="TicketLinks\Commands\" />
-    <Folder Include="TicketLinks\Events\" />
-    <Folder Include="TicketLinks\Results\" />
   </ItemGroup>
 
   <ItemGroup>

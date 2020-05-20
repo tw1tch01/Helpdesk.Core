@@ -5,10 +5,8 @@ using Data.Repositories;
 using FluentValidation;
 using Helpdesk.Domain.Entities;
 using Helpdesk.DomainModels.Tickets;
-using Helpdesk.Services.Clients.Specifications;
 using Helpdesk.Services.Common;
 using Helpdesk.Services.Notifications;
-using Helpdesk.Services.Projects.Specifications;
 using Helpdesk.Services.Tickets.Events.OpenTicket;
 using Helpdesk.Services.Tickets.Factories.OpenTicket;
 using Helpdesk.Services.Tickets.Results;
@@ -49,17 +47,17 @@ namespace Helpdesk.Services.Tickets.Commands.OpenTicket
 
             if (!validationResult.IsValid) return _factory.ValidationFailure(validationResult.Errors);
 
-            var client = await _repository.SingleAsync(new GetClientById(newTicket.ClientId).AsNoTracking());
+            //var client = await _repository.SingleAsync(new GetClientById(newTicket.ClientId).AsNoTracking());
 
-            if (client == null) return _factory.ClientNotFound(newTicket.ClientId);
+            //if (client == null) return _factory.ClientNotFound(newTicket.ClientId);
 
             if (newTicket.ProjectId.HasValue)
             {
-                var project = await _repository.SingleAsync(new GetProjectById(newTicket.ProjectId.Value).AsNoTracking());
+                //var project = await _repository.SingleAsync(new GetProjectById(newTicket.ProjectId.Value).AsNoTracking());
 
-                if (project == null) return _factory.ProjectNotFound(newTicket.ProjectId.Value);
+                //if (project == null) return _factory.ProjectNotFound(newTicket.ProjectId.Value);
 
-                if (client.OrganizationId != project.OrganizationId) return _factory.ProjectInaccessible(client.ClientId, project.ProjectId);
+                //if (client.OrganizationId != project.OrganizationId) return _factory.ProjectInaccessible(client.ClientId, project.ProjectId);
             }
 
             var ticket = _mapper.Map<Ticket>(newTicket);

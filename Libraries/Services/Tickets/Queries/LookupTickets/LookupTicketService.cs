@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Data.Common;
@@ -8,9 +7,7 @@ using Data.Specifications;
 using Helpdesk.Domain.Entities;
 using Helpdesk.DomainModels.Tickets;
 using Helpdesk.Services.Common;
-using Helpdesk.Services.TicketLinks.Specifications;
 using Helpdesk.Services.Tickets.Specifications;
-using Helpdesk.Services.UserTickets.Specifications;
 
 namespace Helpdesk.Services.Tickets.Queries.LookupTickets
 {
@@ -36,7 +33,7 @@ namespace Helpdesk.Services.Tickets.Queries.LookupTickets
 
             var tickets = await _repository.ListAsync(_specification);
 
-            if (tickets.Any()) await ExecuteSubQueries(tickets.Select(t => t.TicketId).ToList());
+            //if (tickets.Any()) await ExecuteSubQueries(tickets.Select(t => t.TicketId).ToList());
 
             var details = _mapper.Map<IList<TicketLookup>>(tickets);
 
@@ -51,7 +48,7 @@ namespace Helpdesk.Services.Tickets.Queries.LookupTickets
 
             var pagedCollection = await _repository.PagedListAsync(page, pageSize, _specification, ticket => ticket.TicketId);
 
-            if (pagedCollection.Items.Any()) await ExecuteSubQueries(pagedCollection.Items.Select(t => t.TicketId).ToList());
+            //if (pagedCollection.Items.Any()) await ExecuteSubQueries(pagedCollection.Items.Select(t => t.TicketId).ToList());
 
             var details = _mapper.Map<ICollection<TicketLookup>>(pagedCollection.Items);
 
@@ -76,16 +73,7 @@ namespace Helpdesk.Services.Tickets.Queries.LookupTickets
 
         private static LinqSpecification<Ticket> GetDefaultSpecification()
         {
-            return new GetAllTickets()
-                .Include(t => t.Client)
-                .Include(t => t.Client.Organization)
-                .Include(t => t.Project);
-        }
-
-        private async Task ExecuteSubQueries(IList<int> ticketIds)
-        {
-            await _repository.ListAsync(new GetUserTicketsByTicketIds(ticketIds));
-            await _repository.ListAsync(new GetLinkedTicketsByTicketIds(ticketIds));
+            return new GetAllTickets();
         }
     }
 }

@@ -38,118 +38,6 @@ namespace Helpdesk.Domain.UnitTests.Entities
             Assert.AreEqual(TicketStatus.Closed, status, $"Should return {TicketStatus.Closed} when {nameof(Ticket.ClosedOn)} has value.");
         }
 
-        [Test]
-        public void GetStatus_WhenApprovedOnHasValue_ReturnsApproved()
-        {
-            var ticket = new Ticket
-            {
-                ResolvedOn = null,
-                ClosedOn = null,
-                ApprovedOn = DateTime.UtcNow
-            };
-
-            var status = ticket.GetStatus();
-            Assert.AreEqual(TicketStatus.Approved, status, $"Should return {TicketStatus.Approved} when {nameof(Ticket.ApprovedOn)} has value.");
-        }
-
-        [Test]
-        public void GetStatus_WhenApprovalRequestOnHasValue_ReturnsPendingApproval()
-        {
-            var ticket = new Ticket
-            {
-                ResolvedOn = null,
-                ClosedOn = null,
-                ApprovedOn = null,
-                ApprovalRequestedOn = DateTime.UtcNow
-            };
-
-            var status = ticket.GetStatus();
-            Assert.AreEqual(TicketStatus.PendingApproval, status, $"Should return {TicketStatus.PendingApproval} when {nameof(Ticket.ApprovalRequestedOn)} has value.");
-        }
-
-        [Test]
-        public void GetStatus_WhenFeedbackRequestOnHasValue_ReturnsPendingFeedback()
-        {
-            var ticket = new Ticket
-            {
-                ResolvedOn = null,
-                ClosedOn = null,
-                ApprovedOn = null,
-                ApprovalRequestedOn = null,
-                FeedbackRequestedOn = DateTime.UtcNow
-            };
-
-            var status = ticket.GetStatus();
-            Assert.AreEqual(TicketStatus.PendingFeedback, status, $"Should return {TicketStatus.PendingFeedback} when {nameof(Ticket.FeedbackRequestedOn)} has value.");
-        }
-
-        [Test]
-        public void GetStatus_WhenStartedOnHasValue_ReturnsInProgress()
-        {
-            var ticket = new Ticket
-            {
-                ResolvedOn = null,
-                ClosedOn = null,
-                ApprovedOn = null,
-                ApprovalRequestedOn = null,
-                FeedbackRequestedOn = DateTime.UtcNow
-            };
-
-            var status = ticket.GetStatus();
-            Assert.AreEqual(TicketStatus.PendingFeedback, status, $"Should return {TicketStatus.PendingFeedback} when {nameof(Ticket.FeedbackRequestedOn)} has value.");
-        }
-
-        [Test]
-        public void GetStatus_WhenDueDateHasIsLessThanCurrentDate_ReturnsOverdue()
-        {
-            var ticket = new Ticket
-            {
-                ResolvedOn = null,
-                ClosedOn = null,
-                ApprovedOn = null,
-                ApprovalRequestedOn = null,
-                FeedbackRequestedOn = null,
-                DueDate = DateTime.UtcNow.AddDays(-1)
-            };
-
-            var status = ticket.GetStatus();
-            Assert.AreEqual(TicketStatus.Overdue, status, $"Should return {TicketStatus.Overdue} when {nameof(Ticket.DueDate)} is less than current date.");
-        }
-
-        [Test]
-        public void GetStatus_WhenDueDateIsInFuture_ReturnsOpen()
-        {
-            var ticket = new Ticket
-            {
-                ResolvedOn = null,
-                ClosedOn = null,
-                ApprovedOn = null,
-                ApprovalRequestedOn = null,
-                FeedbackRequestedOn = null,
-                DueDate = DateTime.UtcNow.AddDays(1)
-            };
-
-            var status = ticket.GetStatus();
-            Assert.AreEqual(TicketStatus.Open, status, $"Should return {TicketStatus.Open} when {nameof(Ticket.DueDate)} is in the future.");
-        }
-
-        [Test]
-        public void GetStatus_WhenDueDateIsNull_ReturnsOpen()
-        {
-            var ticket = new Ticket
-            {
-                ResolvedOn = null,
-                ClosedOn = null,
-                ApprovedOn = null,
-                ApprovalRequestedOn = null,
-                FeedbackRequestedOn = null,
-                DueDate = null
-            };
-
-            var status = ticket.GetStatus();
-            Assert.AreEqual(TicketStatus.Open, status, $"Should return {TicketStatus.Open} when {nameof(Ticket.DueDate)} is null.");
-        }
-
         #endregion GetStatus
 
         #region Start
@@ -247,12 +135,7 @@ namespace Helpdesk.Domain.UnitTests.Entities
                 ClosedOn = _fixture.Create<DateTimeOffset>(),
                 ClosedBy = _fixture.Create<int>(),
                 StartedOn = _fixture.Create<DateTimeOffset>(),
-                PausedOn = _fixture.Create<DateTimeOffset>(),
-                ApprovalRequestedOn = _fixture.Create<DateTimeOffset>(),
-                ApprovalUserId = _fixture.Create<int>(),
-                ApprovedOn = _fixture.Create<DateTimeOffset>(),
-                ApprovedBy = _fixture.Create<int>(),
-                FeedbackRequestedOn = _fixture.Create<DateTimeOffset>()
+                PausedOn = _fixture.Create<DateTimeOffset>()
             };
             ticket.Reopen();
 
@@ -264,11 +147,6 @@ namespace Helpdesk.Domain.UnitTests.Entities
                 Assert.IsNull(ticket.ClosedBy, $"Should set {nameof(Ticket.ClosedBy)} to null.");
                 Assert.IsNull(ticket.StartedOn, $"Should set {nameof(Ticket.StartedOn)} to null.");
                 Assert.IsNull(ticket.PausedOn, $"Should set {nameof(Ticket.PausedOn)} to null.");
-                Assert.IsNull(ticket.ApprovalRequestedOn, $"Should set {nameof(Ticket.ApprovalRequestedOn)} to null.");
-                Assert.IsNull(ticket.ApprovalUserId, $"Should set {nameof(Ticket.ApprovalUserId)} to null.");
-                Assert.IsNull(ticket.ApprovedOn, $"Should set {nameof(Ticket.ApprovedOn)} to null.");
-                Assert.IsNull(ticket.ApprovedBy, $"Should set {nameof(Ticket.ApprovedBy)} to null.");
-                Assert.IsNull(ticket.FeedbackRequestedOn, $"Should set {nameof(Ticket.FeedbackRequestedOn)} to null.");
             });
         }
 
