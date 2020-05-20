@@ -2,11 +2,10 @@
 using FluentValidation.Results;
 using Helpdesk.Domain.Entities;
 using Helpdesk.Services.Extensions;
-using Helpdesk.Services.Tickets.Factories.OpenTicket;
 using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Tickets.Results.Enums;
 
-namespace Helpdesk.Services.Tickets.Factories
+namespace Helpdesk.Services.Tickets.Factories.OpenTicket
 {
     public class OpenTicketResultFactory : IOpenTicketResultFactory
     {

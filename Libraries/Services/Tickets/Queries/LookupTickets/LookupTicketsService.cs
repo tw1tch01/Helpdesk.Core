@@ -11,14 +11,14 @@ using Helpdesk.Services.Tickets.Specifications;
 
 namespace Helpdesk.Services.Tickets.Queries.LookupTickets
 {
-    public class LookupTicketService : AbstractTicketsLookup, ILookupTicketsService
+    public class LookupTicketsService : AbstractTicketsLookup, ILookupTicketsService
     {
         private const int _defaultPageSize = 25;
         private const int _maximumPageSize = 50;
         private readonly IContextRepository<ITicketContext> _repository;
         private readonly IMapper _mapper;
 
-        public LookupTicketService(
+        public LookupTicketsService(
             IContextRepository<ITicketContext> repository,
             IMapper mapper)
             : base(GetDefaultSpecification())
