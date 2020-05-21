@@ -56,7 +56,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         {
             var newTicket = new NewTicket
             {
-                ClientId = _fixture.Create<int>()
+                ClientGuid = _fixture.Create<int>()
             };
             var mockContext = new Mock<IContextRepository<ITicketContext>>();
             var mockValidator = new Mock<IValidator<NewTicket>>();
@@ -79,7 +79,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         {
             var newTicket = new NewTicket
             {
-                ClientId = _fixture.Create<int>()
+                ClientGuid = _fixture.Create<int>()
             };
             var mockContext = new Mock<IContextRepository<ITicketContext>>();
             var mockFactory = new Mock<IOpenTicketResultFactory>();
@@ -97,7 +97,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
 
             var result = await service.Open(newTicket);
 
-            mockFactory.Verify(v => v.ClientNotFound(newTicket.ClientId), Times.Once, "Should return the factory's ClientNotFound method.");
+            mockFactory.Verify(v => v.ClientNotFound(newTicket.ClientGuid), Times.Once, "Should return the factory's ClientNotFound method.");
         }
 
         [Test]
@@ -183,7 +183,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         {
             var newTicket = new NewTicket
             {
-                ClientId = _fixture.Create<int>(),
+                ClientGuid = _fixture.Create<int>(),
                 ProjectId = _fixture.Create<int>()
             };
             //var client = new Client { OrganizationId = _fixture.Create<int>() };

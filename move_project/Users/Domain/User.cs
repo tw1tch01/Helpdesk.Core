@@ -7,17 +7,20 @@ namespace Helpdesk.Domain.Entities
     {
         public User()
         {
-            Tickets = new HashSet<UserTicket>();
+            Tickets = new HashSet<Ticket>();
+            AssignedTickets = new HashSet<UserTicket>();
         }
 
         public int UserId { get; set; }
+        public string Username { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Email { get; set; }
 
         #region Navigational Properties
 
-        public virtual ICollection<UserTicket> Tickets { get; private set; }
+        public virtual ICollection<Ticket> Tickets { get; set; }
+
+        public virtual ICollection<UserTicket> AssignedTickets { get; private set; }
 
         #endregion Navigational Properties
 

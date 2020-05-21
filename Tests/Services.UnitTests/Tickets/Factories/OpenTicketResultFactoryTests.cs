@@ -45,7 +45,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
             {
                 TicketId = _fixture.Create<int>(),
                 ClientId = _fixture.Create<int>(),
-                ProjectId = _fixture.Create<int?>()
             };
             var result = _factory.Opened(ticket);
 
@@ -55,7 +54,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
                 Assert.AreEqual(ResultMessages.Opened, result.Message, $"Should return the {nameof(ResultMessages.Opened)} message.");
                 Assert.AreEqual(ticket.TicketId, result.TicketId, "Should equal ticketId passed through.");
                 Assert.AreEqual(ticket.ClientId, result.ClientId, "Should equal clientId passed through.");
-                Assert.AreEqual(ticket.ProjectId, result.ProjectId, "Should equal projectId passed through.");
                 Assert.IsNull(result.ValidationFailures, "Should be null.");
             });
         }

@@ -5,20 +5,10 @@ namespace Helpdesk.Domain.Entities
 {
     public class UserTicket : ICreatedAudit
     {
-        public UserTicket()
-        {
-        }
-
-        public UserTicket(int ticketId, int userId)
-        {
-            TicketId = ticketId;
-            UserId = userId;
-        }
-
         public int UserId { get; set; }
         public int TicketId { get; set; }
 
-        public int CreatedBy { get; set; }
+        public string CreatedBy { get; set; }
         public DateTimeOffset CreatedOn { get; set; }
         public string CreatedProcess { get; set; }
 

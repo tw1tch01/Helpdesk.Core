@@ -24,7 +24,7 @@ namespace Helpdesk.Services.Tickets.Commands.UpdateTicket
         private readonly INotificationService _notificationService;
         private readonly IWorkflowService _workflowService;
         private readonly IUpdateTicketResultFactory _factory;
-        private readonly IValidator<UpdateTicketDto> _validator;
+        private readonly IValidator<EditTicket> _validator;
 
         public UpdateTicketService(
             IContextRepository<ITicketContext> repository,
@@ -32,7 +32,7 @@ namespace Helpdesk.Services.Tickets.Commands.UpdateTicket
             INotificationService notificationService,
             IWorkflowService workflowService,
             IUpdateTicketResultFactory factory,
-            IValidator<UpdateTicketDto> validator)
+            IValidator<EditTicket> validator)
         {
             _repository = repository;
             _mapper = mapper;
@@ -42,7 +42,7 @@ namespace Helpdesk.Services.Tickets.Commands.UpdateTicket
             _validator = validator;
         }
 
-        public virtual async Task<UpdateTicketResult> Update(int ticketId, UpdateTicketDto updateTicket)
+        public virtual async Task<UpdateTicketResult> Update(int ticketId, EditTicket updateTicket)
         {
             if (updateTicket == null) throw new ArgumentNullException(nameof(updateTicket));
 
@@ -71,9 +71,9 @@ namespace Helpdesk.Services.Tickets.Commands.UpdateTicket
 
         #region Private Methods
 
-        private ValidationResult ValidateDto(DomainModels.Tickets.UpdateTicketDto ticketDto)
+        private ValidationResult ValidateDto(DomainModels.Tickets.EditTicket ticketDto)
         {
-            var validator = new UpdateTicketValidator();
+            var validator = new EditTicketValidator();
             var result = validator.Validate(ticketDto);
             return result;
         }

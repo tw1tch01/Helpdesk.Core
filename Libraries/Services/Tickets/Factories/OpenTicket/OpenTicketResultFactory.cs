@@ -22,8 +22,7 @@ namespace Helpdesk.Services.Tickets.Factories.OpenTicket
             return new OpenTicketResult(TicketOpenResult.Opened)
             {
                 TicketId = ticket.TicketId,
-                ClientId = ticket.ClientId,
-                ProjectId = ticket.ProjectId
+                ClientId = ticket.ClientId
             };
         }
 

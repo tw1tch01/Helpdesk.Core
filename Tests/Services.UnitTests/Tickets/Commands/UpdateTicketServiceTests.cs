@@ -39,9 +39,9 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Open_WhenUpdateTicketDtoIsNotValid_VerifyFactoryValidationFailureIsReturned()
         {
             var ticketId = _fixture.Create<int>();
-            var updateTicket = new UpdateTicketDto();
+            var updateTicket = new EditTicket();
             var mockFactory = new Mock<IUpdateTicketResultFactory>();
-            var mockValidator = new Mock<IValidator<UpdateTicketDto>>();
+            var mockValidator = new Mock<IValidator<EditTicket>>();
             var mockValidationResult = new Mock<ValidationResult>();
 
             mockValidator.Setup(m => m.ValidateAsync(updateTicket, It.IsAny<CancellationToken>())).ReturnsAsync(mockValidationResult.Object);
@@ -60,9 +60,9 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Open_VerifySingleAsyncForGetTicketByIdIsCalled()
         {
             var ticketId = _fixture.Create<int>();
-            var updateTicket = new UpdateTicketDto();
+            var updateTicket = new EditTicket();
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
-            var mockValidator = new Mock<IValidator<UpdateTicketDto>>();
+            var mockValidator = new Mock<IValidator<EditTicket>>();
             var mockValidationResult = new Mock<ValidationResult>();
 
             mockValidator.Setup(m => m.ValidateAsync(updateTicket, It.IsAny<CancellationToken>())).ReturnsAsync(mockValidationResult.Object);
@@ -81,10 +81,10 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Open_WhenClientRecordIsNull_VerifyFactoryTicketNotFoundIsReturned()
         {
             var ticketId = _fixture.Create<int>();
-            var updateTicket = new UpdateTicketDto();
+            var updateTicket = new EditTicket();
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
             var mockFactory = new Mock<IUpdateTicketResultFactory>();
-            var mockValidator = new Mock<IValidator<UpdateTicketDto>>();
+            var mockValidator = new Mock<IValidator<EditTicket>>();
             var mockValidationResult = new Mock<ValidationResult>();
 
             mockValidator.Setup(m => m.ValidateAsync(updateTicket, It.IsAny<CancellationToken>())).ReturnsAsync(mockValidationResult.Object);
@@ -105,12 +105,12 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Update_BeforeTicketIsUpdated_VerifyBeforeTicketUpdatedWorkflowIsProcessed()
         {
             var ticketId = _fixture.Create<int>();
-            var updateTicket = new UpdateTicketDto();
+            var updateTicket = new EditTicket();
             var ticket = new Ticket();
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
             var mockFactory = new Mock<IUpdateTicketResultFactory>();
-            var mockValidator = new Mock<IValidator<UpdateTicketDto>>();
+            var mockValidator = new Mock<IValidator<EditTicket>>();
             var mockValidationResult = new Mock<ValidationResult>();
 
             mockValidator.Setup(m => m.ValidateAsync(updateTicket, It.IsAny<CancellationToken>())).ReturnsAsync(mockValidationResult.Object);
@@ -133,12 +133,12 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Start_WhenBeforeTicketUpdatedWorkflowIsNotSuccessful_VerifyFactoryWorkflowFailedIsCalled()
         {
             var ticketId = _fixture.Create<int>();
-            var updateTicket = new UpdateTicketDto();
+            var updateTicket = new EditTicket();
             var mockWorkflow = new Mock<BeforeTicketUpdatedWorkflow>(It.IsAny<int>(), It.IsAny<IReadOnlyDictionary<string, ValueChange>>());
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
             var mockFactory = new Mock<IUpdateTicketResultFactory>();
-            var mockValidator = new Mock<IValidator<UpdateTicketDto>>();
+            var mockValidator = new Mock<IValidator<EditTicket>>();
             var mockValidationResult = new Mock<ValidationResult>();
 
             mockWorkflow.Setup(a => a.Result).Returns(WorkflowResult.Failed);
@@ -162,12 +162,12 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Open_VerifySaveAsyncIsCalled()
         {
             var ticketId = _fixture.Create<int>();
-            var updateTicket = new UpdateTicketDto();
+            var updateTicket = new EditTicket();
             var ticket = new Ticket();
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
             var mockMapper = new Mock<IMapper>();
-            var mockValidator = new Mock<IValidator<UpdateTicketDto>>();
+            var mockValidator = new Mock<IValidator<EditTicket>>();
             var mockValidationResult = new Mock<ValidationResult>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
@@ -192,13 +192,13 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Open_WhenTicketIsAdded_VerifyFactoryUpdatedIsReturned()
         {
             var ticketId = _fixture.Create<int>();
-            var updateTicket = new UpdateTicketDto();
+            var updateTicket = new EditTicket();
             var ticket = new Ticket();
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
             var mockMapper = new Mock<IMapper>();
             var mockFactory = new Mock<IUpdateTicketResultFactory>();
-            var mockValidator = new Mock<IValidator<UpdateTicketDto>>();
+            var mockValidator = new Mock<IValidator<EditTicket>>();
             var mockValidationResult = new Mock<ValidationResult>();
 
             mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketUpdatedWorkflow>())).ReturnsAsync(new BeforeTicketUpdatedWorkflow(ticketId, It.IsAny<IReadOnlyDictionary<string, ValueChange>>()));
@@ -223,12 +223,12 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Open_WhenTicketIsAdded_VerifyTickeUpdatedWorkflowIsProcessed()
         {
             var ticketId = _fixture.Create<int>();
-            var updateTicket = new UpdateTicketDto();
+            var updateTicket = new EditTicket();
             var ticket = new Ticket();
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
             var mockMapper = new Mock<IMapper>();
-            var mockValidator = new Mock<IValidator<UpdateTicketDto>>();
+            var mockValidator = new Mock<IValidator<EditTicket>>();
             var mockValidationResult = new Mock<ValidationResult>();
 
             mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketUpdatedWorkflow>())).ReturnsAsync(new BeforeTicketUpdatedWorkflow(ticketId, It.IsAny<IReadOnlyDictionary<string, ValueChange>>()));
@@ -252,13 +252,13 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Open_WhenTicketIsAdded_VerifyTickeUpdatedNotificationIsQueued()
         {
             var ticketId = _fixture.Create<int>();
-            var updateTicket = new UpdateTicketDto();
+            var updateTicket = new EditTicket();
             var ticket = new Ticket();
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
             var mockNotificationService = new Mock<INotificationService>();
             var mockMapper = new Mock<IMapper>();
-            var mockValidator = new Mock<IValidator<UpdateTicketDto>>();
+            var mockValidator = new Mock<IValidator<EditTicket>>();
             var mockValidationResult = new Mock<ValidationResult>();
 
             mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketUpdatedWorkflow>())).ReturnsAsync(new BeforeTicketUpdatedWorkflow(ticketId, It.IsAny<IReadOnlyDictionary<string, ValueChange>>()));
@@ -285,14 +285,14 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             Mock<INotificationService> mockNotificationService = null,
             Mock<IWorkflowService> mockWorkflowService = null,
             Mock<IUpdateTicketResultFactory> mockFactory = null,
-            Mock<IValidator<UpdateTicketDto>> mockValidator = null)
+            Mock<IValidator<EditTicket>> mockValidator = null)
         {
             mockRepository ??= new Mock<IContextRepository<ITicketContext>>();
             mockMapper ??= new Mock<IMapper>();
             mockNotificationService ??= new Mock<INotificationService>();
             mockWorkflowService ??= new Mock<IWorkflowService>();
             mockFactory ??= new Mock<IUpdateTicketResultFactory>();
-            mockValidator ??= new Mock<IValidator<UpdateTicketDto>>();
+            mockValidator ??= new Mock<IValidator<EditTicket>>();
 
             return new UpdateTicketService(
                 mockRepository.Object,

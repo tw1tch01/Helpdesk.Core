@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Data.Repositories;
 using Helpdesk.Services.Common;
 using Helpdesk.Services.Notifications;
@@ -30,23 +31,23 @@ namespace Helpdesk.Services.Tickets.Commands.DeleteTicket
             _factory = factory;
         }
 
-        public virtual async Task<DeleteTicketResult> Delete(int ticketId, int userId)
+        public virtual async Task<DeleteTicketResult> Delete(int ticketId, Guid userGuid)
         {
             var ticket = await _repository.SingleAsync(new GetTicketById(ticketId));
 
             if (ticket == null) return _factory.TicketNotFound(ticketId);
 
-            var beforeWorkflow = await _workflowService.Process(new BeforeTicketDeletedWorkflow(ticketId, userId));
-            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return _factory.WorkflowFailed(ticketId, userId, beforeWorkflow);
+            var beforeWorkflow = await _workflowService.Process(new BeforeTicketDeletedWorkflow(ticketId, userGuid));
+            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return _factory.WorkflowFailed(ticketId, userGuid, beforeWorkflow);
 
             _repository.Remove(ticket);
             await _repository.SaveAsync();
 
-            var workflow = _workflowService.Process(new TicketDeletedWorkflow(ticketId, userId));
-            var notification = _notificationService.Queue(new TicketDeletedNotification(ticketId, userId));
+            var workflow = _workflowService.Process(new TicketDeletedWorkflow(ticketId, userGuid));
+            var notification = _notificationService.Queue(new TicketDeletedNotification(ticketId, userGuid));
             await Task.WhenAll(workflow, notification);
 
-            return _factory.Deleted(ticketId, userId);
+            return _factory.Deleted(ticketId, userGuid);
         }
     }
 }

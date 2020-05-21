@@ -32,7 +32,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
                 Assert.AreEqual(TicketDeleteResult.Deleted, result.Result, $"Should be {TicketDeleteResult.Deleted}.");
                 Assert.AreEqual(ResultMessages.Deleted, result.Message, $"Should return the {nameof(ResultMessages.Deleted)} message.");
                 Assert.AreEqual(ticketId, result.TicketId, "Should equal the passed through ticketId.");
-                Assert.AreEqual(userId, result.UserId, "Should equal the passed through userId.");
+                Assert.AreEqual(userId, result.UserGuid, "Should equal the passed through userId.");
                 Assert.IsNull(result.Workflow, "Should be null.");
             });
         }
@@ -49,7 +49,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
                 Assert.AreEqual(TicketDeleteResult.TicketNotFound, result.Result, $"Should be {TicketDeleteResult.TicketNotFound}.");
                 Assert.AreEqual(ResultMessages.TicketNotFound, result.Message, $"Should return the {nameof(ResultMessages.TicketNotFound)} message.");
                 Assert.AreEqual(ticketId, result.TicketId, "Should equal the passed through ticketId.");
-                Assert.IsNull(result.UserId, "Should be null.");
+                Assert.IsNull(result.UserGuid, "Should be null.");
                 Assert.IsNull(result.Workflow, "Should be null.");
             });
         }
@@ -68,7 +68,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
                 Assert.AreEqual(TicketDeleteResult.WorkflowFailed, result.Result, $"Should be {TicketDeleteResult.WorkflowFailed}.");
                 Assert.AreEqual(ResultMessages.WorkflowFailed, result.Message, $"Should return the {nameof(ResultMessages.WorkflowFailed)} message.");
                 Assert.AreEqual(ticketId, result.TicketId, "Should equal the passed through ticketId.");
-                Assert.AreEqual(userId, result.UserId, "Should equal the passed through userId.");
+                Assert.AreEqual(userId, result.UserGuid, "Should equal the passed through userId.");
                 Assert.AreEqual(beforeTicketDeletedWorkflow, result.Workflow, "Should equal the passed through workflow.");
             });
         }

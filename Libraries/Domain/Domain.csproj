@@ -17,9 +17,7 @@
     <Compile Remove="Entities\Role.cs" />
     <Compile Remove="Entities\RolePrivilege.cs" />
     <Compile Remove="Entities\TicketLink.cs" />
-    <Compile Remove="Entities\User.cs" />
     <Compile Remove="Entities\UserRole.cs" />
-    <Compile Remove="Entities\UserTicket.cs" />
   </ItemGroup>
 
 </Project>

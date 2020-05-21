@@ -1,4 +1,5 @@
-﻿using Helpdesk.Domain.Entities;
+﻿using System;
+using Helpdesk.Domain.Entities;
 using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Tickets.Results.Enums;
 using Helpdesk.Services.Workflows;
@@ -46,7 +47,7 @@ namespace Helpdesk.Services.Tickets.Factories.CloseTicket
             };
         }
 
-        public CloseTicketResult UserNotFound(int ticketId, int userId)
+        public CloseTicketResult UserNotFound(int ticketId, Guid userId)
         {
             return new CloseTicketResult(TicketCloseResult.UserNotFound)
             {
@@ -55,7 +56,7 @@ namespace Helpdesk.Services.Tickets.Factories.CloseTicket
             };
         }
 
-        public CloseTicketResult WorkflowFailed(int ticketId, int userId, IWorkflowProcess workflow)
+        public CloseTicketResult WorkflowFailed(int ticketId, Guid userId, IWorkflowProcess workflow)
         {
             return new CloseTicketResult(TicketCloseResult.WorkflowFailed)
             {

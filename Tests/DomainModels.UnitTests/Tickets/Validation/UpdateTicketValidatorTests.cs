@@ -9,12 +9,12 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets.Validation
     public class UpdateTicketValidatorTests
     {
         private readonly IFixture _fixture = new Fixture();
-        private UpdateTicketValidator _validator;
+        private EditTicketValidator _validator;
 
         [SetUp]
         public void Setup()
         {
-            _validator = new UpdateTicketValidator();
+            _validator = new EditTicketValidator();
         }
 
         [TestCase(null)]

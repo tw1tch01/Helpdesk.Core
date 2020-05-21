@@ -27,7 +27,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
             var ticket = new Ticket
             {
                 TicketId = _fixture.Create<int>(),
-                ClosedBy = _fixture.Create<int>(),
+                ClosedBy = _fixture.Create<Guid>(),
                 ClosedOn = _fixture.Create<DateTimeOffset>()
             };
             var result = _factory.Closed(ticket);
@@ -52,7 +52,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
             var ticket = new Ticket
             {
                 TicketId = _fixture.Create<int>(),
-                ClosedBy = _fixture.Create<int>(),
+                ClosedBy = _fixture.Create<Guid>(),
                 ClosedOn = _fixture.Create<DateTimeOffset>()
             };
             var result = _factory.TicketAlreadyClosed(ticket);
@@ -77,7 +77,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
             var ticket = new Ticket
             {
                 TicketId = _fixture.Create<int>(),
-                ResolvedBy = _fixture.Create<int>(),
+                ResolvedBy = _fixture.Create<Guid>(),
                 ResolvedOn = _fixture.Create<DateTimeOffset>()
             };
             var result = _factory.TicketAlreadyResolved(ticket);
@@ -120,15 +120,15 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
         public void UserNotFound()
         {
             var ticketId = _fixture.Create<int>();
-            var userId = _fixture.Create<int>();
-            var result = _factory.UserNotFound(ticketId, userId);
+            var userGuid = _fixture.Create<Guid>();
+            var result = _factory.UserNotFound(ticketId, userGuid);
 
             Assert.Multiple(() =>
             {
                 Assert.AreEqual(TicketCloseResult.UserNotFound, result.Result, $"Should be {TicketCloseResult.UserNotFound}.");
                 Assert.AreEqual(ResultMessages.UserNotFound, result.Message, $"Should return the {nameof(ResultMessages.UserNotFound)} message.");
                 Assert.AreEqual(ticketId, result.TicketId, "Should equal passed in ticketId.");
-                Assert.AreEqual(userId, result.UserId, "Should equal passed in userId.");
+                Assert.AreEqual(userGuid, result.UserId, "Should equal passed in userGuid.");
                 Assert.IsNull(result.ResolvedBy, "Should be null.");
                 Assert.IsNull(result.ResolvedOn, "Should be null.");
                 Assert.IsNull(result.ClosedBy, "Should be null.");
@@ -141,16 +141,16 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
         public void WorkflowFailed()
         {
             var ticketId = _fixture.Create<int>();
-            var userId = _fixture.Create<int>();
-            var beforeTicketClosedWorkflow = new BeforeTicketClosedWorkflow(ticketId, userId);
-            var result = _factory.WorkflowFailed(ticketId, userId, beforeTicketClosedWorkflow);
+            var userGuid = _fixture.Create<Guid>();
+            var beforeTicketClosedWorkflow = new BeforeTicketClosedWorkflow(ticketId, userGuid);
+            var result = _factory.WorkflowFailed(ticketId, userGuid, beforeTicketClosedWorkflow);
 
             Assert.Multiple(() =>
             {
                 Assert.AreEqual(TicketCloseResult.WorkflowFailed, result.Result, $"Should be {TicketCloseResult.WorkflowFailed}.");
                 Assert.AreEqual(ResultMessages.WorkflowFailed, result.Message, $"Should return the {nameof(ResultMessages.WorkflowFailed)} message.");
                 Assert.AreEqual(ticketId, result.TicketId, "Should equal passed in ticketId.");
-                Assert.AreEqual(userId, result.UserId, "Should equal passed in userId.");
+                Assert.AreEqual(userGuid, result.UserId, "Should equal passed in userGuid.");
                 Assert.IsNull(result.ResolvedBy, "Should be null.");
                 Assert.IsNull(result.ResolvedOn, "Should be null.");
                 Assert.IsNull(result.ClosedBy, "Should be null.");

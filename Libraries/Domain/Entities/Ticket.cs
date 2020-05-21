@@ -8,44 +8,26 @@ namespace Helpdesk.Domain.Entities
     {
         public Ticket()
         {
-            //AssignedUsers = new HashSet<UserTicket>();
             //LinkedTickets = new HashSet<TicketLink>();
         }
 
         public int TicketId { get; set; }
+        public Guid UserGuid { get; set; }
+        public Guid? AssignedUserGuid { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTimeOffset? DueDate { get; set; }
         public Severity Severity { get; set; }
         public Priority Priority { get; set; }
+        public DateTimeOffset? AssignedOn { get; set; }
         public DateTimeOffset? StartedOn { get; set; }
+        public Guid? StartedBy { get; set; }
         public DateTimeOffset? PausedOn { get; set; }
+        public Guid? PausedBy { get; set; }
         public DateTimeOffset? ResolvedOn { get; set; }
-        public int? ResolvedBy { get; set; }
+        public Guid? ResolvedBy { get; set; }
         public DateTimeOffset? ClosedOn { get; set; }
-        public int? ClosedBy { get; set; }
-
-        //public DateTimeOffset? ApprovalRequestedOn { get; set; }
-        //public int? ApprovalUserId { get; set; }
-        //public DateTimeOffset? ApprovedOn { get; set; }
-        //public int? ApprovedBy { get; set; }
-        //public DateTimeOffset? FeedbackRequestedOn { get; set; }
-        public int ClientId { get; set; }
-
-        public int? ProjectId { get; set; }
-
-        #region Navigational Properties
-
-        //public virtual ICollection<UserTicket> AssignedUsers { get; private set; }
-        //public virtual ICollection<TicketLink> LinkedTickets { get; private set; }
-        //public virtual User ResolvedByUser { get; set; }
-        //public virtual User ClosedByUser { get; set; }
-        //public virtual User ApprovalUser { get; set; }
-        //public virtual User ApprovedByUser { get; set; }
-        //public virtual Client Client { get; set; }
-        //public virtual Project Project { get; set; }
-
-        #endregion Navigational Properties
+        public Guid? ClosedBy { get; set; }
 
         #region Public Methods
 
@@ -54,12 +36,6 @@ namespace Helpdesk.Domain.Entities
             if (ResolvedOn.HasValue) return TicketStatus.Resolved;
 
             if (ClosedOn.HasValue) return TicketStatus.Closed;
-
-            //if (ApprovedOn.HasValue) return TicketStatus.Approved;
-
-            //if (ApprovalRequestedOn.HasValue) return TicketStatus.PendingApproval;
-
-            //if (FeedbackRequestedOn.HasValue) return TicketStatus.PendingFeedback;
 
             if (PausedOn.HasValue) return TicketStatus.OnHold;
 
@@ -70,27 +46,33 @@ namespace Helpdesk.Domain.Entities
             return TicketStatus.Open;
         }
 
-        public virtual void Start()
+        public virtual void Start(Guid userGuid)
         {
-            if (!StartedOn.HasValue) StartedOn = DateTimeOffset.UtcNow;
+            if (!StartedOn.HasValue)
+            {
+                StartedBy = userGuid;
+                StartedOn = DateTimeOffset.UtcNow;
+            }
             PausedOn = null;
+            PausedBy = null;
         }
 
-        public virtual void Pause()
+        public virtual void Pause(Guid userGuid)
         {
             PausedOn = DateTimeOffset.UtcNow;
+            PausedBy = userGuid;
         }
 
-        public virtual void Resolve(int userId)
+        public virtual void Resolve(Guid userGuid)
         {
-            ResolvedBy = userId;
             ResolvedOn = DateTimeOffset.UtcNow;
+            ResolvedBy = userGuid;
         }
 
-        public virtual void Close(int userId)
+        public virtual void Close(Guid userGuid)
         {
-            ClosedBy = userId;
             ClosedOn = DateTimeOffset.UtcNow;
+            ClosedBy = userGuid;
         }
 
         public virtual void Reopen()
@@ -99,13 +81,16 @@ namespace Helpdesk.Domain.Entities
             ResolvedBy = null;
             ClosedOn = null;
             ClosedBy = null;
-            StartedOn = null;
             PausedOn = null;
-            //ApprovalRequestedOn = null;
-            //ApprovalUserId = null;
-            //ApprovedOn = null;
-            //ApprovedBy = null;
-            //FeedbackRequestedOn = null;
+            PausedBy = null;
+            StartedOn = null;
+            StartedBy = null;
+        }
+
+        public virtual void AssignUser(Guid userGuid)
+        {
+            AssignedUserGuid = userGuid;
+            AssignedOn = DateTimeOffset.UtcNow;
         }
 
         #endregion Public Methods

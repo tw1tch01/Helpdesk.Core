@@ -2,9 +2,9 @@
 
 namespace Helpdesk.DomainModels.Tickets.Validation
 {
-    public class UpdateTicketValidator : AbstractValidator<UpdateTicketDto>
+    public class EditTicketValidator : AbstractValidator<EditTicket>
     {
-        public UpdateTicketValidator()
+        public EditTicketValidator()
         {
             RuleFor(r => r.Name).MaximumLength(64);
         }

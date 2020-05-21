@@ -58,14 +58,14 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets.Validation
         [TestCase(-1)]
         public void ShouldHaveErrorWhenClientIdIsNotGreaterThan0(int clientId)
         {
-            _validator.ShouldHaveValidationErrorFor(t => t.ClientId, clientId);
+            _validator.ShouldHaveValidationErrorFor(t => t.ClientGuid, clientId);
         }
 
         [Test]
         public void ShouldNotHaveErrorWhenClientIdIsGreaterThan0()
         {
             var clientId = _fixture.Create<int>();
-            _validator.ShouldNotHaveValidationErrorFor(t => t.ClientId, clientId);
+            _validator.ShouldNotHaveValidationErrorFor(t => t.ClientGuid, clientId);
         }
 
         [Test]

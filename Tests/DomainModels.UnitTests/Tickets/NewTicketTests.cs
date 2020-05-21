@@ -43,7 +43,7 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets
                 Severity = _fixture.Create<Severity>(),
                 Priority = _fixture.Create<Priority>(),
                 DueDate = _fixture.Create<DateTimeOffset?>(),
-                ClientId = _fixture.Create<int>(),
+                ClientGuid = _fixture.Create<int>(),
                 ProjectId = _fixture.Create<int?>()
             };
             var ticket = _mapper.Map<Ticket>(newTicket);
@@ -57,8 +57,7 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets
                 Assert.AreEqual(newTicket.Severity, ticket.Severity);
                 Assert.AreEqual(newTicket.Priority, ticket.Priority);
                 Assert.AreEqual(newTicket.DueDate, ticket.DueDate);
-                Assert.AreEqual(newTicket.ClientId, ticket.ClientId);
-                Assert.AreEqual(newTicket.ProjectId, ticket.ProjectId);
+                Assert.AreEqual(newTicket.ClientGuid, ticket.ClientId);
             });
         }
     }
