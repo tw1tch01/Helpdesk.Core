@@ -37,7 +37,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
                 Assert.AreEqual(TicketCloseResult.Closed, result.Result, $"Should be {TicketCloseResult.Closed}.");
                 Assert.AreEqual(ResultMessages.Closed, result.Message, $"Should return the {nameof(ResultMessages.Closed)} message.");
                 Assert.AreEqual(ticket.TicketId, result.TicketId, "Should equal ticket's TicketId.");
-                Assert.AreEqual(ticket.ClosedBy, result.UserId, "Should equal the ClosedBy value.");
+                Assert.AreEqual(ticket.ClosedBy, result.UserGuid, "Should equal the ClosedBy value.");
                 Assert.IsNull(result.ResolvedBy, "Should be null.");
                 Assert.IsNull(result.ResolvedOn, "Should be null.");
                 Assert.AreEqual(ticket.ClosedBy, result.ClosedBy, "Should equal the ticket's ClosedBy.");
@@ -62,7 +62,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
                 Assert.AreEqual(TicketCloseResult.TicketAlreadyClosed, result.Result, $"Should be {TicketCloseResult.TicketAlreadyClosed}.");
                 Assert.AreEqual(ResultMessages.TicketAlreadyClosed, result.Message, $"Should return the {nameof(ResultMessages.TicketAlreadyClosed)} message.");
                 Assert.AreEqual(ticket.TicketId, result.TicketId, "Should equal ticket's TicketId.");
-                Assert.IsNull(result.UserId, "Should be null.");
+                Assert.IsNull(result.UserGuid, "Should be null.");
                 Assert.IsNull(result.ResolvedBy, "Should be null.");
                 Assert.IsNull(result.ResolvedOn, "Should be null.");
                 Assert.AreEqual(ticket.ClosedBy, result.ClosedBy, "Should equal the ticket's ClosedBy.");
@@ -87,7 +87,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
                 Assert.AreEqual(TicketCloseResult.TicketAlreadyResolved, result.Result, $"Should be {TicketCloseResult.TicketAlreadyResolved}.");
                 Assert.AreEqual(ResultMessages.TicketAlreadyResolved, result.Message, $"Should return the {nameof(ResultMessages.TicketAlreadyClosed)} message.");
                 Assert.AreEqual(ticket.TicketId, result.TicketId, "Should equal ticket's TicketId.");
-                Assert.IsNull(result.UserId, "Should be null.");
+                Assert.IsNull(result.UserGuid, "Should be null.");
                 Assert.AreEqual(result.ResolvedBy, result.ResolvedBy, "Should equal ticket's ResolvedBy.");
                 Assert.AreEqual(result.ResolvedOn, result.ResolvedOn, "Should equal ticket's ResvoledOn.");
                 Assert.IsNull(result.ClosedBy, "Should be null.");
@@ -107,28 +107,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
                 Assert.AreEqual(TicketCloseResult.TicketNotFound, result.Result, $"Should be {TicketCloseResult.TicketNotFound}.");
                 Assert.AreEqual(ResultMessages.TicketNotFound, result.Message, $"Should return the {nameof(ResultMessages.TicketNotFound)} message.");
                 Assert.AreEqual(ticketId, result.TicketId, "Should equal passed in ticketId.");
-                Assert.IsNull(result.UserId, "Should be null.");
-                Assert.IsNull(result.ResolvedBy, "Should be null.");
-                Assert.IsNull(result.ResolvedOn, "Should be null.");
-                Assert.IsNull(result.ClosedBy, "Should be null.");
-                Assert.IsNull(result.ClosedOn, "Should be null.");
-                Assert.IsNull(result.Workflow, "Should be null.");
-            });
-        }
-
-        [Test]
-        public void UserNotFound()
-        {
-            var ticketId = _fixture.Create<int>();
-            var userGuid = _fixture.Create<Guid>();
-            var result = _factory.UserNotFound(ticketId, userGuid);
-
-            Assert.Multiple(() =>
-            {
-                Assert.AreEqual(TicketCloseResult.UserNotFound, result.Result, $"Should be {TicketCloseResult.UserNotFound}.");
-                Assert.AreEqual(ResultMessages.UserNotFound, result.Message, $"Should return the {nameof(ResultMessages.UserNotFound)} message.");
-                Assert.AreEqual(ticketId, result.TicketId, "Should equal passed in ticketId.");
-                Assert.AreEqual(userGuid, result.UserId, "Should equal passed in userGuid.");
+                Assert.IsNull(result.UserGuid, "Should be null.");
                 Assert.IsNull(result.ResolvedBy, "Should be null.");
                 Assert.IsNull(result.ResolvedOn, "Should be null.");
                 Assert.IsNull(result.ClosedBy, "Should be null.");
@@ -150,7 +129,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
                 Assert.AreEqual(TicketCloseResult.WorkflowFailed, result.Result, $"Should be {TicketCloseResult.WorkflowFailed}.");
                 Assert.AreEqual(ResultMessages.WorkflowFailed, result.Message, $"Should return the {nameof(ResultMessages.WorkflowFailed)} message.");
                 Assert.AreEqual(ticketId, result.TicketId, "Should equal passed in ticketId.");
-                Assert.AreEqual(userGuid, result.UserId, "Should equal passed in userGuid.");
+                Assert.AreEqual(userGuid, result.UserGuid, "Should equal passed in userGuid.");
                 Assert.IsNull(result.ResolvedBy, "Should be null.");
                 Assert.IsNull(result.ResolvedOn, "Should be null.");
                 Assert.IsNull(result.ClosedBy, "Should be null.");

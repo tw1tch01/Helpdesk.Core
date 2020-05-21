@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoFixture;
 using AutoMapper;
 using Data.Repositories;
 using FluentValidation;
@@ -22,8 +21,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
     [TestFixture]
     public class OpenTicketServiceTests
     {
-        private readonly IFixture _fixture = new Fixture();
-
         [Test]
         public void Open_WhenNewTicketIsNull_ThrowsArgumentNullException()
         {
@@ -52,163 +49,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         [Test]
-        public async Task Open_ForCleint_VerifySingleAsyncForGetClientByIdIsCalled()
-        {
-            var newTicket = new NewTicket
-            {
-                ClientGuid = _fixture.Create<int>()
-            };
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
-            var mockValidator = new Mock<IValidator<NewTicket>>();
-            var mockValidationResult = new Mock<ValidationResult>();
-
-            mockValidator.Setup(m => m.ValidateAsync(newTicket, It.IsAny<CancellationToken>())).ReturnsAsync(mockValidationResult.Object);
-            mockValidationResult.Setup(m => m.IsValid).Returns(true);
-
-            var service = CreateService(
-                mockContext: mockContext,
-                mockValidator: mockValidator);
-
-            var result = await service.Open(newTicket);
-
-            //mockContext.Verify(v => v.SingleAsync(It.Is<GetClientById>(c => c._clientId == newTicket.ClientId)), Times.Once, "Should call the context's SingleAsync method exactly once for GetClientById.");
-        }
-
-        [Test]
-        public async Task Open_WhenClientRecordIsNull_VerifyFactoryClientNotFoundIsReturned()
-        {
-            var newTicket = new NewTicket
-            {
-                ClientGuid = _fixture.Create<int>()
-            };
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
-            var mockFactory = new Mock<IOpenTicketResultFactory>();
-            var mockValidator = new Mock<IValidator<NewTicket>>();
-            var mockValidationResult = new Mock<ValidationResult>();
-
-            mockValidator.Setup(m => m.ValidateAsync(newTicket, It.IsAny<CancellationToken>())).ReturnsAsync(mockValidationResult.Object);
-            mockValidationResult.Setup(m => m.IsValid).Returns(true);
-            //mockContext.Setup(m => m.SingleAsync(It.IsAny<GetClientById>())).ReturnsAsync((Client)null);
-
-            var service = CreateService(
-                mockContext: mockContext,
-                mockFactory: mockFactory,
-                mockValidator: mockValidator);
-
-            var result = await service.Open(newTicket);
-
-            mockFactory.Verify(v => v.ClientNotFound(newTicket.ClientGuid), Times.Once, "Should return the factory's ClientNotFound method.");
-        }
-
-        [Test]
-        public async Task Open_WhenProjectIdIsNotSpecified_VerifySingleAsyncForGetProjectByIdIsNotCalled()
-        {
-            var newTicket = new NewTicket
-            {
-                ProjectId = null
-            };
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
-            var mockMapper = new Mock<IMapper>();
-            var mockValidator = new Mock<IValidator<NewTicket>>();
-            var mockValidationResult = new Mock<ValidationResult>();
-
-            mockValidator.Setup(m => m.ValidateAsync(newTicket, It.IsAny<CancellationToken>())).ReturnsAsync(mockValidationResult.Object);
-            mockValidationResult.Setup(m => m.IsValid).Returns(true);
-            //mockContext.Setup(m => m.SingleAsync(It.IsAny<GetClientById>())).ReturnsAsync(new Client());
-            mockMapper.Setup(m => m.Map<Ticket>(newTicket)).Returns(new Ticket());
-
-            var service = CreateService(
-                mockContext: mockContext,
-                mockMapper: mockMapper,
-                mockValidator: mockValidator);
-
-            var result = await service.Open(newTicket);
-
-            //mockContext.Verify(v => v.SingleAsync(It.IsAny<GetProjectById>()), Times.Never, "Should not call the context's SingleAsync method exactly once for GetProjectById.");
-        }
-
-        [Test]
-        public async Task Open_WhenProjectIdIsSpecified_VerifySingleAsyncForGetProjectByIdIsCalled()
-        {
-            var newTicket = new NewTicket
-            {
-                ProjectId = _fixture.Create<int>()
-            };
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
-            var mockValidator = new Mock<IValidator<NewTicket>>();
-            var mockValidationResult = new Mock<ValidationResult>();
-
-            mockValidator.Setup(m => m.ValidateAsync(newTicket, It.IsAny<CancellationToken>())).ReturnsAsync(mockValidationResult.Object);
-            mockValidationResult.Setup(m => m.IsValid).Returns(true);
-            //mockContext.Setup(m => m.SingleAsync(It.IsAny<GetClientById>())).ReturnsAsync(new Client());
-
-            var service = CreateService(
-                mockContext: mockContext,
-                mockValidator: mockValidator);
-
-            var result = await service.Open(newTicket);
-
-            //mockContext.Verify(v => v.SingleAsync(It.Is<GetProjectById>(p => p._projectId == newTicket.ProjectId.Value)), Times.Once, "Should call the context's SingleAsync method exactly once for GetProjectById.");
-        }
-
-        [Test]
-        public async Task Open_WhenProjectRecordIsNull_VerifyFactoryProjectNotFoundIsReturned()
-        {
-            var newTicket = new NewTicket
-            {
-                ProjectId = _fixture.Create<int>()
-            };
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
-            var mockFactory = new Mock<IOpenTicketResultFactory>();
-            var mockValidator = new Mock<IValidator<NewTicket>>();
-            var mockValidationResult = new Mock<ValidationResult>();
-
-            mockValidator.Setup(m => m.ValidateAsync(newTicket, It.IsAny<CancellationToken>())).ReturnsAsync(mockValidationResult.Object);
-            mockValidationResult.Setup(m => m.IsValid).Returns(true);
-            //mockContext.Setup(m => m.SingleAsync(It.IsAny<GetClientById>())).ReturnsAsync(new Client());
-            //mockContext.Setup(m => m.SingleAsync(It.Is<GetProjectById>(p => p._projectId == newTicket.ProjectId.Value))).ReturnsAsync((Project)null);
-
-            var service = CreateService(
-                mockContext: mockContext,
-                mockFactory: mockFactory,
-                mockValidator: mockValidator);
-
-            var result = await service.Open(newTicket);
-
-            mockFactory.Verify(v => v.ProjectNotFound(newTicket.ProjectId.Value), Times.Once, "Should return the factory's ProjectNotFound method.");
-        }
-
-        [Test]
-        public async Task Open_WhenClientAndProjectIdsDoNotMatch_VerifyFactoryProjectInaccessibleIsReturned()
-        {
-            var newTicket = new NewTicket
-            {
-                ClientGuid = _fixture.Create<int>(),
-                ProjectId = _fixture.Create<int>()
-            };
-            //var client = new Client { OrganizationId = _fixture.Create<int>() };
-            //var project = new Project { OrganizationId = _fixture.Create<int>() };
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
-            var mockFactory = new Mock<IOpenTicketResultFactory>();
-            var mockValidator = new Mock<IValidator<NewTicket>>();
-            var mockValidationResult = new Mock<ValidationResult>();
-
-            mockValidator.Setup(m => m.ValidateAsync(newTicket, It.IsAny<CancellationToken>())).ReturnsAsync(mockValidationResult.Object);
-            mockValidationResult.Setup(m => m.IsValid).Returns(true);
-            //mockContext.Setup(m => m.SingleAsync(It.IsAny<GetClientById>())).ReturnsAsync(client);
-            //mockContext.Setup(m => m.SingleAsync(It.IsAny<GetProjectById>())).ReturnsAsync(project);
-
-            var service = CreateService(
-                mockContext: mockContext,
-                mockFactory: mockFactory,
-                mockValidator: mockValidator);
-
-            var result = await service.Open(newTicket);
-
-            //mockFactory.Verify(v => v.ProjectInaccessible(client.ClientId, project.ProjectId), Times.Once, "Should return the factory's ProjectInaccessible method.");
-        }
-
-        [Test]
         public async Task Open_VerifyAddAsyncIsCalled()
         {
             var newTicket = new NewTicket();
@@ -220,7 +60,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
 
             mockValidator.Setup(m => m.ValidateAsync(newTicket, It.IsAny<CancellationToken>())).ReturnsAsync(mockValidationResult.Object);
             mockValidationResult.Setup(m => m.IsValid).Returns(true);
-            //mockContext.Setup(m => m.SingleAsync(It.IsAny<GetClientById>())).ReturnsAsync(new Client());
             mockMapper.Setup(m => m.Map<Ticket>(newTicket)).Returns(ticket);
 
             var service = CreateService(

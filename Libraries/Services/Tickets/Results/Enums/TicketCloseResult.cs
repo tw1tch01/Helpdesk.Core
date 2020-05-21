@@ -6,7 +6,6 @@
         TicketNotFound,
         TicketAlreadyResolved,
         TicketAlreadyClosed,
-        UserNotFound,
         WorkflowFailed
     }
 }

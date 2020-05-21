@@ -3,9 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Data.Repositories;
 using FluentValidation;
-using FluentValidation.Results;
 using Helpdesk.DomainModels.Tickets;
-using Helpdesk.DomainModels.Tickets.Validation;
 using Helpdesk.Services.Common;
 using Helpdesk.Services.Notifications;
 using Helpdesk.Services.Tickets.Events.UpdateTicket;
@@ -42,11 +40,11 @@ namespace Helpdesk.Services.Tickets.Commands.UpdateTicket
             _validator = validator;
         }
 
-        public virtual async Task<UpdateTicketResult> Update(int ticketId, EditTicket updateTicket)
+        public virtual async Task<UpdateTicketResult> Update(int ticketId, EditTicket editTicket)
         {
-            if (updateTicket == null) throw new ArgumentNullException(nameof(updateTicket));
+            if (editTicket == null) throw new ArgumentNullException(nameof(editTicket));
 
-            var validationResult = await _validator.ValidateAsync(updateTicket);
+            var validationResult = await _validator.ValidateAsync(editTicket);
 
             if (!validationResult.IsValid) return _factory.ValidationFailure(ticketId, validationResult.Errors);
 
@@ -54,12 +52,12 @@ namespace Helpdesk.Services.Tickets.Commands.UpdateTicket
 
             if (ticket == null) return _factory.TicketNotFound(ticketId);
 
-            var changes = updateTicket.GetChanges(ticket);
+            var changes = editTicket.GetChanges(ticket);
 
             var beforeWorkflow = await _workflowService.Process(new BeforeTicketUpdatedWorkflow(ticketId, changes));
             if (beforeWorkflow.Result != WorkflowResult.Succeeded) return _factory.WorkflowFailed(ticketId, beforeWorkflow);
 
-            _mapper.Map(updateTicket, ticket);
+            _mapper.Map(editTicket, ticket);
             await _repository.SaveAsync();
 
             var workflow = _workflowService.Process(new TicketUpdatedWorkflow(ticketId, changes));
@@ -68,16 +66,5 @@ namespace Helpdesk.Services.Tickets.Commands.UpdateTicket
 
             return _factory.Updated(ticket, changes);
         }
-
-        #region Private Methods
-
-        private ValidationResult ValidateDto(DomainModels.Tickets.EditTicket ticketDto)
-        {
-            var validator = new EditTicketValidator();
-            var result = validator.Validate(ticketDto);
-            return result;
-        }
-
-        #endregion Private Methods
     }
 }

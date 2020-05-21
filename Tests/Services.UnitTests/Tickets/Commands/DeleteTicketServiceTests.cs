@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AutoFixture;
 using Data.Repositories;
 using Helpdesk.Domain.Entities;
@@ -28,7 +29,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
 
             var service = CreateService(mockRepository: mockRepository);
 
-            await service.Delete(ticketId, It.IsAny<int>());
+            await service.Delete(ticketId, It.IsAny<Guid>());
 
             mockRepository.Verify(v => v.SingleAsync(It.Is<GetTicketById>(t => t._ticketId == ticketId)), Times.Once, "Should call the repository's SingleAsync exactly once for GetTicketById.");
         }
@@ -46,7 +47,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
                 mockRepository: mockRepository,
                 mockFactory: mockFactory);
 
-            await service.Delete(ticketId, It.IsAny<int>());
+            await service.Delete(ticketId, It.IsAny<Guid>());
 
             mockFactory.Verify(v => v.TicketNotFound(ticketId), Times.Once, "Should return the factory's TicketNotFound method.");
         }
@@ -55,28 +56,28 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Delete_BeforeTicketIsDeleted_VerifyBeforeTicketDeletedWorkflowIsProcessed()
         {
             var ticketId = _fixture.Create<int>();
-            var userId = _fixture.Create<int>();
+            var userGuid = _fixture.Create<Guid>();
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
-            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketDeletedWorkflow>())).ReturnsAsync(new BeforeTicketDeletedWorkflow(It.IsAny<int>(), It.IsAny<int>()));
+            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketDeletedWorkflow>())).ReturnsAsync(new BeforeTicketDeletedWorkflow(It.IsAny<int>(), It.IsAny<Guid>()));
 
             var service = CreateService(
                 mockRepository: mockRepository,
                 mockWorkflowService: mockWorkflowService);
 
-            await service.Delete(ticketId, userId);
+            await service.Delete(ticketId, userGuid);
 
-            mockWorkflowService.Verify(v => v.Process(It.Is<BeforeTicketDeletedWorkflow>(w => w.TicketId == ticketId && w.UserId == userId)), Times.Once, "Should call the workflow services's Process method for BeforeTicketDeletedWorkflow.");
+            mockWorkflowService.Verify(v => v.Process(It.Is<BeforeTicketDeletedWorkflow>(w => w.TicketId == ticketId && w.UserGuid == userGuid)), Times.Once, "Should call the workflow services's Process method for BeforeTicketDeletedWorkflow.");
         }
 
         [Test]
         public async Task Delete_WhenBeforeTicketDeletedWorkflowIsNotSuccessful_VerifyFactoryWorkflowFailedIsReturned()
         {
             var ticketId = _fixture.Create<int>();
-            var userId = _fixture.Create<int>();
-            var mockWorkflow = new Mock<BeforeTicketDeletedWorkflow>(It.IsAny<int>(), It.IsAny<int>());
+            var userGuid = _fixture.Create<Guid>();
+            var mockWorkflow = new Mock<BeforeTicketDeletedWorkflow>(It.IsAny<int>(), It.IsAny<Guid>());
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
             var mockFactory = new Mock<IDeleteTicketResultFactory>();
@@ -90,9 +91,9 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
                 mockWorkflowService: mockWorkflowService,
                 mockFactory: mockFactory);
 
-            await service.Delete(ticketId, userId);
+            await service.Delete(ticketId, userGuid);
 
-            mockFactory.Verify(v => v.WorkflowFailed(ticketId, userId, mockWorkflow.Object), Times.Once, "Should return the factory's WorkflowFailed method.");
+            mockFactory.Verify(v => v.WorkflowFailed(ticketId, userGuid, mockWorkflow.Object), Times.Once, "Should return the factory's WorkflowFailed method.");
         }
 
         [Test]
@@ -103,13 +104,13 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             var mockWorkflowService = new Mock<IWorkflowService>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(ticket);
-            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketDeletedWorkflow>())).ReturnsAsync(new BeforeTicketDeletedWorkflow(It.IsAny<int>(), It.IsAny<int>()));
+            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketDeletedWorkflow>())).ReturnsAsync(new BeforeTicketDeletedWorkflow(It.IsAny<int>(), It.IsAny<Guid>()));
 
             var service = CreateService(
                 mockRepository: mockRepository,
                 mockWorkflowService: mockWorkflowService);
 
-            await service.Delete(It.IsAny<int>(), It.IsAny<int>());
+            await service.Delete(It.IsAny<int>(), It.IsAny<Guid>());
 
             mockRepository.Verify(v => v.Remove(ticket), Times.Once, "Should call the repository's Remove method.");
         }
@@ -121,13 +122,13 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             var mockWorkflowService = new Mock<IWorkflowService>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
-            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketDeletedWorkflow>())).ReturnsAsync(new BeforeTicketDeletedWorkflow(It.IsAny<int>(), It.IsAny<int>()));
+            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketDeletedWorkflow>())).ReturnsAsync(new BeforeTicketDeletedWorkflow(It.IsAny<int>(), It.IsAny<Guid>()));
 
             var service = CreateService(
                 mockRepository: mockRepository,
                 mockWorkflowService: mockWorkflowService);
 
-            await service.Delete(It.IsAny<int>(), It.IsAny<int>());
+            await service.Delete(It.IsAny<int>(), It.IsAny<Guid>());
 
             mockRepository.Verify(v => v.SaveAsync(), Times.Once, "Should call the repository's SaveAsync method.");
         }
@@ -136,64 +137,64 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Delete_WhenTicketIsDeleted_VerifyTicketDeletedWorkflowIsProcessed()
         {
             var ticketId = _fixture.Create<int>();
-            var userId = _fixture.Create<int>();
+            var userGuid = _fixture.Create<Guid>();
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
-            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketDeletedWorkflow>())).ReturnsAsync(new BeforeTicketDeletedWorkflow(It.IsAny<int>(), It.IsAny<int>()));
+            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketDeletedWorkflow>())).ReturnsAsync(new BeforeTicketDeletedWorkflow(It.IsAny<int>(), It.IsAny<Guid>()));
 
             var service = CreateService(
                 mockRepository: mockRepository,
                 mockWorkflowService: mockWorkflowService);
 
-            await service.Delete(ticketId, userId);
+            await service.Delete(ticketId, userGuid);
 
-            mockWorkflowService.Verify(v => v.Process(It.Is<TicketDeletedWorkflow>(t => t.TicketId == ticketId && t.UserId == userId)), Times.Once, "Should call the workflow service's Process method for TicketDeletedWorkflow.");
+            mockWorkflowService.Verify(v => v.Process(It.Is<TicketDeletedWorkflow>(t => t.TicketId == ticketId && t.UserGuid == userGuid)), Times.Once, "Should call the workflow service's Process method for TicketDeletedWorkflow.");
         }
 
         [Test]
         public async Task Delete_WhenTicketIsDeleted_VerifyTicketDeletedNotificationIsQueued()
         {
             var ticketId = _fixture.Create<int>();
-            var userId = _fixture.Create<int>();
+            var userGuid = _fixture.Create<Guid>();
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
             var mockNotificationService = new Mock<INotificationService>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
-            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketDeletedWorkflow>())).ReturnsAsync(new BeforeTicketDeletedWorkflow(It.IsAny<int>(), It.IsAny<int>()));
+            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketDeletedWorkflow>())).ReturnsAsync(new BeforeTicketDeletedWorkflow(It.IsAny<int>(), It.IsAny<Guid>()));
 
             var service = CreateService(
                 mockRepository: mockRepository,
                 mockNotificationService: mockNotificationService,
                 mockWorkflowService: mockWorkflowService);
 
-            await service.Delete(ticketId, userId);
+            await service.Delete(ticketId, userGuid);
 
-            mockNotificationService.Verify(v => v.Queue(It.Is<TicketDeletedNotification>(t => t.TicketId == ticketId && t.UserId == userId)), Times.Once, "Should call the notification service's Queue method for TicketDeletedNotification.");
+            mockNotificationService.Verify(v => v.Queue(It.Is<TicketDeletedNotification>(t => t.TicketId == ticketId && t.UserGuid == userGuid)), Times.Once, "Should call the notification service's Queue method for TicketDeletedNotification.");
         }
 
         [Test]
         public async Task Delete_WhenTicketIsDeleted_VerifyFactoryDeletedIsReturned()
         {
             var ticketId = _fixture.Create<int>();
-            var userId = _fixture.Create<int>();
+            var userGuid = _fixture.Create<Guid>();
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
             var mockFactory = new Mock<IDeleteTicketResultFactory>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
-            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketDeletedWorkflow>())).ReturnsAsync(new BeforeTicketDeletedWorkflow(It.IsAny<int>(), It.IsAny<int>()));
+            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketDeletedWorkflow>())).ReturnsAsync(new BeforeTicketDeletedWorkflow(It.IsAny<int>(), It.IsAny<Guid>()));
 
             var service = CreateService(
                 mockRepository: mockRepository,
                 mockWorkflowService: mockWorkflowService,
                 mockFactory: mockFactory);
 
-            await service.Delete(ticketId, userId);
+            await service.Delete(ticketId, userGuid);
 
-            mockFactory.Verify(v => v.Deleted(ticketId, userId), Times.Once, "Should return the factoy's Deleted method.");
+            mockFactory.Verify(v => v.Deleted(ticketId, userGuid), Times.Once, "Should return the factoy's Deleted method.");
         }
 
         private DeleteTicketService CreateService(

@@ -14,15 +14,10 @@ namespace Helpdesk.Services.Tickets.Results
         }
 
         public TicketUpdateResult Result { get; }
-
         public string Message => GetMessage();
-
         public int TicketId { get; internal set; }
-
         public Dictionary<string, List<string>> ValidationFailures { get; internal set; }
-
         public IReadOnlyDictionary<string, ValueChange> PropertyChanges { get; internal set; }
-
         public IWorkflowProcess Workflow { get; internal set; }
 
         #region Methods

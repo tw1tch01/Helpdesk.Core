@@ -13,7 +13,7 @@ namespace Helpdesk.Services.Tickets.Factories.CloseTicket
             return new CloseTicketResult(TicketCloseResult.Closed)
             {
                 TicketId = ticket.TicketId,
-                UserId = ticket.ClosedBy.Value,
+                UserGuid = ticket.ClosedBy.Value,
                 ClosedBy = ticket.ClosedBy.Value,
                 ClosedOn = ticket.ClosedOn.Value
             };
@@ -47,21 +47,12 @@ namespace Helpdesk.Services.Tickets.Factories.CloseTicket
             };
         }
 
-        public CloseTicketResult UserNotFound(int ticketId, Guid userId)
-        {
-            return new CloseTicketResult(TicketCloseResult.UserNotFound)
-            {
-                TicketId = ticketId,
-                UserId = userId
-            };
-        }
-
-        public CloseTicketResult WorkflowFailed(int ticketId, Guid userId, IWorkflowProcess workflow)
+        public CloseTicketResult WorkflowFailed(int ticketId, Guid UserGuid, IWorkflowProcess workflow)
         {
             return new CloseTicketResult(TicketCloseResult.WorkflowFailed)
             {
                 TicketId = ticketId,
-                UserId = userId,
+                UserGuid = UserGuid,
                 Workflow = workflow
             };
         }

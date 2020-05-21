@@ -1,4 +1,5 @@
-﻿using Helpdesk.Domain.Entities;
+﻿using System;
+using Helpdesk.Domain.Entities;
 using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Tickets.Results.Enums;
 using Helpdesk.Services.Workflows;
@@ -14,7 +15,7 @@ namespace Helpdesk.Services.Tickets.Factories.ResolveTicket
                 TicketId = ticket.TicketId,
                 ResolvedBy = ticket.ResolvedBy.Value,
                 ResolvedOn = ticket.ResolvedOn.Value,
-                UserId = ticket.ResolvedBy.Value
+                UserGuid = ticket.ResolvedBy.Value
             };
         }
 
@@ -46,21 +47,12 @@ namespace Helpdesk.Services.Tickets.Factories.ResolveTicket
             };
         }
 
-        public ResolveTicketResult UserNotFound(int ticketId, int userId)
-        {
-            return new ResolveTicketResult(TicketResolveResult.UserNotFound)
-            {
-                TicketId = ticketId,
-                UserId = userId
-            };
-        }
-
-        public ResolveTicketResult WorkflowFailed(int ticketId, int userId, IWorkflowProcess workflow)
+        public ResolveTicketResult WorkflowFailed(int ticketId, Guid userGuid, IWorkflowProcess workflow)
         {
             return new ResolveTicketResult(TicketResolveResult.WorkflowFailed)
             {
                 TicketId = ticketId,
-                UserId = userId,
+                UserGuid = userGuid,
                 Workflow = workflow
             };
         }

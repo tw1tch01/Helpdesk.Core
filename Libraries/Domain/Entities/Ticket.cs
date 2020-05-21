@@ -93,6 +93,12 @@ namespace Helpdesk.Domain.Entities
             AssignedOn = DateTimeOffset.UtcNow;
         }
 
+        public virtual void UnassignUser()
+        {
+            AssignedUserGuid = null;
+            AssignedOn = null;
+        }
+
         #endregion Public Methods
     }
 }

@@ -1,4 +1,5 @@
-﻿using Helpdesk.Domain.Entities;
+﻿using System;
+using Helpdesk.Domain.Entities;
 using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Tickets.Results.Enums;
 using Helpdesk.Services.Workflows;
@@ -12,7 +13,9 @@ namespace Helpdesk.Services.Tickets.Factories.StartTicket
             return new StartTicketResult(TicketStartResult.Started)
             {
                 TicketId = ticket.TicketId,
-                StartedOn = ticket.StartedOn.Value
+                StartedOn = ticket.StartedOn.Value,
+                StartedBy = ticket.StartedBy.Value,
+                UserGuid = ticket.StartedBy.Value
             };
         }
 
@@ -53,12 +56,12 @@ namespace Helpdesk.Services.Tickets.Factories.StartTicket
             };
         }
 
-        public StartTicketResult WorkflowFailed(int ticketId, int userId, IWorkflowProcess workflow)
+        public StartTicketResult WorkflowFailed(int ticketId, Guid userGuid, IWorkflowProcess workflow)
         {
             return new StartTicketResult(TicketStartResult.WorkflowFailed)
             {
                 TicketId = ticketId,
-                UserId = userId,
+                UserGuid = userGuid,
                 Workflow = workflow
             };
         }

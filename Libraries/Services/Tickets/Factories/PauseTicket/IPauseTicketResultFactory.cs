@@ -1,4 +1,5 @@
-﻿using Helpdesk.Domain.Entities;
+﻿using System;
+using Helpdesk.Domain.Entities;
 using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Workflows;
 
@@ -16,6 +17,6 @@ namespace Helpdesk.Services.Tickets.Factories.PauseTicket
 
         PauseTicketResult TicketNotFound(int ticketId);
 
-        PauseTicketResult WorkflowFailed(int ticketId, int userId, IWorkflowProcess workflow);
+        PauseTicketResult WorkflowFailed(int ticketId, Guid userGuid, IWorkflowProcess workflow);
     }
 }

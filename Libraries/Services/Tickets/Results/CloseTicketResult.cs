@@ -15,7 +15,7 @@ namespace Helpdesk.Services.Tickets.Results
         public TicketCloseResult Result { get; }
         public string Message => GetMessage();
         public int TicketId { get; internal set; }
-        public Guid? UserId { get; internal set; }
+        public Guid? UserGuid { get; internal set; }
         public DateTimeOffset? ResolvedOn { get; internal set; }
         public Guid? ResolvedBy { get; internal set; }
         public DateTimeOffset? ClosedOn { get; internal set; }
@@ -30,7 +30,6 @@ namespace Helpdesk.Services.Tickets.Results
             TicketCloseResult.TicketNotFound => ResultMessages.TicketNotFound,
             TicketCloseResult.TicketAlreadyResolved => ResultMessages.TicketAlreadyResolved,
             TicketCloseResult.TicketAlreadyClosed => ResultMessages.TicketAlreadyClosed,
-            TicketCloseResult.UserNotFound => ResultMessages.UserNotFound,
             TicketCloseResult.WorkflowFailed => ResultMessages.WorkflowFailed,
             _ => Result.ToString()
         };

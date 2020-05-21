@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Data.Repositories;
 using Helpdesk.Domain.Enums;
 using Helpdesk.Services.Common;
@@ -31,7 +32,7 @@ namespace Helpdesk.Services.Tickets.Commands.ResolveTicket
             _factory = factory;
         }
 
-        public virtual async Task<ResolveTicketResult> Resolve(int ticketId, int userId)
+        public virtual async Task<ResolveTicketResult> Resolve(int ticketId, Guid userGuid)
         {
             var ticket = await _repository.SingleAsync(new GetTicketById(ticketId));
 
@@ -46,18 +47,14 @@ namespace Helpdesk.Services.Tickets.Commands.ResolveTicket
                     return _factory.TicketAlreadyClosed(ticket);
             }
 
-            //var user = await _repository.SingleAsync(new GetUserById(userId));
+            var beforeWorkflow = await _workflowService.Process(new BeforeTicketResolvedWorkflow(ticketId, userGuid));
+            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return _factory.WorkflowFailed(ticketId, userGuid, beforeWorkflow);
 
-            //if (user == null) return _factory.UserNotFound(ticketId, userId);
-
-            var beforeWorkflow = await _workflowService.Process(new BeforeTicketResolvedWorkflow(ticketId, userId));
-            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return _factory.WorkflowFailed(ticketId, userId, beforeWorkflow);
-
-            ticket.Resolve(userId);
+            ticket.Resolve(userGuid);
             await _repository.SaveAsync();
 
-            var workflow = _workflowService.Process(new TicketResolvedWorkflow(ticketId, userId));
-            var notification = _notificationService.Queue(new TicketResolvedNotification(ticketId, userId));
+            var workflow = _workflowService.Process(new TicketResolvedWorkflow(ticketId, userGuid));
+            var notification = _notificationService.Queue(new TicketResolvedNotification(ticketId, userGuid));
             await Task.WhenAll(workflow, notification);
 
             return _factory.Resolved(ticket);

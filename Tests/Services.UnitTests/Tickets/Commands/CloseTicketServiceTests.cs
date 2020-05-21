@@ -118,7 +118,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             var ticketId = _fixture.Create<int>();
             var userGuid = _fixture.Create<Guid>();
             var mockTicket = new Mock<Ticket>();
-            var mockBeforeTicketClosedWorkflow = new Mock<BeforeTicketClosedWorkflow>(It.IsAny<int>(), It.IsAny<int>());
+            var mockBeforeTicketClosedWorkflow = new Mock<BeforeTicketClosedWorkflow>(It.IsAny<int>(), It.IsAny<Guid>());
             var mockContext = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
             var mockFactory = new Mock<ICloseTicketResultFactory>();

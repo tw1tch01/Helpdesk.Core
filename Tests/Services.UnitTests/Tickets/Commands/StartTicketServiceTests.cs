@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AutoFixture;
 using Data.Repositories;
 using Helpdesk.Domain.Entities;
@@ -29,7 +30,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
 
             var service = CreateService(mockRepository: mockRepository);
 
-            await service.Start(ticketId, It.IsAny<int>());
+            await service.Start(ticketId, It.IsAny<Guid>());
 
             mockRepository.Verify(v => v.SingleAsync(It.Is<GetTicketById>(t => t._ticketId == ticketId)), Times.Once, "Should call the repository's SingleAsync exactly once for GetTicketById.");
         }
@@ -47,7 +48,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
                 mockRepository: mockRepository,
                 mockFactory: mockFactory);
 
-            await service.Start(ticketId, It.IsAny<int>());
+            await service.Start(ticketId, It.IsAny<Guid>());
 
             mockFactory.Verify(v => v.TicketNotFound(ticketId), Times.Once, "Should return the factory's TicketNotFound method.");
         }
@@ -66,7 +67,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
                 mockRepository: mockRepository,
                 mockFactory: mockFactory);
 
-            await service.Start(It.IsAny<int>(), It.IsAny<int>());
+            await service.Start(It.IsAny<int>(), It.IsAny<Guid>());
 
             mockFactory.Verify(v => v.TicketAlreadyResolved(mockTicket.Object), Times.Once, "Should return the factory's TicketAlreadyResolved method.");
         }
@@ -85,7 +86,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
                 mockRepository: mockRepository,
                 mockFactory: mockFactory);
 
-            await service.Start(It.IsAny<int>(), It.IsAny<int>());
+            await service.Start(It.IsAny<int>(), It.IsAny<Guid>());
 
             mockFactory.Verify(v => v.TicketAlreadyClosed(mockTicket.Object), Times.Once, "Should return the factory's TicketAlreadyClosed method.");
         }
@@ -104,7 +105,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
                 mockRepository: mockRepository,
                 mockFactory: mockFactory);
 
-            await service.Start(It.IsAny<int>(), It.IsAny<int>());
+            await service.Start(It.IsAny<int>(), It.IsAny<Guid>());
 
             mockFactory.Verify(v => v.TicketAlreadyStarted(mockTicket.Object), Times.Once, "Should return the factory's TicketAlreadyStarted method.");
         }
@@ -113,28 +114,28 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Start_BeforeTicketIsStarted_VerifyBeforeTicketStartedWorkflowIsProcessed()
         {
             var ticketId = _fixture.Create<int>();
-            var userId = _fixture.Create<int>();
+            var userGuid = _fixture.Create<Guid>();
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
-            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketStartedWorkflow>())).ReturnsAsync(new BeforeTicketStartedWorkflow(ticketId, userId));
+            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketStartedWorkflow>())).ReturnsAsync(new BeforeTicketStartedWorkflow(ticketId, userGuid));
 
             var service = CreateService(
                 mockRepository: mockRepository,
                 mockWorkflowService: mockWorkflowService);
 
-            await service.Start(ticketId, userId);
+            await service.Start(ticketId, userGuid);
 
-            mockWorkflowService.Verify(v => v.Process(It.Is<BeforeTicketStartedWorkflow>(w => w.TicketId == ticketId && w.UserId == userId)), Times.Once, "Should call the workflow flow's Process method for BeforeTicketStartedWorkflow.");
+            mockWorkflowService.Verify(v => v.Process(It.Is<BeforeTicketStartedWorkflow>(w => w.TicketId == ticketId && w.UserGuid == userGuid)), Times.Once, "Should call the workflow flow's Process method for BeforeTicketStartedWorkflow.");
         }
 
         [Test]
         public async Task Start_WhenBeforeTicketStartedWorkflowIsNotSuccessful_VerifyFactoryWorkflowFailedIsCalled()
         {
             var ticketId = _fixture.Create<int>();
-            var userId = _fixture.Create<int>();
-            var mockWorkflow = new Mock<BeforeTicketStartedWorkflow>(It.IsAny<int>(), It.IsAny<int>());
+            var userGuid = _fixture.Create<Guid>();
+            var mockWorkflow = new Mock<BeforeTicketStartedWorkflow>(It.IsAny<int>(), It.IsAny<Guid>());
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
             var mockFactory = new Mock<IStartTicketResultFactory>();
@@ -148,28 +149,29 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
                 mockWorkflowService: mockWorkflowService,
                 mockFactory: mockFactory);
 
-            await service.Start(ticketId, userId);
+            await service.Start(ticketId, userGuid);
 
-            mockFactory.Verify(v => v.WorkflowFailed(ticketId, userId, mockWorkflow.Object), Times.Once, "Should return the factory's WorkflowFailed method.");
+            mockFactory.Verify(v => v.WorkflowFailed(ticketId, userGuid, mockWorkflow.Object), Times.Once, "Should return the factory's WorkflowFailed method.");
         }
 
         [Test]
         public async Task Start_VerifyTicketStartedIsCalled()
         {
+            var userGuid = It.IsAny<Guid>();
             var mockTicket = new Mock<Ticket>();
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(mockTicket.Object);
-            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketStartedWorkflow>())).ReturnsAsync(new BeforeTicketStartedWorkflow(It.IsAny<int>(), It.IsAny<int>()));
+            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketStartedWorkflow>())).ReturnsAsync(new BeforeTicketStartedWorkflow(It.IsAny<int>(), It.IsAny<Guid>()));
 
             var service = CreateService(
                 mockRepository: mockRepository,
                 mockWorkflowService: mockWorkflowService);
 
-            await service.Start(It.IsAny<int>(), It.IsAny<int>());
+            await service.Start(It.IsAny<int>(), userGuid);
 
-            mockTicket.Verify(v => v.Start(), Times.Once, "Should call the ticket's Start method.");
+            mockTicket.Verify(v => v.Start(userGuid), Times.Once, "Should call the ticket's Start method.");
         }
 
         [Test]
@@ -179,13 +181,13 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             var mockWorkflowService = new Mock<IWorkflowService>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
-            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketStartedWorkflow>())).ReturnsAsync(new BeforeTicketStartedWorkflow(It.IsAny<int>(), It.IsAny<int>()));
+            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketStartedWorkflow>())).ReturnsAsync(new BeforeTicketStartedWorkflow(It.IsAny<int>(), It.IsAny<Guid>()));
 
             var service = CreateService(
                 mockRepository: mockRepository,
                 mockWorkflowService: mockWorkflowService);
 
-            await service.Start(It.IsAny<int>(), It.IsAny<int>());
+            await service.Start(It.IsAny<int>(), It.IsAny<Guid>());
 
             mockRepository.Verify(v => v.SaveAsync(), Times.Once, "Should call the repository's SaveAsync method exactly once.");
         }
@@ -194,42 +196,42 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Start_WhenTicketIsStarted_VerifyTicketStartedWorkflowIsProcessed()
         {
             var ticketId = _fixture.Create<int>();
-            var userId = _fixture.Create<int>();
+            var userGuid = _fixture.Create<Guid>();
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
-            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketStartedWorkflow>())).ReturnsAsync(new BeforeTicketStartedWorkflow(It.IsAny<int>(), It.IsAny<int>()));
+            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketStartedWorkflow>())).ReturnsAsync(new BeforeTicketStartedWorkflow(It.IsAny<int>(), It.IsAny<Guid>()));
 
             var service = CreateService(
                 mockRepository: mockRepository,
                 mockWorkflowService: mockWorkflowService);
 
-            await service.Start(ticketId, userId);
+            await service.Start(ticketId, userGuid);
 
-            mockWorkflowService.Verify(v => v.Process(It.Is<TicketStartedWorkflow>(w => w.TicketId == ticketId && w.UserId == userId)), Times.Once, "Should call the workflow flow's Process method for TicketStartedWorkflow.");
+            mockWorkflowService.Verify(v => v.Process(It.Is<TicketStartedWorkflow>(w => w.TicketId == ticketId && w.UserGuid == userGuid)), Times.Once, "Should call the workflow flow's Process method for TicketStartedWorkflow.");
         }
 
         [Test]
         public async Task Start_WhenTicketIsStarted_VerifyTicketStartedNotificationIsProcessed()
         {
             var ticketId = _fixture.Create<int>();
-            var userId = _fixture.Create<int>();
+            var userGuid = _fixture.Create<Guid>();
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
             var mockNotificationService = new Mock<INotificationService>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
-            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketStartedWorkflow>())).ReturnsAsync(new BeforeTicketStartedWorkflow(It.IsAny<int>(), It.IsAny<int>()));
+            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketStartedWorkflow>())).ReturnsAsync(new BeforeTicketStartedWorkflow(It.IsAny<int>(), It.IsAny<Guid>()));
 
             var service = CreateService(
                 mockRepository: mockRepository,
                 mockNotificationService: mockNotificationService,
                 mockWorkflowService: mockWorkflowService);
 
-            await service.Start(ticketId, userId);
+            await service.Start(ticketId, userGuid);
 
-            mockNotificationService.Verify(v => v.Queue(It.Is<TicketStartedNotification>(n => n.TicketId == ticketId && n.UserId == userId)), Times.Once, "Should call the notification service's Queue method for TicketStartedNotification.");
+            mockNotificationService.Verify(v => v.Queue(It.Is<TicketStartedNotification>(n => n.TicketId == ticketId && n.UserGuid == userGuid)), Times.Once, "Should call the notification service's Queue method for TicketStartedNotification.");
         }
 
         [Test]
@@ -241,14 +243,14 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             var mockFactory = new Mock<IStartTicketResultFactory>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(ticket);
-            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketStartedWorkflow>())).ReturnsAsync(new BeforeTicketStartedWorkflow(It.IsAny<int>(), It.IsAny<int>()));
+            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketStartedWorkflow>())).ReturnsAsync(new BeforeTicketStartedWorkflow(It.IsAny<int>(), It.IsAny<Guid>()));
 
             var service = CreateService(
                 mockRepository: mockRepository,
                 mockWorkflowService: mockWorkflowService,
                 mockFactory: mockFactory);
 
-            await service.Start(It.IsAny<int>(), It.IsAny<int>());
+            await service.Start(It.IsAny<int>(), It.IsAny<Guid>());
 
             mockFactory.Verify(v => v.Started(ticket), Times.Once, "Should return the factory's Started method.");
         }

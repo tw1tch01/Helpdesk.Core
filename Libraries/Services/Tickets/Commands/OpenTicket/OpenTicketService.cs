@@ -47,26 +47,13 @@ namespace Helpdesk.Services.Tickets.Commands.OpenTicket
 
             if (!validationResult.IsValid) return _factory.ValidationFailure(validationResult.Errors);
 
-            //var client = await _repository.SingleAsync(new GetClientById(newTicket.ClientId).AsNoTracking());
-
-            //if (client == null) return _factory.ClientNotFound(newTicket.ClientId);
-
-            if (newTicket.ProjectId.HasValue)
-            {
-                //var project = await _repository.SingleAsync(new GetProjectById(newTicket.ProjectId.Value).AsNoTracking());
-
-                //if (project == null) return _factory.ProjectNotFound(newTicket.ProjectId.Value);
-
-                //if (client.OrganizationId != project.OrganizationId) return _factory.ProjectInaccessible(client.ClientId, project.ProjectId);
-            }
-
             var ticket = _mapper.Map<Ticket>(newTicket);
 
             await _repository.AddAsync(ticket);
             await _repository.SaveAsync();
 
-            var workflow = _workflowService.Process(new TicketOpenedWorkflow(ticket.TicketId));
-            var notification = _notificationService.Queue(new TicketOpenedNotification(ticket.TicketId));
+            var workflow = _workflowService.Process(new TicketOpenedWorkflow(ticket.TicketId, ticket.UserGuid));
+            var notification = _notificationService.Queue(new TicketOpenedNotification(ticket.TicketId, ticket.UserGuid));
             await Task.WhenAll(workflow, notification);
 
             return _factory.Opened(ticket);

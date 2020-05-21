@@ -1,4 +1,5 @@
-﻿using Helpdesk.Domain.Entities;
+﻿using System;
+using Helpdesk.Domain.Entities;
 using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Tickets.Results.Enums;
 using Helpdesk.Services.Workflows;
@@ -53,12 +54,12 @@ namespace Helpdesk.Services.Tickets.Factories.PauseTicket
             };
         }
 
-        public PauseTicketResult WorkflowFailed(int ticketId, int userId, IWorkflowProcess workflow)
+        public PauseTicketResult WorkflowFailed(int ticketId, Guid userGuid, IWorkflowProcess workflow)
         {
             return new PauseTicketResult(TicketPauseResult.WorkflowFailed)
             {
                 TicketId = ticketId,
-                UserId = userId,
+                UserGuid = userGuid,
                 Workflow = workflow
             };
         }

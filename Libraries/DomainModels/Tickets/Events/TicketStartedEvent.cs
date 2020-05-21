@@ -1,15 +1,17 @@
-﻿namespace Helpdesk.DomainModels.Tickets.Events
+﻿using System;
+
+namespace Helpdesk.DomainModels.Tickets.Events
 {
     public class TicketStartedEvent
     {
-        public TicketStartedEvent(int ticketId, int userId)
+        public TicketStartedEvent(int ticketId, Guid userGuid)
         {
             TicketId = ticketId;
-            UserId = userId;
+            UserGuid = userGuid;
         }
 
         public int TicketId { get; }
 
-        public int UserId { get; }
+        public Guid UserGuid { get; }
     }
 }

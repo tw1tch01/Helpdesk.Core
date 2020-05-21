@@ -33,8 +33,6 @@ namespace Helpdesk.Services.Tickets.Queries.LookupTickets
 
             var tickets = await _repository.ListAsync(_specification);
 
-            //if (tickets.Any()) await ExecuteSubQueries(tickets.Select(t => t.TicketId).ToList());
-
             var details = _mapper.Map<IList<TicketLookup>>(tickets);
 
             return details;
@@ -47,8 +45,6 @@ namespace Helpdesk.Services.Tickets.Queries.LookupTickets
             (page, pageSize) = ValidatePaging(page, pageSize);
 
             var pagedCollection = await _repository.PagedListAsync(page, pageSize, _specification, ticket => ticket.TicketId);
-
-            //if (pagedCollection.Items.Any()) await ExecuteSubQueries(pagedCollection.Items.Select(t => t.TicketId).ToList());
 
             var details = _mapper.Map<ICollection<TicketLookup>>(pagedCollection.Items);
 
