@@ -4,9 +4,9 @@ using AutoMapper;
 using Data.Common;
 using Data.Repositories;
 using Data.Specifications;
-using Helpdesk.Domain.Entities;
+using Helpdesk.Domain.Tickets;
 using Helpdesk.DomainModels.Tickets;
-using Helpdesk.Services.Common;
+using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Tickets.Specifications;
 
 namespace Helpdesk.Services.Tickets.Queries.LookupTickets

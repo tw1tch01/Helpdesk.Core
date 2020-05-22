@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
 using Data.Specifications;
-using Helpdesk.Domain.Entities;
 using Helpdesk.Domain.Enums;
+using Helpdesk.Domain.Tickets;
 
 namespace Helpdesk.Services.Tickets.Specifications
 {

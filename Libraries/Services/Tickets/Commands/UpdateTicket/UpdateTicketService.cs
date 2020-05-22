@@ -4,7 +4,7 @@ using AutoMapper;
 using Data.Repositories;
 using FluentValidation;
 using Helpdesk.DomainModels.Tickets;
-using Helpdesk.Services.Common;
+using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Notifications;
 using Helpdesk.Services.Tickets.Events.UpdateTicket;
 using Helpdesk.Services.Tickets.Factories.UpdateTicket;

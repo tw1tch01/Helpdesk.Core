@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using AutoFixture;
 using Data.Repositories;
-using Helpdesk.Domain.Entities;
-using Helpdesk.Services.Common;
+using Helpdesk.Domain.Tickets;
+using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Notifications;
 using Helpdesk.Services.Tickets.Commands.ReopenTicket;
 using Helpdesk.Services.Tickets.Events.ReopenTicket;

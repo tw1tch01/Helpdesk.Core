@@ -1,8 +1,8 @@
 ﻿using System;
 using AutoFixture;
 using AutoMapper;
-using Helpdesk.Domain.Entities;
 using Helpdesk.Domain.Enums;
+using Helpdesk.Domain.Tickets;
 using Helpdesk.DomainModels.Mappings;
 using Helpdesk.DomainModels.Tickets;
 using NUnit.Framework;

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using FluentValidation.Results;
-using Helpdesk.Domain.Entities;
+using Helpdesk.Domain.Tickets;
 using Helpdesk.DomainModels.Common;
 using Helpdesk.Services.Extensions;
 using Helpdesk.Services.Tickets.Results;

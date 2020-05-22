@@ -2,7 +2,7 @@
 using AutoMapper;
 using Data.Repositories;
 using Helpdesk.DomainModels.Tickets;
-using Helpdesk.Services.Common;
+using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Tickets.Specifications;
 
 namespace Helpdesk.Services.Tickets.Queries.GetTicket

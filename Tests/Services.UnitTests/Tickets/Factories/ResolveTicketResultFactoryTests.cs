@@ -1,6 +1,6 @@
 ﻿using System;
 using AutoFixture;
-using Helpdesk.Domain.Entities;
+using Helpdesk.Domain.Tickets;
 using Helpdesk.Services.Tickets.Events.ResolveTicket;
 using Helpdesk.Services.Tickets.Factories.ResolveTicket;
 using Helpdesk.Services.Tickets.Results;

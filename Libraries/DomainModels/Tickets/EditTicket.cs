@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using AutoMapper;
-using Helpdesk.Domain.Entities;
 using Helpdesk.Domain.Enums;
+using Helpdesk.Domain.Tickets;
 using Helpdesk.DomainModels.Common;
 using Helpdesk.DomainModels.Mappings;
 

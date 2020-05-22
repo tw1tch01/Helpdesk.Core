@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Data.Repositories;
-using Helpdesk.Services.Common;
+using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Notifications;
 using Helpdesk.Services.Tickets.Events.DeleteTicket;
 using Helpdesk.Services.Tickets.Factories.DeleteTicket;

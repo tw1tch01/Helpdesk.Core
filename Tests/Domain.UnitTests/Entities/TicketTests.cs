@@ -1,7 +1,7 @@
 ﻿using System;
 using AutoFixture;
-using Helpdesk.Domain.Entities;
 using Helpdesk.Domain.Enums;
+using Helpdesk.Domain.Tickets;
 using NUnit.Framework;
 
 namespace Helpdesk.Domain.UnitTests.Entities

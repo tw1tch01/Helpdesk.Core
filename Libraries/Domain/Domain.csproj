@@ -10,14 +10,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Entities\Client.cs" />
-    <Compile Remove="Entities\Organization.cs" />
-    <Compile Remove="Entities\Privilege.cs" />
-    <Compile Remove="Entities\Project.cs" />
-    <Compile Remove="Entities\Role.cs" />
-    <Compile Remove="Entities\RolePrivilege.cs" />
-    <Compile Remove="Entities\TicketLink.cs" />
-    <Compile Remove="Entities\UserRole.cs" />
+    <Compile Remove="Users\Client.cs" />
+    <Compile Remove="Users\Organization.cs" />
+    <Compile Remove="Users\Privilege.cs" />
+    <Compile Remove="Users\Project.cs" />
+    <Compile Remove="Users\Role.cs" />
+    <Compile Remove="Users\RolePrivilege.cs" />
+    <Compile Remove="Users\TicketLink.cs" />
+    <Compile Remove="Users\UserRole.cs" />
+    <Compile Remove="Tickets\TicketLink.cs" />
   </ItemGroup>
 
 </Project>
