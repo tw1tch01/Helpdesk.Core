@@ -1,5 +1,5 @@
-﻿using Helpdesk.Domain.Enums;
-using Helpdesk.Domain.Tickets;
+﻿using Helpdesk.Domain.Tickets;
+using Helpdesk.Domain.Tickets.Enums;
 using Helpdesk.Services.Tickets.Specifications;
 using NUnit.Framework;
 

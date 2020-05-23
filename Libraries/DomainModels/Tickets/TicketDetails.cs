@@ -1,7 +1,7 @@
 ﻿using System;
 using AutoMapper;
-using Helpdesk.Domain.Enums;
 using Helpdesk.Domain.Tickets;
+using Helpdesk.Domain.Tickets.Enums;
 using Helpdesk.DomainModels.Common;
 using Helpdesk.DomainModels.Mappings;
 

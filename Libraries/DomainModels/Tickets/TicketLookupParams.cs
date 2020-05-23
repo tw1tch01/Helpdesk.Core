@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Helpdesk.Domain.Enums;
+using Helpdesk.Domain.Tickets.Enums;
 using Helpdesk.DomainModels.Tickets.Enums;
 
 namespace Helpdesk.DomainModels.Tickets

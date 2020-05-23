@@ -1,4 +1,4 @@
-﻿namespace Helpdesk.Domain.Enums
+﻿namespace Helpdesk.Domain.Tickets.Enums
 {
     public enum TicketStatus
     {
@@ -6,7 +6,7 @@
         Overdue = 1,
         Resolved = 2,
         Closed = 3,
-        InProgress = 7,
-        OnHold = 8
+        InProgress = 4,
+        OnHold = 5
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 using Helpdesk.Domain.Common;
-using Helpdesk.Domain.Enums;
+using Helpdesk.Domain.Tickets.Enums;
 
 namespace Helpdesk.Domain.Tickets
 {
