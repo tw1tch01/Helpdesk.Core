@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace Helpdesk.Services.UnitTests.Tickets.Tests
 {
     [TestFixture]
-    public class GetTicketByIdsTests
+    public class GetTicketWithinIdsTests
     {
         private readonly IFixture _fixture = new Fixture();
 
