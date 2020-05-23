@@ -1,8 +1,8 @@
 ﻿using System;
 using AutoFixture;
 using AutoMapper;
-using Helpdesk.Domain.Entities;
 using Helpdesk.Domain.Enums;
+using Helpdesk.Domain.Tickets;
 using Helpdesk.DomainModels.Mappings;
 using Helpdesk.DomainModels.Tickets;
 using NUnit.Framework;
@@ -28,7 +28,7 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets
         [Test]
         public void NullObjectReturnsNull()
         {
-            UpdateTicketDto dto = null;
+            EditTicket dto = null;
             var item = _mapper.Map<Ticket>(dto);
             Assert.IsNull(item);
         }
@@ -36,7 +36,7 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets
         [Test]
         public void MapsOpenTicketDtoToTicket()
         {
-            var dto = new UpdateTicketDto
+            var dto = new EditTicket
             {
                 Name = _fixture.Create<string>(),
                 Description = _fixture.Create<string>(),
@@ -59,7 +59,7 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets
         [Test]
         public void WhenUpdateDueDateIsTrue_MapsDueDate()
         {
-            var dto = new UpdateTicketDto
+            var dto = new EditTicket
             {
                 DueDate = _fixture.Create<DateTimeOffset?>(),
                 UpdateDueDate = true
@@ -72,7 +72,7 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets
         [Test]
         public void WhenUpdateDueDateIsFalse_DoesNotMapDueDate()
         {
-            var dto = new UpdateTicketDto
+            var dto = new EditTicket
             {
                 DueDate = _fixture.Create<DateTimeOffset>(),
                 UpdateDueDate = false

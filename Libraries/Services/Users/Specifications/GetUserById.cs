@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using Data.Specifications;
-using Helpdesk.Domain.Entities;
+using Helpdesk.Domain.Users;
 
 [assembly: InternalsVisibleTo("Helpdesk.Services.UnitTests")]
 

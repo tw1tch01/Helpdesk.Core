@@ -13,24 +13,16 @@ namespace Helpdesk.Services.Tickets.Results
         }
 
         public TicketPauseResult Result { get; }
-
         public string Message => GetMessage();
-
-        public int TicketId { get; internal set; }
-
-        public int? UserId { get; internal set; }
-
-        public DateTimeOffset? ResolvedOn { get; internal set; }
-
-        public int? ResolvedBy { get; internal set; }
-
-        public int? ClosedBy { get; internal set; }
-
-        public DateTimeOffset? ClosedOn { get; internal set; }
-
-        public DateTimeOffset? PausedOn { get; internal set; }
-
-        public IWorkflowProcess Workflow { get; internal set; }
+        public int TicketId { get; set; }
+        public Guid? UserGuid { get; set; }
+        public DateTimeOffset? ResolvedOn { get; set; }
+        public Guid? ResolvedBy { get; set; }
+        public DateTimeOffset? ClosedOn { get; set; }
+        public Guid? ClosedBy { get; set; }
+        public DateTimeOffset? PausedOn { get; set; }
+        public Guid? PausedBy { get; set; }
+        public IWorkflowProcess Workflow { get; set; }
 
         #region Methods
 

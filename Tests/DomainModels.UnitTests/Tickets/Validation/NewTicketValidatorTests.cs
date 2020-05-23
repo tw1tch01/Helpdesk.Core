@@ -1,4 +1,5 @@
-﻿using AutoFixture;
+﻿using System;
+using AutoFixture;
 using FluentValidation.TestHelper;
 using Helpdesk.DomainModels.Tickets.Validation;
 using NUnit.Framework;
@@ -54,38 +55,33 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets.Validation
             _validator.ShouldNotHaveValidationErrorFor(t => t.Name, name);
         }
 
-        [TestCase(0)]
-        [TestCase(-1)]
-        public void ShouldHaveErrorWhenClientIdIsNotGreaterThan0(int clientId)
+        [Test]
+        public void ShouldHaveErrorClientIsEmpty()
         {
-            _validator.ShouldHaveValidationErrorFor(t => t.ClientId, clientId);
+            _validator.ShouldHaveValidationErrorFor(t => t.Client, Guid.Empty);
         }
 
         [Test]
-        public void ShouldNotHaveErrorWhenClientIdIsGreaterThan0()
+        public void ShouldNotHaveErrorWhenClientHasGeneratedGuid()
         {
-            var clientId = _fixture.Create<int>();
-            _validator.ShouldNotHaveValidationErrorFor(t => t.ClientId, clientId);
+            _validator.ShouldNotHaveValidationErrorFor(t => t.Client, _fixture.Create<Guid>());
         }
 
         [Test]
-        public void ShouldNotHaveErrorWhenProjectIdIsNull()
+        public void ShouldNotHaveErrorWhenAssigneeIsNull()
         {
-            _validator.ShouldNotHaveValidationErrorFor(t => t.ProjectId, null as int?);
+            _validator.ShouldNotHaveValidationErrorFor(t => t.Assignee, null as Guid?);
         }
 
-        [TestCase(0)]
-        [TestCase(-1)]
-        public void ShouldHaveErrorWhenProjectIdIsNotGreatherThan0(int projectId)
+        public void ShouldHaveErrorWhenAssigneeIsEmpty()
         {
-            _validator.ShouldHaveValidationErrorFor(t => t.ProjectId, projectId);
+            _validator.ShouldHaveValidationErrorFor(t => t.Assignee, Guid.Empty);
         }
 
         [Test]
-        public void ShouldNotHaveErrorWhenProjectIdIsGreaterThan0()
+        public void ShouldNotHaveErrorWhenAssigneeHasGeneratedGuid()
         {
-            var projectId = _fixture.Create<int>();
-            _validator.ShouldNotHaveValidationErrorFor(t => t.ProjectId, projectId);
+            _validator.ShouldNotHaveValidationErrorFor(t => t.Assignee, _fixture.Create<Guid>());
         }
     }
 }

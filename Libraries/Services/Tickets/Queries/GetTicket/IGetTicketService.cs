@@ -5,6 +5,6 @@ namespace Helpdesk.Services.Tickets.Queries.GetTicket
 {
     public interface IGetTicketService
     {
-        Task<FullTicketDetails> Get(int ticketId);
+        Task<TicketDetails> Get(int ticketId);
     }
 }

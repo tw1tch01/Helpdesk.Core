@@ -1,7 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Data.Repositories;
 using Helpdesk.Domain.Enums;
-using Helpdesk.Services.Common;
+using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Notifications;
 using Helpdesk.Services.Tickets.Events.CloseTicket;
 using Helpdesk.Services.Tickets.Factories.CloseTicket;
@@ -31,7 +32,7 @@ namespace Helpdesk.Services.Tickets.Commands.CloseTicket
             _factory = factory;
         }
 
-        public virtual async Task<CloseTicketResult> Close(int ticketId, int userId)
+        public virtual async Task<CloseTicketResult> Close(int ticketId, Guid userGuid)
         {
             var ticket = await _repository.SingleAsync(new GetTicketById(ticketId));
 
@@ -46,18 +47,14 @@ namespace Helpdesk.Services.Tickets.Commands.CloseTicket
                     return _factory.TicketAlreadyClosed(ticket);
             }
 
-            //var user = await _repository.SingleAsync(new GetUserById(userId).AsNoTracking());
+            var beforeWorkflow = await _workflowService.Process(new BeforeTicketClosedWorkflow(ticketId, userGuid));
+            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return _factory.WorkflowFailed(ticketId, userGuid, beforeWorkflow);
 
-            //if (user == null) return _factory.UserNotFound(ticketId, userId);
-
-            var beforeWorkflow = await _workflowService.Process(new BeforeTicketClosedWorkflow(ticketId, userId));
-            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return _factory.WorkflowFailed(ticketId, userId, beforeWorkflow);
-
-            ticket.Close(userId);
+            ticket.Close(userGuid);
             await _repository.SaveAsync();
 
-            var workflow = _workflowService.Process(new TicketClosedWorkflow(ticketId, userId));
-            var notification = _notificationService.Queue(new TicketClosedNotification(ticketId, userId));
+            var workflow = _workflowService.Process(new TicketClosedWorkflow(ticketId, userGuid));
+            var notification = _notificationService.Queue(new TicketClosedNotification(ticketId, userGuid));
             await Task.WhenAll(workflow, notification);
 
             return _factory.Closed(ticket);

@@ -3,9 +3,6 @@
     public enum TicketOpenResult
     {
         Opened,
-        ValidationFailure,
-        ClientNotFound,
-        ProjectNotFound,
-        ProjectInaccessible
+        ValidationFailure
     }
 }

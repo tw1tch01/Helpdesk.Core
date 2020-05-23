@@ -1,14 +1,16 @@
-﻿namespace Helpdesk.DomainModels.Tickets.Events
+﻿using System;
+
+namespace Helpdesk.DomainModels.Tickets.Events
 {
     public class TicketClosedEvent
     {
-        public TicketClosedEvent(int ticketId, int userId)
+        public TicketClosedEvent(int ticketId, Guid userGuid)
         {
             TicketId = ticketId;
-            UserId = userId;
+            UserGuid = userGuid;
         }
 
         public int TicketId { get; }
-        public int UserId { get; }
+        public Guid UserGuid { get; }
     }
 }

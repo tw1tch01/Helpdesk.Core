@@ -1,7 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Data.Repositories;
 using Helpdesk.Domain.Enums;
-using Helpdesk.Services.Common;
+using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Notifications;
 using Helpdesk.Services.Tickets.Events.PauseTicket;
 using Helpdesk.Services.Tickets.Factories.PauseTicket;
@@ -31,7 +32,7 @@ namespace Helpdesk.Services.Tickets.Commands.PauseTicket
             _factory = factory;
         }
 
-        public virtual async Task<PauseTicketResult> Pause(int ticketId, int userId)
+        public virtual async Task<PauseTicketResult> Pause(int ticketId, Guid userGuid)
         {
             var ticket = await _repository.SingleAsync(new GetTicketById(ticketId));
 
@@ -49,14 +50,14 @@ namespace Helpdesk.Services.Tickets.Commands.PauseTicket
                     return _factory.TicketAlreadyPaused(ticket);
             }
 
-            var beforeWorkflow = await _workflowService.Process(new BeforeTicketPausedWorkflow(ticketId, userId));
-            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return _factory.WorkflowFailed(ticketId, userId, beforeWorkflow);
+            var beforeWorkflow = await _workflowService.Process(new BeforeTicketPausedWorkflow(ticketId, userGuid));
+            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return _factory.WorkflowFailed(ticketId, userGuid, beforeWorkflow);
 
-            ticket.Pause();
+            ticket.Pause(userGuid);
             await _repository.SaveAsync();
 
-            var workflow = _workflowService.Process(new TicketPausedWorkflow(ticketId, userId));
-            var notification = _notificationService.Queue(new TicketPausedNotification(ticketId, userId));
+            var workflow = _workflowService.Process(new TicketPausedWorkflow(ticketId, userGuid));
+            var notification = _notificationService.Queue(new TicketPausedNotification(ticketId, userGuid));
             await Task.WhenAll(workflow, notification);
 
             return _factory.Paused(ticket);

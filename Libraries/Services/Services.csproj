@@ -17,8 +17,6 @@
     <Compile Remove="Tickets\Commands\RequestApproval\**" />
     <Compile Remove="Tickets\Events\ApproveTicket\**" />
     <Compile Remove="Tickets\Events\RequestApproval\**" />
-    <Compile Remove="Users\**" />
-    <Compile Remove="UserTickets\**" />
     <EmbeddedResource Remove="Clients\**" />
     <EmbeddedResource Remove="Projects\**" />
     <EmbeddedResource Remove="TicketLinks\**" />
@@ -26,8 +24,6 @@
     <EmbeddedResource Remove="Tickets\Commands\RequestApproval\**" />
     <EmbeddedResource Remove="Tickets\Events\ApproveTicket\**" />
     <EmbeddedResource Remove="Tickets\Events\RequestApproval\**" />
-    <EmbeddedResource Remove="Users\**" />
-    <EmbeddedResource Remove="UserTickets\**" />
     <None Remove="Clients\**" />
     <None Remove="Projects\**" />
     <None Remove="TicketLinks\**" />
@@ -35,8 +31,6 @@
     <None Remove="Tickets\Commands\RequestApproval\**" />
     <None Remove="Tickets\Events\ApproveTicket\**" />
     <None Remove="Tickets\Events\RequestApproval\**" />
-    <None Remove="Users\**" />
-    <None Remove="UserTickets\**" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,5 @@
-﻿using Helpdesk.Domain.Entities;
+﻿using System;
+using Helpdesk.Domain.Tickets;
 using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Workflows;
 
@@ -14,8 +15,6 @@ namespace Helpdesk.Services.Tickets.Factories.ResolveTicket
 
         ResolveTicketResult TicketNotFound(int ticketId);
 
-        ResolveTicketResult UserNotFound(int ticketId, int userId);
-
-        ResolveTicketResult WorkflowFailed(int ticketId, int userId, IWorkflowProcess workflow);
+        ResolveTicketResult WorkflowFailed(int ticketId, Guid userGuid, IWorkflowProcess workflow);
     }
 }

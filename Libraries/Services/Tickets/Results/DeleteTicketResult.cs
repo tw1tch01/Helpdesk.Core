@@ -1,4 +1,5 @@
-﻿using Helpdesk.Services.Common.Results;
+﻿using System;
+using Helpdesk.Services.Common.Results;
 using Helpdesk.Services.Tickets.Results.Enums;
 using Helpdesk.Services.Workflows;
 
@@ -12,14 +13,10 @@ namespace Helpdesk.Services.Tickets.Results
         }
 
         public TicketDeleteResult Result { get; }
-
         public string Message => GetMessage();
-
-        public int TicketId { get; internal set; }
-
-        public int? UserId { get; internal set; }
-
-        public IWorkflowProcess Workflow { get; internal set; }
+        public int TicketId { get; set; }
+        public Guid? UserGuid { get; set; }
+        public IWorkflowProcess Workflow { get; set; }
 
         #region Methods
 

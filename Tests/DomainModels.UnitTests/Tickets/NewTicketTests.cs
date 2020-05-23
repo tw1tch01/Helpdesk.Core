@@ -1,8 +1,8 @@
 ﻿using System;
 using AutoFixture;
 using AutoMapper;
-using Helpdesk.Domain.Entities;
 using Helpdesk.Domain.Enums;
+using Helpdesk.Domain.Tickets;
 using Helpdesk.DomainModels.Mappings;
 using Helpdesk.DomainModels.Tickets;
 using NUnit.Framework;
@@ -43,8 +43,8 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets
                 Severity = _fixture.Create<Severity>(),
                 Priority = _fixture.Create<Priority>(),
                 DueDate = _fixture.Create<DateTimeOffset?>(),
-                ClientId = _fixture.Create<int>(),
-                ProjectId = _fixture.Create<int?>()
+                Client = _fixture.Create<Guid>(),
+                Assignee = _fixture.Create<Guid?>()
             };
             var ticket = _mapper.Map<Ticket>(newTicket);
 
@@ -57,8 +57,8 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets
                 Assert.AreEqual(newTicket.Severity, ticket.Severity);
                 Assert.AreEqual(newTicket.Priority, ticket.Priority);
                 Assert.AreEqual(newTicket.DueDate, ticket.DueDate);
-                Assert.AreEqual(newTicket.ClientId, ticket.ClientId);
-                Assert.AreEqual(newTicket.ProjectId, ticket.ProjectId);
+                Assert.AreEqual(newTicket.Client, ticket.UserGuid);
+                Assert.AreEqual(newTicket.Assignee, ticket.AssignedUserGuid);
             });
         }
     }

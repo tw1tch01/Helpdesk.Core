@@ -3,10 +3,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Data.Repositories;
 using FluentValidation;
-using FluentValidation.Results;
 using Helpdesk.DomainModels.Tickets;
-using Helpdesk.DomainModels.Tickets.Validation;
-using Helpdesk.Services.Common;
+using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Notifications;
 using Helpdesk.Services.Tickets.Events.UpdateTicket;
 using Helpdesk.Services.Tickets.Factories.UpdateTicket;
@@ -24,7 +22,7 @@ namespace Helpdesk.Services.Tickets.Commands.UpdateTicket
         private readonly INotificationService _notificationService;
         private readonly IWorkflowService _workflowService;
         private readonly IUpdateTicketResultFactory _factory;
-        private readonly IValidator<UpdateTicketDto> _validator;
+        private readonly IValidator<EditTicket> _validator;
 
         public UpdateTicketService(
             IContextRepository<ITicketContext> repository,
@@ -32,7 +30,7 @@ namespace Helpdesk.Services.Tickets.Commands.UpdateTicket
             INotificationService notificationService,
             IWorkflowService workflowService,
             IUpdateTicketResultFactory factory,
-            IValidator<UpdateTicketDto> validator)
+            IValidator<EditTicket> validator)
         {
             _repository = repository;
             _mapper = mapper;
@@ -42,11 +40,11 @@ namespace Helpdesk.Services.Tickets.Commands.UpdateTicket
             _validator = validator;
         }
 
-        public virtual async Task<UpdateTicketResult> Update(int ticketId, UpdateTicketDto updateTicket)
+        public virtual async Task<UpdateTicketResult> Update(int ticketId, EditTicket editTicket)
         {
-            if (updateTicket == null) throw new ArgumentNullException(nameof(updateTicket));
+            if (editTicket == null) throw new ArgumentNullException(nameof(editTicket));
 
-            var validationResult = await _validator.ValidateAsync(updateTicket);
+            var validationResult = await _validator.ValidateAsync(editTicket);
 
             if (!validationResult.IsValid) return _factory.ValidationFailure(ticketId, validationResult.Errors);
 
@@ -54,12 +52,12 @@ namespace Helpdesk.Services.Tickets.Commands.UpdateTicket
 
             if (ticket == null) return _factory.TicketNotFound(ticketId);
 
-            var changes = updateTicket.GetChanges(ticket);
+            var changes = editTicket.GetChanges(ticket);
 
             var beforeWorkflow = await _workflowService.Process(new BeforeTicketUpdatedWorkflow(ticketId, changes));
             if (beforeWorkflow.Result != WorkflowResult.Succeeded) return _factory.WorkflowFailed(ticketId, beforeWorkflow);
 
-            _mapper.Map(updateTicket, ticket);
+            _mapper.Map(editTicket, ticket);
             await _repository.SaveAsync();
 
             var workflow = _workflowService.Process(new TicketUpdatedWorkflow(ticketId, changes));
@@ -68,16 +66,5 @@ namespace Helpdesk.Services.Tickets.Commands.UpdateTicket
 
             return _factory.Updated(ticket, changes);
         }
-
-        #region Private Methods
-
-        private ValidationResult ValidateDto(DomainModels.Tickets.UpdateTicketDto ticketDto)
-        {
-            var validator = new UpdateTicketValidator();
-            var result = validator.Validate(ticketDto);
-            return result;
-        }
-
-        #endregion Private Methods
     }
 }

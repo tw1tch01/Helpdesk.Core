@@ -1,6 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Data.Repositories;
-using Helpdesk.Services.Common;
+using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Notifications;
 using Helpdesk.Services.Tickets.Events.ReopenTicket;
 using Helpdesk.Services.Tickets.Factories.ReopenTicket;
@@ -30,23 +31,23 @@ namespace Helpdesk.Services.Tickets.Commands.ReopenTicket
             _factory = factory;
         }
 
-        public virtual async Task<ReopenTicketResult> Reopen(int ticketId, int userId)
+        public virtual async Task<ReopenTicketResult> Reopen(int ticketId, Guid userGuid)
         {
             var ticket = await _repository.SingleAsync(new GetTicketById(ticketId));
 
             if (ticket == null) return _factory.TicketNotFound(ticketId);
 
-            var beforeWorkflow = await _workflowService.Process(new BeforeTicketReopenedWorkflow(ticketId, userId));
-            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return _factory.WorkflowFailed(ticketId, userId, beforeWorkflow);
+            var beforeWorkflow = await _workflowService.Process(new BeforeTicketReopenedWorkflow(ticketId, userGuid));
+            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return _factory.WorkflowFailed(ticketId, userGuid, beforeWorkflow);
 
             ticket.Reopen();
             await _repository.SaveAsync();
 
-            var workflow = _workflowService.Process(new TicketReopenedWorkflow(ticketId, userId));
-            var notification = _notificationService.Queue(new TicketReopenedNotification(ticketId, userId));
+            var workflow = _workflowService.Process(new TicketReopenedWorkflow(ticketId, userGuid));
+            var notification = _notificationService.Queue(new TicketReopenedNotification(ticketId, userGuid));
             await Task.WhenAll(workflow, notification);
 
-            return _factory.Reopened(ticket);
+            return _factory.Reopened(ticket, userGuid);
         }
     }
 }

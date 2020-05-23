@@ -1,4 +1,5 @@
-﻿using Helpdesk.Domain.Entities;
+﻿using System;
+using Helpdesk.Domain.Tickets;
 using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Workflows;
 
@@ -16,6 +17,6 @@ namespace Helpdesk.Services.Tickets.Factories.StartTicket
 
         StartTicketResult TicketNotFound(int ticketId);
 
-        StartTicketResult WorkflowFailed(int ticketId, int userId, IWorkflowProcess workflow);
+        StartTicketResult WorkflowFailed(int ticketId, Guid userGuid, IWorkflowProcess workflow);
     }
 }

@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AutoFixture;
 using Data.Repositories;
-using Helpdesk.Domain.Entities;
 using Helpdesk.Domain.Enums;
-using Helpdesk.Services.Common;
+using Helpdesk.Domain.Tickets;
+using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Notifications;
 using Helpdesk.Services.Tickets.Commands.PauseTicket;
 using Helpdesk.Services.Tickets.Events.PauseTicket;
@@ -29,7 +30,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
 
             var service = CreateService(mockRepository: mockRepository);
 
-            await service.Pause(ticketId, It.IsAny<int>());
+            await service.Pause(ticketId, It.IsAny<Guid>());
 
             mockRepository.Verify(v => v.SingleAsync(It.Is<GetTicketById>(t => t._ticketId == ticketId)), Times.Once, "Should call the repository's SingleAsync exactly once for GetTicketById.");
         }
@@ -47,7 +48,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
                 mockRepository: mockRepository,
                 mockFactory: mockFactory);
 
-            await service.Pause(ticketId, It.IsAny<int>());
+            await service.Pause(ticketId, It.IsAny<Guid>());
 
             mockFactory.Verify(v => v.TicketNotFound(ticketId), Times.Once, "Should return the factory's TicketNotFound method.");
         }
@@ -66,7 +67,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
                 mockRepository: mockRepository,
                 mockFactory: mockFactory);
 
-            await service.Pause(It.IsAny<int>(), It.IsAny<int>());
+            await service.Pause(It.IsAny<int>(), It.IsAny<Guid>());
 
             mockFactory.Verify(v => v.TicketAlreadyResolved(mockTicket.Object), Times.Once, "Should return the factory's TicketAlreadyResolved method.");
         }
@@ -85,13 +86,13 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
                 mockRepository: mockRepository,
                 mockFactory: mockFactory);
 
-            await service.Pause(It.IsAny<int>(), It.IsAny<int>());
+            await service.Pause(It.IsAny<int>(), It.IsAny<Guid>());
 
             mockFactory.Verify(v => v.TicketAlreadyPaused(mockTicket.Object), Times.Once, "Should return the factory's TicketAlreadyPaused method.");
         }
 
         [Test]
-        public async Task Pause_WhenTicketIsPaused_ReturnsFactoryTicketAlreadyClosed()
+        public async Task Pause_WhenTicketIsClosed_ReturnsFactoryTicketAlreadyClosed()
         {
             var mockTicket = new Mock<Ticket>();
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
@@ -104,7 +105,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
                 mockRepository: mockRepository,
                 mockFactory: mockFactory);
 
-            await service.Pause(It.IsAny<int>(), It.IsAny<int>());
+            await service.Pause(It.IsAny<int>(), It.IsAny<Guid>());
 
             mockFactory.Verify(v => v.TicketAlreadyClosed(mockTicket.Object), Times.Once, "Should return the factory's TicketAlreadyClosed method.");
         }
@@ -113,28 +114,28 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Pause_BeforeTicketIsPaused_VerifyBeforeTicketPausedWorkflowIsProcessed()
         {
             var ticketId = _fixture.Create<int>();
-            var userId = _fixture.Create<int>();
+            var userGuid = _fixture.Create<Guid>();
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
-            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketPausedWorkflow>())).ReturnsAsync(new BeforeTicketPausedWorkflow(ticketId, userId));
+            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketPausedWorkflow>())).ReturnsAsync(new BeforeTicketPausedWorkflow(ticketId, userGuid));
 
             var service = CreateService(
                 mockRepository: mockRepository,
                 mockWorkflowService: mockWorkflowService);
 
-            await service.Pause(ticketId, userId);
+            await service.Pause(ticketId, userGuid);
 
-            mockWorkflowService.Verify(v => v.Process(It.Is<BeforeTicketPausedWorkflow>(w => w.TicketId == ticketId && w.UserId == userId)), Times.Once, "Should call the workflow flow's Process method for BeforeTicketPausedWorkflow.");
+            mockWorkflowService.Verify(v => v.Process(It.Is<BeforeTicketPausedWorkflow>(w => w.TicketId == ticketId && w.UserGuid == userGuid)), Times.Once, "Should call the workflow flow's Process method for BeforeTicketPausedWorkflow.");
         }
 
         [Test]
         public async Task Pause_WhenBeforeTicketPausedWorkflowIsNotSuccessful_VerifyFactoryWorkflowFailedIsCalled()
         {
             var ticketId = _fixture.Create<int>();
-            var userId = _fixture.Create<int>();
-            var mockBeforeTicketPausdWorflow = new Mock<BeforeTicketPausedWorkflow>(It.IsAny<int>(), It.IsAny<int>());
+            var userGuid = _fixture.Create<Guid>();
+            var mockBeforeTicketPausdWorflow = new Mock<BeforeTicketPausedWorkflow>(It.IsAny<int>(), It.IsAny<Guid>());
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
             var mockFactory = new Mock<IPauseTicketResultFactory>();
@@ -148,28 +149,29 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
                 mockWorkflowService: mockWorkflowService,
                 mockFactory: mockFactory);
 
-            await service.Pause(ticketId, userId);
+            await service.Pause(ticketId, userGuid);
 
-            mockFactory.Verify(v => v.WorkflowFailed(ticketId, userId, mockBeforeTicketPausdWorflow.Object), Times.Once, "Should return the factory's WorkflowFailed method.");
+            mockFactory.Verify(v => v.WorkflowFailed(ticketId, userGuid, mockBeforeTicketPausdWorflow.Object), Times.Once, "Should return the factory's WorkflowFailed method.");
         }
 
         [Test]
         public async Task Pause_VerifyTicketPausedIsCalled()
         {
+            var userGuid = It.IsAny<Guid>();
             var mockTicket = new Mock<Ticket>();
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(mockTicket.Object);
-            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketPausedWorkflow>())).ReturnsAsync(new BeforeTicketPausedWorkflow(It.IsAny<int>(), It.IsAny<int>()));
+            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketPausedWorkflow>())).ReturnsAsync(new BeforeTicketPausedWorkflow(It.IsAny<int>(), It.IsAny<Guid>()));
 
             var service = CreateService(
                 mockRepository: mockRepository,
                 mockWorkflowService: mockWorkflowService);
 
-            await service.Pause(It.IsAny<int>(), It.IsAny<int>());
+            await service.Pause(It.IsAny<int>(), userGuid);
 
-            mockTicket.Verify(v => v.Pause(), Times.Once, "Should call the ticket's Pause method.");
+            mockTicket.Verify(v => v.Pause(userGuid), Times.Once, "Should call the ticket's Pause method.");
         }
 
         [Test]
@@ -179,13 +181,13 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             var mockWorkflowService = new Mock<IWorkflowService>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
-            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketPausedWorkflow>())).ReturnsAsync(new BeforeTicketPausedWorkflow(It.IsAny<int>(), It.IsAny<int>()));
+            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketPausedWorkflow>())).ReturnsAsync(new BeforeTicketPausedWorkflow(It.IsAny<int>(), It.IsAny<Guid>()));
 
             var service = CreateService(
                 mockRepository: mockRepository,
                 mockWorkflowService: mockWorkflowService);
 
-            await service.Pause(It.IsAny<int>(), It.IsAny<int>());
+            await service.Pause(It.IsAny<int>(), It.IsAny<Guid>());
 
             mockRepository.Verify(v => v.SaveAsync(), Times.Once, "Should call the repository's SaveAsync method exactly once.");
         }
@@ -194,42 +196,42 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Pause_WhenTicketIsPaused_VerifyTicketPausedWorkflowIsProcessed()
         {
             var ticketId = _fixture.Create<int>();
-            var userId = _fixture.Create<int>();
+            var userGuid = _fixture.Create<Guid>();
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
-            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketPausedWorkflow>())).ReturnsAsync(new BeforeTicketPausedWorkflow(It.IsAny<int>(), It.IsAny<int>()));
+            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketPausedWorkflow>())).ReturnsAsync(new BeforeTicketPausedWorkflow(It.IsAny<int>(), It.IsAny<Guid>()));
 
             var service = CreateService(
                 mockRepository: mockRepository,
                 mockWorkflowService: mockWorkflowService);
 
-            await service.Pause(ticketId, userId);
+            await service.Pause(ticketId, userGuid);
 
-            mockWorkflowService.Verify(v => v.Process(It.Is<TicketPausedWorkflow>(w => w.TicketId == ticketId && w.UserId == userId)), Times.Once, "Should call the workflow flow's Process method for TicketPausedWorkflow.");
+            mockWorkflowService.Verify(v => v.Process(It.Is<TicketPausedWorkflow>(w => w.TicketId == ticketId && w.UserGuid == userGuid)), Times.Once, "Should call the workflow flow's Process method for TicketPausedWorkflow.");
         }
 
         [Test]
         public async Task Pause_WhenTicketIsPaused_VerifyTicketPausedNotificationIsProcessed()
         {
             var ticketId = _fixture.Create<int>();
-            var userId = _fixture.Create<int>();
+            var userGuid = _fixture.Create<Guid>();
             var mockRepository = new Mock<IContextRepository<ITicketContext>>();
             var mockWorkflowService = new Mock<IWorkflowService>();
             var mockNotificationService = new Mock<INotificationService>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
-            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketPausedWorkflow>())).ReturnsAsync(new BeforeTicketPausedWorkflow(It.IsAny<int>(), It.IsAny<int>()));
+            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketPausedWorkflow>())).ReturnsAsync(new BeforeTicketPausedWorkflow(It.IsAny<int>(), It.IsAny<Guid>()));
 
             var service = CreateService(
                 mockRepository: mockRepository,
                 mockNotificationService: mockNotificationService,
                 mockWorkflowService: mockWorkflowService);
 
-            await service.Pause(ticketId, userId);
+            await service.Pause(ticketId, userGuid);
 
-            mockNotificationService.Verify(v => v.Queue(It.Is<TicketPausedNotification>(n => n.TicketId == ticketId && n.UserId == userId)), Times.Once, "Should call the notification service's Queue method for TicketPausedNotification.");
+            mockNotificationService.Verify(v => v.Queue(It.Is<TicketPausedNotification>(n => n.TicketId == ticketId && n.UserGuid == userGuid)), Times.Once, "Should call the notification service's Queue method for TicketPausedNotification.");
         }
 
         [Test]
@@ -241,14 +243,14 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             var mockFactory = new Mock<IPauseTicketResultFactory>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(ticket);
-            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketPausedWorkflow>())).ReturnsAsync(new BeforeTicketPausedWorkflow(It.IsAny<int>(), It.IsAny<int>()));
+            mockWorkflowService.Setup(s => s.Process(It.IsAny<BeforeTicketPausedWorkflow>())).ReturnsAsync(new BeforeTicketPausedWorkflow(It.IsAny<int>(), It.IsAny<Guid>()));
 
             var service = CreateService(
                 mockRepository: mockRepository,
                 mockWorkflowService: mockWorkflowService,
                 mockFactory: mockFactory);
 
-            await service.Pause(It.IsAny<int>(), It.IsAny<int>());
+            await service.Pause(It.IsAny<int>(), It.IsAny<Guid>());
 
             mockFactory.Verify(v => v.Paused(ticket), Times.Once, "Should return the factory's Paused method.");
         }

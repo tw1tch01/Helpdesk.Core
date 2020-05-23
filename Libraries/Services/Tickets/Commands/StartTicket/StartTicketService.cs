@@ -1,7 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Data.Repositories;
 using Helpdesk.Domain.Enums;
-using Helpdesk.Services.Common;
+using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Notifications;
 using Helpdesk.Services.Tickets.Events.StartTicket;
 using Helpdesk.Services.Tickets.Factories.StartTicket;
@@ -31,7 +32,7 @@ namespace Helpdesk.Services.Tickets.Commands.StartTicket
             _factory = factory;
         }
 
-        public virtual async Task<StartTicketResult> Start(int ticketId, int userId)
+        public virtual async Task<StartTicketResult> Start(int ticketId, Guid userGuid)
         {
             var ticket = await _repository.SingleAsync(new GetTicketById(ticketId));
 
@@ -49,14 +50,14 @@ namespace Helpdesk.Services.Tickets.Commands.StartTicket
                     return _factory.TicketAlreadyStarted(ticket);
             }
 
-            var beforeWorkflow = await _workflowService.Process(new BeforeTicketStartedWorkflow(ticketId, userId));
-            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return _factory.WorkflowFailed(ticketId, userId, beforeWorkflow);
+            var beforeWorkflow = await _workflowService.Process(new BeforeTicketStartedWorkflow(ticketId, userGuid));
+            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return _factory.WorkflowFailed(ticketId, userGuid, beforeWorkflow);
 
-            ticket.Start();
+            ticket.Start(userGuid);
             await _repository.SaveAsync();
 
-            var workflow = _workflowService.Process(new TicketStartedWorkflow(ticketId, userId));
-            var notification = _notificationService.Queue(new TicketStartedNotification(ticketId, userId));
+            var workflow = _workflowService.Process(new TicketStartedWorkflow(ticketId, userGuid));
+            var notification = _notificationService.Queue(new TicketStartedNotification(ticketId, userGuid));
             await Task.WhenAll(workflow, notification);
 
             return _factory.Started(ticket);
