@@ -90,7 +90,7 @@ namespace Helpdesk.Services.UnitTests.Users.Queries
                 mockRepository);
 
             mockRepository.Setup(s => s.PagedListAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<LinqSpecification<User>>(), u => u.UserId)).ReturnsAsync(_fixture.Create<PagedCollection<User>>());
-            
+
             await service.PagedLookup(It.IsAny<int>(), It.IsAny<int>(), @params);
 
             mockRepository.Verify(v => v.PagedListAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<LinqSpecification<User>>(), u => u.UserId), Times.Once, "Should call PagedListAsync method exactly once.");
@@ -105,6 +105,7 @@ namespace Helpdesk.Services.UnitTests.Users.Queries
             var mockMapper = new Mock<IMapper>();
 
             mockRepository.Setup(s => s.PagedListAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<LinqSpecification<User>>(), u => u.UserId)).ReturnsAsync(pagedCollection);
+            mockMapper.Setup(s => s.Map<IList<UserLookup>>(pagedCollection.Items)).Returns(_fixture.CreateMany<UserLookup>().ToList());
 
             var service = CreateService(
                 mockRepository,

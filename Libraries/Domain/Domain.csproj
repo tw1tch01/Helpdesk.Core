@@ -9,15 +9,4 @@
     <Version>1.0.2</Version>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Users\Client.cs" />
-    <Compile Remove="Users\Organization.cs" />
-    <Compile Remove="Users\Privilege.cs" />
-    <Compile Remove="Users\Project.cs" />
-    <Compile Remove="Users\Role.cs" />
-    <Compile Remove="Users\RolePrivilege.cs" />
-    <Compile Remove="Users\TicketLink.cs" />
-    <Compile Remove="Users\UserRole.cs" />
-  </ItemGroup>
-
 </Project>
