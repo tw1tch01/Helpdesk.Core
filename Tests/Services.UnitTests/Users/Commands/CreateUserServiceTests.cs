@@ -7,7 +7,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using Helpdesk.Domain.Users;
 using Helpdesk.DomainModels.Users;
-using Helpdesk.Services.Common;
+using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Users.Commands.CreateUser;
 using Helpdesk.Services.Users.Factories.CreateUser;
 using Helpdesk.Services.Users.Specifications;
@@ -50,7 +50,7 @@ namespace Helpdesk.Services.UnitTests.Users.Commands
         public async Task Create_VerifySingleAsyncForGetUserByUsername()
         {
             var newUser = new NewUser();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IContextRepository<IUserContext>>();
             var mockValidator = new Mock<IValidator<NewUser>>();
             var mockValidationResult = new Mock<ValidationResult>();
 
@@ -71,7 +71,7 @@ namespace Helpdesk.Services.UnitTests.Users.Commands
         {
             var user = new User();
             var newUser = new NewUser();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IContextRepository<IUserContext>>();
             var mockFactory = new Mock<ICreateUserResultFactory>();
             var mockValidator = new Mock<IValidator<NewUser>>();
             var mockValidationResult = new Mock<ValidationResult>();
@@ -95,7 +95,7 @@ namespace Helpdesk.Services.UnitTests.Users.Commands
         {
             var newUser = new NewUser();
             var user = new User();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IContextRepository<IUserContext>>();
             var mockMapper = new Mock<IMapper>();
             var mockValidator = new Mock<IValidator<NewUser>>();
             var mockValidationResult = new Mock<ValidationResult>();
@@ -119,7 +119,7 @@ namespace Helpdesk.Services.UnitTests.Users.Commands
         public async Task Create_VerifySaveAsyncIsCalled()
         {
             var newUser = new NewUser();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IContextRepository<IUserContext>>();
             var mockValidator = new Mock<IValidator<NewUser>>();
             var mockValidationResult = new Mock<ValidationResult>();
 
@@ -141,7 +141,7 @@ namespace Helpdesk.Services.UnitTests.Users.Commands
         {
             var newUser = new NewUser();
             var user = new User();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IContextRepository<IUserContext>>();
             var mockMapper = new Mock<IMapper>();
             var mockFactory = new Mock<ICreateUserResultFactory>();
             var mockValidator = new Mock<IValidator<NewUser>>();
@@ -164,12 +164,12 @@ namespace Helpdesk.Services.UnitTests.Users.Commands
         }
 
         private CreateUserService CreateService(
-            IMock<IContextRepository<ITicketContext>> mockRepository = null,
+            IMock<IContextRepository<IUserContext>> mockRepository = null,
             IMock<IMapper> mockMapper = null,
             IMock<ICreateUserResultFactory> mockFactory = null,
             IMock<IValidator<NewUser>> mockValidator = null)
         {
-            mockRepository ??= new Mock<IContextRepository<ITicketContext>>();
+            mockRepository ??= new Mock<IContextRepository<IUserContext>>();
             mockMapper ??= new Mock<IMapper>();
             mockFactory ??= new Mock<ICreateUserResultFactory>();
             mockValidator ??= new Mock<IValidator<NewUser>>();

@@ -11,9 +11,7 @@ namespace Helpdesk.Services.Users.Results
         }
 
         public UserDeleteResult Result { get; }
-
         public string Message => GetMessage();
-
         public int UserId { get; set; }
 
         #region Methods
@@ -22,6 +20,8 @@ namespace Helpdesk.Services.Users.Results
         {
             return Result switch
             {
+                UserDeleteResult.Deleted => ResultMessages.Deleted,
+                UserDeleteResult.UserNotFound => ResultMessages.UserNotFound,
                 _ => Result.ToString()
             };
         }

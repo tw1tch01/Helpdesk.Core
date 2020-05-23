@@ -6,6 +6,6 @@ namespace Helpdesk.Services.Users.Commands.UpdateUser
 {
     public interface IUpdateUserService
     {
-        Task<UpdateUserResult> Update(int userId, EditUser userUpdates);
+        Task<UpdateUserResult> Update(int userId, EditUser editUser);
     }
 }

@@ -35,7 +35,6 @@
 
   <ItemGroup>
     <Folder Include="Common\Specifications\" />
-    <Folder Include="Users\" />
   </ItemGroup>
 
   <ItemGroup>

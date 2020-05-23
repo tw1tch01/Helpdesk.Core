@@ -2,6 +2,6 @@
 {
     public interface IWorkflowResult
     {
-        IWorkflowProcess Workflow { get; }
+        IWorkflowProcess Workflow { get; set; }
     }
 }

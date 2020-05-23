@@ -14,7 +14,7 @@ namespace Helpdesk.DomainModels.Users
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<NewUser, User>();
+            profile.CreateMap<NewUser, User>(MemberList.Source);
         }
     }
 }

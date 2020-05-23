@@ -13,12 +13,11 @@ namespace Helpdesk.Services.Users.Results
         }
 
         public UserUpdateResult Result { get; }
-
         public string Message => GetMessage();
-
-        public Dictionary<string, List<string>> ValidationFailures { get; }
-
-        public IReadOnlyDictionary<string, ValueChange> PropertyChanges { get; }
+        public int UserId { get; internal set; }
+        public string Username { get; internal set; }
+        public Dictionary<string, List<string>> ValidationFailures { get; internal set; }
+        public IReadOnlyDictionary<string, ValueChange> PropertyChanges { get; internal set; }
 
         #region Methods
 
@@ -26,6 +25,10 @@ namespace Helpdesk.Services.Users.Results
         {
             return Result switch
             {
+                UserUpdateResult.Updated => ResultMessages.Updated,
+                UserUpdateResult.UserNotFound => ResultMessages.UserNotFound,
+                UserUpdateResult.ValidationFailure => ResultMessages.ValidationFailure,
+                UserUpdateResult.DuplicateUsername => ResultMessages.DuplicateUsername,
                 _ => Result.ToString()
             };
         }

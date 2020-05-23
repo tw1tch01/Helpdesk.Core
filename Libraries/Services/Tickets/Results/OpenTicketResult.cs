@@ -14,9 +14,9 @@ namespace Helpdesk.Services.Tickets.Results
 
         public TicketOpenResult Result { get; }
         public string Message => GetMessage();
-        public int? TicketId { get; internal set; }
-        public Guid? UserGuid { get; internal set; }
-        public Dictionary<string, List<string>> ValidationFailures { get; internal set; }
+        public int? TicketId { get; set; }
+        public Guid? UserGuid { get; set; }
+        public Dictionary<string, List<string>> ValidationFailures { get; set; }
 
         #region Methods
 

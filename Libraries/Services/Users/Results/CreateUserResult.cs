@@ -12,13 +12,9 @@ namespace Helpdesk.Services.Users.Results
         }
 
         public UserCreateResult Result { get; }
-
         public string Message => GetMessage();
-
         public int? UserId { get; internal set; }
-
         public string Username { get; internal set; }
-
         public Dictionary<string, List<string>> ValidationFailures { get; internal set; }
 
         #region Methods
@@ -27,6 +23,9 @@ namespace Helpdesk.Services.Users.Results
         {
             return Result switch
             {
+                UserCreateResult.Created => ResultMessages.Created,
+                UserCreateResult.ValidationFailure => ResultMessages.ValidationFailure,
+                UserCreateResult.DuplicateUsername => ResultMessages.DuplicateUsername,
                 _ => Result.ToString()
             };
         }

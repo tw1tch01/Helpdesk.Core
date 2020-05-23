@@ -8,14 +8,12 @@ namespace Helpdesk.Services.Users.Factories.UpdateUser
 {
     public interface IUpdateUserResultFactory
     {
+        UpdateUserResult DuplicateUsername(User existingUser);
+
         UpdateUserResult Updated(User user, IReadOnlyDictionary<string, ValueChange> readOnlyDictionary);
 
         UpdateUserResult UserNotFound(int userId);
 
-        UpdateUserResult UserNotFound(string username);
-
         UpdateUserResult ValidationFailure(int userId, IList<ValidationFailure> errors);
-
-        UpdateUserResult ValidationFailure(string usernam, IList<ValidationFailure> errors);
     }
 }

@@ -6,6 +6,8 @@ namespace Helpdesk.Services.Tickets.Results
 {
     internal static class ResultMessages
     {
+        public const string Assigned = "Ticket has been assigned.";
+
         public const string Closed = "Ticket has been closed.";
 
         public const string Deleted = "Ticket has been deleted.";
@@ -29,6 +31,8 @@ namespace Helpdesk.Services.Tickets.Results
         public const string TicketAlreadyResolved = "Ticket has already been resolved.";
 
         public const string TicketAlreadyStarted = "Ticket has already been started.";
+
+        public const string Unassigned = "Ticket has been unassigned.";
 
         public const string Updated = "Ticket has been updated.";
 

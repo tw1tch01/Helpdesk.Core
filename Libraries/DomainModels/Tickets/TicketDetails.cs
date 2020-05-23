@@ -7,10 +7,10 @@ using Helpdesk.DomainModels.Mappings;
 
 namespace Helpdesk.DomainModels.Tickets
 {
-    public class FullTicketDetails : IMaps<Ticket>
+    public class TicketDetails : IMaps<Ticket>
     {
         public int TicketId { get; set; }
-        public Guid Identifier { get; set; }
+        public Guid TicketGuid { get; set; }
         public CreatedAuditInfo Opened { get; set; }
         public ModifiedAuditInfo Modified { get; set; }
         public Guid Client { get; set; }
@@ -29,7 +29,8 @@ namespace Helpdesk.DomainModels.Tickets
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Ticket, FullTicketDetails>(MemberList.Destination)
+            profile.CreateMap<Ticket, TicketDetails>(MemberList.Destination)
+                .ForMember(m => m.TicketGuid, o => o.MapFrom(o => o.Identifier))
                 .ForMember(m => m.Client, o => o.MapFrom(m => m.UserGuid))
                 .ForMember(m => m.Assignee, o => o.MapFrom(m => m.AssignedUserGuid))
                 .ForMember(m => m.Opened, o => o.MapFrom(m => m))

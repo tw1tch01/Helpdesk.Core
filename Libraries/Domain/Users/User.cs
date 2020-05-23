@@ -20,6 +20,6 @@ namespace Helpdesk.Domain.Users
             return Name + " " + Surname;
         }
 
-        #endregion
+        #endregion Public Methods
     }
 }

@@ -32,7 +32,12 @@ namespace Helpdesk.DomainModels.Users
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<EditUser, User>();
+            profile.CreateMap<EditUser, User>(MemberList.Source)
+                .ForMember(m => m.Username, o => o.Condition(m => !string.IsNullOrWhiteSpace(m.Username)))
+                .ForMember(m => m.Name, o => o.Condition(m => !string.IsNullOrWhiteSpace(m.Name)))
+                .ForMember(m => m.Surname, o => o.Condition(m => !string.IsNullOrWhiteSpace(m.Surname)))
+                .ForMember(m => m.Alias, o => o.Condition(m => !string.IsNullOrWhiteSpace(m.Alias)))
+                .ForMember(m => m.Email, o => o.Condition(m => !string.IsNullOrWhiteSpace(m.Email)));
         }
     }
 }

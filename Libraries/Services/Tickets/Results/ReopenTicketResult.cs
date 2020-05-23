@@ -14,9 +14,9 @@ namespace Helpdesk.Services.Tickets.Results
 
         public TicketReopenResult Result { get; }
         public string Message => GetMessage();
-        public int TicketId { get; internal set; }
-        public Guid? UserGuid { get; internal set; }
-        public IWorkflowProcess Workflow { get; internal set; }
+        public int TicketId { get; set; }
+        public Guid? UserGuid { get; set; }
+        public IWorkflowProcess Workflow { get; set; }
 
         #region Methods
 

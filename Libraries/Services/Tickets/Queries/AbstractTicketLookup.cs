@@ -2,23 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using Data.Specifications;
-using FluentValidation.Validators;
 using Helpdesk.Domain.Enums;
 using Helpdesk.Domain.Tickets;
 using Helpdesk.DomainModels.Tickets;
 using Helpdesk.DomainModels.Tickets.Enums;
+using Helpdesk.Services.Common;
 using Helpdesk.Services.Common.Specifications;
 using Helpdesk.Services.Tickets.Specifications;
 
 namespace Helpdesk.Services.Tickets.Queries
 {
-    public abstract class AbstractTicketsLookup
+    public abstract class AbstractTicketsLookup : AbstractLookup<Ticket>
     {
-        protected LinqSpecification<Ticket> _specification;
-
         protected AbstractTicketsLookup(LinqSpecification<Ticket> defaultSpecifcation)
+            : base(defaultSpecifcation)
         {
-            _specification = defaultSpecifcation;
         }
 
         #region Methods
@@ -52,22 +50,22 @@ namespace Helpdesk.Services.Tickets.Queries
 
         private void CreatedAfter(DateTimeOffset createdAfter)
         {
-            AndSpecification(new CreatedAfter<Ticket>(createdAfter));
+            And(new CreatedAfter<Ticket>(createdAfter));
         }
 
         private void CreatedBefore(DateTimeOffset createdBefore)
         {
-            AndSpecification(new CreatedBefore<Ticket>(createdBefore));
+            And(new CreatedBefore<Ticket>(createdBefore));
         }
 
         private void SearchBy(string searchBy)
         {
-            AndSpecification(new TicketNameContainsTerm(searchBy));
+            And(new TicketNameContainsTerm(searchBy));
         }
 
         private void WithinTicketIds(IList<int> ticketIds)
         {
-            AndSpecification(new GetTicketByIds(ticketIds));
+            And(new GetTicketsWithinIds(ticketIds));
         }
 
         private void FilterByStatus(TicketStatus status)
@@ -75,27 +73,27 @@ namespace Helpdesk.Services.Tickets.Queries
             switch (status)
             {
                 case TicketStatus.Open:
-                    AndSpecification(new GetOpenTickets());
+                    And(new GetOpenTickets());
                     break;
 
                 case TicketStatus.Overdue:
-                    AndSpecification(new GetOverdueTickets());
+                    And(new GetOverdueTickets());
                     break;
 
                 case TicketStatus.Resolved:
-                    AndSpecification(new GetResolvedTickets());
+                    And(new GetResolvedTickets());
                     break;
 
                 case TicketStatus.Closed:
-                    AndSpecification(new GetClosedTickets());
+                    And(new GetClosedTickets());
                     break;
 
                 case TicketStatus.InProgress:
-                    AndSpecification(new GetInProgressTickets());
+                    And(new GetInProgressTickets());
                     break;
 
                 case TicketStatus.OnHold:
-                    AndSpecification(new GetOnHoldTickets());
+                    And(new GetOnHoldTickets());
                     break;
 
                 default:
@@ -105,12 +103,12 @@ namespace Helpdesk.Services.Tickets.Queries
 
         private void FilterBySeverity(Severity severity)
         {
-            AndSpecification(new GetTicketBySeverity(severity));
+            And(new GetTicketBySeverity(severity));
         }
 
         private void FilterByPriority(Priority priority)
         {
-            AndSpecification(new GetTicketByPriority(priority));
+            And(new GetTicketByPriority(priority));
         }
 
         private void SortBy(SortTicketsBy sortBy)
@@ -149,12 +147,6 @@ namespace Helpdesk.Services.Tickets.Queries
                     _specification.OrderByDescending(ticket => ticket.Priority);
                     break;
             }
-        }
-
-        private void AndSpecification(LinqSpecification<Ticket> filterSpec)
-        {
-            if (_specification == null) _specification = filterSpec;
-            else _specification &= filterSpec;
         }
 
         #endregion Private Methods

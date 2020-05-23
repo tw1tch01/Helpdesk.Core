@@ -20,13 +20,13 @@ namespace Helpdesk.Services.Tickets.Queries.GetTicket
             _mapper = mapper;
         }
 
-        public virtual async Task<FullTicketDetails> Get(int ticketId)
+        public virtual async Task<TicketDetails> Get(int ticketId)
         {
-            var ticket = await _repository.SingleAsync(new GetTicketById(ticketId));
+            var ticket = await _repository.SingleAsync(new GetTicketById(ticketId).AsNoTracking());
 
             if (ticket == null) return null;
 
-            var details = _mapper.Map<FullTicketDetails>(ticket);
+            var details = _mapper.Map<TicketDetails>(ticket);
 
             return details;
         }

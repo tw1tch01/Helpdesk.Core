@@ -6,10 +6,6 @@ namespace Helpdesk.Services.Users.Factories.DeleteUser
     {
         DeleteUserResult Deleted(int userId);
 
-        DeleteUserResult Deleted(string username);
-
         DeleteUserResult UserNotFound(int userId);
-
-        DeleteUserResult UserNotFound(string username);
     }
 }

@@ -19,7 +19,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Tests
             {
                 TicketId = ticketId
             };
-            var spec = new GetTicketByIds(new List<int> { ticketId });
+            var spec = new GetTicketsWithinIds(new List<int> { ticketId });
             var result = spec.IsSatisfiedBy(ticket);
             Assert.IsTrue(result, "Should return true when ticketId is within the value.");
         }
@@ -32,7 +32,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Tests
             {
                 TicketId = _fixture.Create<int>()
             };
-            var spec = new GetTicketByIds(new List<int> { ticketId });
+            var spec = new GetTicketsWithinIds(new List<int> { ticketId });
             var result = spec.IsSatisfiedBy(ticket);
             Assert.IsFalse(result, "Should return false when ticketId is not contained within the value.");
         }
