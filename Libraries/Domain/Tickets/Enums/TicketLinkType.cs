@@ -1,4 +1,4 @@
-﻿namespace Helpdesk.Domain.Enums
+﻿namespace Helpdesk.Domain.Tickets.Enums
 {
     public enum TicketLinkType
     {

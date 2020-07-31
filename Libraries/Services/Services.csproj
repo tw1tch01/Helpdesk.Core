@@ -12,21 +12,18 @@
   <ItemGroup>
     <Compile Remove="Clients\**" />
     <Compile Remove="Projects\**" />
-    <Compile Remove="TicketLinks\**" />
     <Compile Remove="Tickets\Commands\ApproveTicket\**" />
     <Compile Remove="Tickets\Commands\RequestApproval\**" />
     <Compile Remove="Tickets\Events\ApproveTicket\**" />
     <Compile Remove="Tickets\Events\RequestApproval\**" />
     <EmbeddedResource Remove="Clients\**" />
     <EmbeddedResource Remove="Projects\**" />
-    <EmbeddedResource Remove="TicketLinks\**" />
     <EmbeddedResource Remove="Tickets\Commands\ApproveTicket\**" />
     <EmbeddedResource Remove="Tickets\Commands\RequestApproval\**" />
     <EmbeddedResource Remove="Tickets\Events\ApproveTicket\**" />
     <EmbeddedResource Remove="Tickets\Events\RequestApproval\**" />
     <None Remove="Clients\**" />
     <None Remove="Projects\**" />
-    <None Remove="TicketLinks\**" />
     <None Remove="Tickets\Commands\ApproveTicket\**" />
     <None Remove="Tickets\Commands\RequestApproval\**" />
     <None Remove="Tickets\Events\ApproveTicket\**" />

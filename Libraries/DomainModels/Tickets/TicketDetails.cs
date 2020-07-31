@@ -1,7 +1,7 @@
 ﻿using System;
 using AutoMapper;
-using Helpdesk.Domain.Enums;
 using Helpdesk.Domain.Tickets;
+using Helpdesk.Domain.Tickets.Enums;
 using Helpdesk.DomainModels.Common;
 using Helpdesk.DomainModels.Mappings;
 
@@ -22,9 +22,13 @@ namespace Helpdesk.DomainModels.Tickets
         public Priority Priority { get; set; }
         public DateTimeOffset? AssignedOn { get; set; }
         public DateTimeOffset? StartedOn { get; set; }
+        public Guid? StartedBy { get; set; }
         public DateTimeOffset? PausedOn { get; set; }
+        public Guid? PausedBy { get; set; }
         public DateTimeOffset? ResolvedOn { get; set; }
+        public Guid? ResolvedBy { get; set; }
         public DateTimeOffset? ClosedOn { get; set; }
+        public Guid? ClosedBy { get; set; }
         public TicketStatus Status { get; set; }
 
         public void Mapping(Profile profile)

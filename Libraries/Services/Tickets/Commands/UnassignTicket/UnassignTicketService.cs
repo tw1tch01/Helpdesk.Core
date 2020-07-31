@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Data.Repositories;
-using Helpdesk.Domain.Enums;
 using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Notifications;
 using Helpdesk.Services.Tickets.Events.UnassignTicket;

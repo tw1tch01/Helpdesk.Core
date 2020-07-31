@@ -1,4 +1,4 @@
-﻿using Helpdesk.Domain.Enums;
+﻿using Helpdesk.Domain.Tickets.Enums;
 using Helpdesk.DomainModels.TicketLinks.Events;
 using Helpdesk.Services.Notifications;
 

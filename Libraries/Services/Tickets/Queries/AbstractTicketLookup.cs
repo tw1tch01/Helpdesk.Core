@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Data.Specifications;
-using Helpdesk.Domain.Enums;
 using Helpdesk.Domain.Tickets;
+using Helpdesk.Domain.Tickets.Enums;
 using Helpdesk.DomainModels.Tickets;
 using Helpdesk.DomainModels.Tickets.Enums;
 using Helpdesk.Services.Common;

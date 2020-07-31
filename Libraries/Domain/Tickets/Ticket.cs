@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using Helpdesk.Domain.Common;
-using Helpdesk.Domain.Enums;
+using Helpdesk.Domain.Entities;
+using Helpdesk.Domain.Tickets.Enums;
 
 namespace Helpdesk.Domain.Tickets
 {
@@ -8,7 +10,8 @@ namespace Helpdesk.Domain.Tickets
     {
         public Ticket()
         {
-            //LinkedTickets = new HashSet<TicketLink>();
+            LinkedTo = new HashSet<TicketLink>();
+            LinkedFrom = new HashSet<TicketLink>();
         }
 
         public int TicketId { get; set; }
@@ -28,6 +31,13 @@ namespace Helpdesk.Domain.Tickets
         public Guid? ResolvedBy { get; set; }
         public DateTimeOffset? ClosedOn { get; set; }
         public Guid? ClosedBy { get; set; }
+
+        #region Navigational Properties
+
+        public ICollection<TicketLink> LinkedTo { get; set; }
+        public ICollection<TicketLink> LinkedFrom { get; set; }
+
+        #endregion Navigational Properties
 
         #region Public Methods
 
