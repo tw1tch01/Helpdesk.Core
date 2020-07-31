@@ -7,16 +7,6 @@ namespace Helpdesk.Domain.Entities
 {
     public class TicketLink : ICreatedAudit
     {
-        public TicketLink()
-        {
-        }
-
-        public TicketLink(int fromTicketId, int toTicketId)
-        {
-            FromTicketId = fromTicketId;
-            ToTicketId = toTicketId;
-        }
-
         public int FromTicketId { get; set; }
         public int ToTicketId { get; set; }
         public string CreatedBy { get; set; }

@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Data.Repositories;
-using Helpdesk.Services.Common;
-using Helpdesk.Services.Common.Results;
+using Helpdesk.DomainModels.TicketLinks;
+using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Notifications;
 using Helpdesk.Services.TicketLinks.Events.UnlinkTicket;
-using Helpdesk.Services.TicketLinks.Results.Invalid;
-using Helpdesk.Services.TicketLinks.Results.Valid;
+using Helpdesk.Services.TicketLinks.Factories.UnlinkTickets;
+using Helpdesk.Services.TicketLinks.Results;
 using Helpdesk.Services.TicketLinks.Specifications;
 using Helpdesk.Services.Workflows;
+using Helpdesk.Services.Workflows.Enums;
 
 namespace Helpdesk.Services.Tickets.Commands.UnlinkTicket
 {
@@ -17,37 +18,42 @@ namespace Helpdesk.Services.Tickets.Commands.UnlinkTicket
         private readonly IContextRepository<ITicketContext> _repository;
         private readonly INotificationService _notificationService;
         private readonly IWorkflowService _workflowService;
+        private readonly IUnlinkTicketsResultFactory _factory;
 
         public UnlinkTicketService(
             IContextRepository<ITicketContext> repository,
             INotificationService notificationService,
-            IWorkflowService workflowService)
+            IWorkflowService workflowService,
+            IUnlinkTicketsResultFactory factory)
         {
             _repository = repository;
             _notificationService = notificationService;
             _workflowService = workflowService;
+            _factory = factory;
         }
 
-        public virtual async Task<ProcessResult> Unlink(int fromTicketId, int toTicketId)
+        public virtual async Task<UnlinkTicketsResult> Unlink(RemoveTicketsLink removeLink)
         {
-            if (fromTicketId == toTicketId) throw new ArgumentException("Cannot unlink a ticket from itself.");
+            if (removeLink.IsSelfUnlink()) throw new ArgumentException("Cannot unlink a ticket from itself.");
 
-            var ticketLink = await _repository.SingleAsync(new GetTicketLinkById(fromTicketId, toTicketId));
+            var ticketLinkSpec = new GetLinkedTicketsById(removeLink.FromTicketId, removeLink.ToTicketId)
+                               | new GetLinkedTicketsById(removeLink.ToTicketId, removeLink.FromTicketId);
 
-            if (ticketLink == null) await _repository.SingleAsync(new GetTicketLinkById(toTicketId, fromTicketId));
+            var ticketLink = await _repository.SingleAsync(ticketLinkSpec);
 
-            if (ticketLink == null) return new TicketsNotLinkedResult(fromTicketId, toTicketId);
+            if (ticketLink == null) return _factory.TicketsNotLinked(removeLink.FromTicketId, removeLink.ToTicketId);
 
-            await _workflowService.Process(new BeforeTicketsUnlinkedWorkflow(fromTicketId, toTicketId));
+            var beforeWorkflow = await _workflowService.Process(new BeforeTicketsUnlinkedWorkflow(removeLink.FromTicketId, removeLink.ToTicketId));
+            if (beforeWorkflow.Result != WorkflowResult.Succeeded) return _factory.WorkflowFailed(removeLink.FromTicketId, removeLink.ToTicketId, beforeWorkflow);
 
             _repository.Remove(ticketLink);
             await _repository.SaveAsync();
 
-            var workflow = _workflowService.Process(new TicketsUnlinkedWorkflow(fromTicketId, toTicketId));
-            var notification = _notificationService.Queue(new TicketsUnlinkedNotification(fromTicketId, toTicketId));
+            var workflow = _workflowService.Process(new TicketsUnlinkedWorkflow(removeLink.FromTicketId, removeLink.ToTicketId));
+            var notification = _notificationService.Queue(new TicketsUnlinkedNotification(removeLink.FromTicketId, removeLink.ToTicketId));
             await Task.WhenAll(workflow, notification);
 
-            return new TicketsUnlinkedResult(fromTicketId, toTicketId);
+            return _factory.Unlinked(removeLink.FromTicketId, removeLink.ToTicketId);
         }
     }
 }

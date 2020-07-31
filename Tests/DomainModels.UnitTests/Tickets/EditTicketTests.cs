@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace Helpdesk.DomainModels.UnitTests.Tickets
 {
     [TestFixture]
-    public class UpdateTicketTests
+    public class EditTicketTests
     {
         private readonly IFixture _fixture = new Fixture();
         private IMapper _mapper;
@@ -28,58 +28,58 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets
         [Test]
         public void NullObjectReturnsNull()
         {
-            EditTicket dto = null;
-            var item = _mapper.Map<Ticket>(dto);
+            EditTicket editTicket = null;
+            var item = _mapper.Map<Ticket>(editTicket);
             Assert.IsNull(item);
         }
 
         [Test]
         public void MapsOpenTicketDtoToTicket()
         {
-            var dto = new EditTicket
+            var editTicket = new EditTicket
             {
                 Name = _fixture.Create<string>(),
                 Description = _fixture.Create<string>(),
                 Severity = _fixture.Create<Severity?>(),
                 Priority = _fixture.Create<Priority?>(),
             };
-            var ticket = _mapper.Map<Ticket>(dto);
+            var ticket = _mapper.Map<Ticket>(editTicket);
 
             Assert.Multiple(() =>
             {
                 Assert.IsNotNull(ticket);
                 Assert.IsInstanceOf<Ticket>(ticket);
-                Assert.AreEqual(dto.Name, ticket.Name);
-                Assert.AreEqual(dto.Description, ticket.Description);
-                Assert.AreEqual(dto.Severity, ticket.Severity);
-                Assert.AreEqual(dto.Priority, ticket.Priority);
+                Assert.AreEqual(editTicket.Name, ticket.Name);
+                Assert.AreEqual(editTicket.Description, ticket.Description);
+                Assert.AreEqual(editTicket.Severity, ticket.Severity);
+                Assert.AreEqual(editTicket.Priority, ticket.Priority);
             });
         }
 
         [Test]
         public void WhenUpdateDueDateIsTrue_MapsDueDate()
         {
-            var dto = new EditTicket
+            var editTicket = new EditTicket
             {
                 DueDate = _fixture.Create<DateTimeOffset?>(),
                 UpdateDueDate = true
             };
-            var ticket = _mapper.Map<Ticket>(dto);
+            var ticket = _mapper.Map<Ticket>(editTicket);
 
-            Assert.AreEqual(dto.DueDate, ticket.DueDate);
+            Assert.AreEqual(editTicket.DueDate, ticket.DueDate);
         }
 
         [Test]
         public void WhenUpdateDueDateIsFalse_DoesNotMapDueDate()
         {
-            var dto = new EditTicket
+            var editTicket = new EditTicket
             {
                 DueDate = _fixture.Create<DateTimeOffset>(),
                 UpdateDueDate = false
             };
-            var ticket = _mapper.Map<Ticket>(dto);
+            var ticket = _mapper.Map<Ticket>(editTicket);
 
-            Assert.AreNotEqual(dto.DueDate, ticket.DueDate);
+            Assert.AreNotEqual(editTicket.DueDate, ticket.DueDate);
         }
     }
 }

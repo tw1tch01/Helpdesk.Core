@@ -5,12 +5,12 @@ using Helpdesk.Domain.Entities;
 
 namespace Helpdesk.Services.TicketLinks.Specifications
 {
-    public class GetTicketLinkById : LinqSpecification<TicketLink>
+    public class GetLinkedTicketsById : LinqSpecification<TicketLink>
     {
         private readonly int _fromTicketId;
         private readonly int _toTicketId;
 
-        public GetTicketLinkById(int fromTicketId, int toTicketId)
+        public GetLinkedTicketsById(int fromTicketId, int toTicketId)
         {
             _fromTicketId = fromTicketId;
             _toTicketId = toTicketId;

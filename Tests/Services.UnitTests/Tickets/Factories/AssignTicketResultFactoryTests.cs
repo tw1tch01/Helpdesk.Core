@@ -13,8 +13,16 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
     [TestFixture]
     public class AssignTicketResultFactoryTests
     {
-        private readonly IFixture _fixture = new Fixture();
+        private readonly IFixture _fixture;
         private AssignTicketResultFactory _factory;
+
+        public AssignTicketResultFactoryTests()
+        {
+            _fixture = new Fixture();
+
+            _fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
+            _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+        }
 
         [SetUp]
         public void Setup()
