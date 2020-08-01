@@ -7,16 +7,16 @@ namespace Helpdesk.Services.Tickets.Specifications
 {
     public class TicketNameContainsTerm : LinqSpecification<Ticket>
     {
-        private readonly string _term;
-
         public TicketNameContainsTerm(string term)
         {
-            _term = term;
+            Term = term;
         }
+
+        public string Term { get; }
 
         public override Expression<Func<Ticket, bool>> AsExpression()
         {
-            return ticket => ticket.Name.Contains(_term);
+            return ticket => ticket.Name.Contains(Term);
         }
     }
 }

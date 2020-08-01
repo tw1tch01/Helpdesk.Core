@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using FluentValidation.Results;
+using Helpdesk.Domain.Common;
 using Helpdesk.Domain.Tickets;
-using Helpdesk.DomainModels.Common;
 using Helpdesk.Services.Extensions;
 using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Tickets.Results.Enums;
-using Helpdesk.Services.Workflows;
 
 namespace Helpdesk.Services.Tickets.Factories.UpdateTicket
 {
@@ -34,15 +33,6 @@ namespace Helpdesk.Services.Tickets.Factories.UpdateTicket
             {
                 TicketId = ticketId,
                 ValidationFailures = errors.GroupPropertyWithErrors()
-            };
-        }
-
-        public UpdateTicketResult WorkflowFailed(int ticketId, IWorkflowProcess workflow)
-        {
-            return new UpdateTicketResult(TicketUpdateResult.WorkflowFailed)
-            {
-                TicketId = ticketId,
-                Workflow = workflow
             };
         }
     }

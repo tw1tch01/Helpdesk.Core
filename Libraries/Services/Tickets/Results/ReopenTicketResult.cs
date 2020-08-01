@@ -1,11 +1,10 @@
 ﻿using System;
 using Helpdesk.Services.Common.Results;
 using Helpdesk.Services.Tickets.Results.Enums;
-using Helpdesk.Services.Workflows;
 
 namespace Helpdesk.Services.Tickets.Results
 {
-    public class ReopenTicketResult : IProcessResult<TicketReopenResult>, IWorkflowResult
+    public class ReopenTicketResult : IProcessResult<TicketReopenResult>
     {
         public ReopenTicketResult(TicketReopenResult result)
         {
@@ -16,7 +15,6 @@ namespace Helpdesk.Services.Tickets.Results
         public string Message => GetMessage();
         public int TicketId { get; set; }
         public Guid? UserGuid { get; set; }
-        public IWorkflowProcess Workflow { get; set; }
 
         #region Methods
 
@@ -24,7 +22,6 @@ namespace Helpdesk.Services.Tickets.Results
         {
             TicketReopenResult.Reopened => ResultMessages.Reopened,
             TicketReopenResult.TicketNotFound => ResultMessages.TicketNotFound,
-            TicketReopenResult.WorkflowFailed => ResultMessages.WorkflowFailed,
             _ => Result.ToString()
         };
 

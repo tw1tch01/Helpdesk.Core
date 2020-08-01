@@ -21,7 +21,7 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets
                 opt.AddProfile<MappingProfile>();
             });
             _mapper = configProvider.CreateMapper();
-            _fixture.Behaviors.Clear();
+            _fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
             _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         }
 
@@ -29,8 +29,8 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets
         public void NullObjectReturnsNull()
         {
             Ticket ticket = null;
-            var item = _mapper.Map<TicketDetails>(ticket);
-            Assert.IsNull(item);
+            var ticketDetails = _mapper.Map<TicketDetails>(ticket);
+            Assert.IsNull(ticketDetails);
         }
 
         [Test]

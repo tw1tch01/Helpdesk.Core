@@ -51,12 +51,12 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets.Validation
         [Test]
         public void ShouldNotHaveErrorWhenDescriptionIsSpecified()
         {
-            var name = _fixture.Create<string>();
-            _validator.ShouldNotHaveValidationErrorFor(t => t.Name, name);
+            var description = _fixture.Create<string>();
+            _validator.ShouldNotHaveValidationErrorFor(t => t.Description, description);
         }
 
         [Test]
-        public void ShouldHaveErrorClientIsEmpty()
+        public void ShouldHaveErrorWhenClientIsEmpty()
         {
             _validator.ShouldHaveValidationErrorFor(t => t.Client, Guid.Empty);
         }

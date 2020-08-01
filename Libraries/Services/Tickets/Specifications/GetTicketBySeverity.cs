@@ -8,16 +8,16 @@ namespace Helpdesk.Services.Tickets.Specifications
 {
     public class GetTicketBySeverity : LinqSpecification<Ticket>
     {
-        private readonly Severity _severity;
-
         public GetTicketBySeverity(Severity severity)
         {
-            _severity = severity;
+            Severity = severity;
         }
+
+        public Severity Severity { get; }
 
         public override Expression<Func<Ticket, bool>> AsExpression()
         {
-            return ticket => ticket.Severity == _severity;
+            return ticket => ticket.Severity == Severity;
         }
     }
 }

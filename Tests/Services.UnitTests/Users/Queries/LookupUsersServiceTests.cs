@@ -85,11 +85,19 @@ namespace Helpdesk.Services.UnitTests.Users.Queries
         {
             var @params = _fixture.Create<UserLookupParams>();
             var mockRepository = new Mock<IContextRepository<IUserContext>>();
+            var mockMapper = new Mock<IMapper>();
+
+            var pagedUsers = _fixture.Create<PagedCollection<User>>();
+            var userLookup = _fixture.Create<IList<UserLookup>>();
+
+            mockRepository.Setup(s => s.PagedListAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<LinqSpecification<User>>(), u => u.UserId))
+                          .ReturnsAsync(pagedUsers);
+            mockMapper.Setup(s => s.Map<IList<UserLookup>>(pagedUsers.Items))
+                      .Returns(userLookup);
 
             var service = CreateService(
-                mockRepository);
-
-            mockRepository.Setup(s => s.PagedListAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<LinqSpecification<User>>(), u => u.UserId)).ReturnsAsync(_fixture.Create<PagedCollection<User>>());
+                mockRepository,
+                mockMapper);
 
             await service.PagedLookup(It.IsAny<int>(), It.IsAny<int>(), @params);
 

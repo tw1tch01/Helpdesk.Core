@@ -1,11 +1,10 @@
 ﻿using System;
 using Helpdesk.Services.Common.Results;
 using Helpdesk.Services.Tickets.Results.Enums;
-using Helpdesk.Services.Workflows;
 
 namespace Helpdesk.Services.Tickets.Results
 {
-    public class UnassignTicketResult : IProcessResult<TicketUnassignResult>, IWorkflowResult
+    public class UnassignTicketResult : IProcessResult<TicketUnassignResult>
     {
         public UnassignTicketResult(TicketUnassignResult result)
         {
@@ -16,7 +15,6 @@ namespace Helpdesk.Services.Tickets.Results
         public string Message => GetMessage();
         public int TicketId { get; set; }
         public Guid? UnassignedBy { get; set; }
-        public IWorkflowProcess Workflow { get; set; }
 
         #region Methods
 
@@ -24,7 +22,6 @@ namespace Helpdesk.Services.Tickets.Results
         {
             TicketUnassignResult.Unassigned => ResultMessages.Unassigned,
             TicketUnassignResult.TicketNotFound => ResultMessages.TicketNotFound,
-            TicketUnassignResult.WorkflowFailed => ResultMessages.WorkflowFailed,
             _ => Result.ToString()
         };
 

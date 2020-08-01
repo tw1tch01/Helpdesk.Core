@@ -8,16 +8,16 @@ namespace Helpdesk.Services.Tickets.Specifications
 {
     public class GetTicketsWithinIds : LinqSpecification<Ticket>
     {
-        private readonly IList<int> _ticketIds;
-
         public GetTicketsWithinIds(IList<int> ticketIds)
         {
-            _ticketIds = ticketIds;
+            TicketIds = ticketIds;
         }
+
+        public IList<int> TicketIds { get; }
 
         public override Expression<Func<Ticket, bool>> AsExpression()
         {
-            return ticket => _ticketIds.Contains(ticket.TicketId);
+            return ticket => TicketIds.Contains(ticket.TicketId);
         }
     }
 }

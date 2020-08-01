@@ -27,7 +27,7 @@ namespace Helpdesk.Services.UnitTests.Users.Commands
 
             await service.Delete(userId);
 
-            mockRepository.Verify(v => v.SingleAsync(It.Is<GetUserById>(a => a._userId == userId)), Times.Once, "Should call the SingleAsync method exactly once for GetUserById.");
+            mockRepository.Verify(v => v.SingleAsync(It.Is<GetUserById>(a => a.UserId == userId)), Times.Once, "Should call the SingleAsync method exactly once for GetUserById.");
         }
 
         [Test]

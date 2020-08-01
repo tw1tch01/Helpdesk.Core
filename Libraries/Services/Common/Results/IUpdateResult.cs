@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Helpdesk.DomainModels.Common;
+using Helpdesk.Domain.Common;
 
 namespace Helpdesk.Services.Common.Results
 {

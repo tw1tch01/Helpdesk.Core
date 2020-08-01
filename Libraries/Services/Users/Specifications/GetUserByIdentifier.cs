@@ -7,16 +7,16 @@ namespace Helpdesk.Services.Users.Specifications
 {
     public class GetUserByIdentifier : LinqSpecification<User>
     {
-        internal readonly Guid _identifier;
-
         public GetUserByIdentifier(Guid identifier)
         {
-            _identifier = identifier;
+            Identifier = identifier;
         }
+
+        public Guid Identifier { get; }
 
         public override Expression<Func<User, bool>> AsExpression()
         {
-            return user => user.Identifier == _identifier;
+            return user => user.Identifier == Identifier;
         }
     }
 }

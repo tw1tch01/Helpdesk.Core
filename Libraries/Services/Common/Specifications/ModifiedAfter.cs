@@ -7,16 +7,16 @@ namespace Helpdesk.Services.Common.Specifications
 {
     public class ModifiedAfter<T> : LinqSpecification<T> where T : class, IModifiedAudit
     {
-        private readonly DateTime _modifiedAfter;
-
-        public ModifiedAfter(DateTime modifiedAfter)
+        public ModifiedAfter(DateTimeOffset modifiedAfter)
         {
-            _modifiedAfter = modifiedAfter;
+            ModifiedDate = modifiedAfter;
         }
+
+        public DateTimeOffset ModifiedDate { get; }
 
         public override Expression<Func<T, bool>> AsExpression()
         {
-            return a => a.ModifiedOn > _modifiedAfter;
+            return a => a.ModifiedOn > ModifiedDate;
         }
     }
 }

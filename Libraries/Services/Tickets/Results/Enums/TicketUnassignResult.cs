@@ -3,7 +3,6 @@
     public enum TicketUnassignResult
     {
         Unassigned,
-        TicketNotFound,
-        WorkflowFailed
+        TicketNotFound
     }
 }

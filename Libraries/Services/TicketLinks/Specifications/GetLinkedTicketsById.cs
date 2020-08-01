@@ -7,18 +7,19 @@ namespace Helpdesk.Services.TicketLinks.Specifications
 {
     public class GetLinkedTicketsById : LinqSpecification<TicketLink>
     {
-        private readonly int _fromTicketId;
-        private readonly int _toTicketId;
-
         public GetLinkedTicketsById(int fromTicketId, int toTicketId)
         {
-            _fromTicketId = fromTicketId;
-            _toTicketId = toTicketId;
+            FromTicketId = fromTicketId;
+            ToTicketId = toTicketId;
         }
+
+        public int FromTicketId { get; }
+        public int ToTicketId { get; }
 
         public override Expression<Func<TicketLink, bool>> AsExpression()
         {
-            return ticketLink => ticketLink.FromTicketId == _fromTicketId && ticketLink.ToTicketId == _toTicketId;
+            return ticketLink => ticketLink.FromTicketId == FromTicketId &&
+                                 ticketLink.ToTicketId == ToTicketId;
         }
     }
 }

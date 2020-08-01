@@ -6,6 +6,6 @@ namespace Helpdesk.Services.TicketLinks.Commands.LinkTickets
 {
     public interface ILinkTicketService
     {
-        Task<LinkTicketsResult> Link(NewTicketsLink newLink);
+        Task<LinkTicketsResult> Link(LinkTicket newLink);
     }
 }

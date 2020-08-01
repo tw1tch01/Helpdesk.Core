@@ -1,8 +1,6 @@
-﻿using System;
-using Helpdesk.Domain.Tickets;
+﻿using Helpdesk.Domain.Tickets;
 using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Tickets.Results.Enums;
-using Helpdesk.Services.Workflows;
 
 namespace Helpdesk.Services.Tickets.Factories.AssignTicket
 {
@@ -44,16 +42,6 @@ namespace Helpdesk.Services.Tickets.Factories.AssignTicket
             return new AssignTicketResult(TicketAssignResult.TicketNotFound)
             {
                 TicketId = ticketId
-            };
-        }
-
-        public AssignTicketResult WorkflowFailed(int ticketId, Guid userGuid, IWorkflowProcess workflow)
-        {
-            return new AssignTicketResult(TicketAssignResult.WorkflowFailed)
-            {
-                TicketId = ticketId,
-                UserGuid = userGuid,
-                Workflow = workflow
             };
         }
     }

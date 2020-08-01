@@ -4,7 +4,6 @@
     {
         Updated,
         ValidationFailure,
-        TicketNotFound,
-        WorkflowFailed
+        TicketNotFound
     }
 }

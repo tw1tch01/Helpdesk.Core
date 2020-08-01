@@ -2,8 +2,8 @@
 using System.Linq;
 using AutoFixture;
 using FluentValidation.Results;
+using Helpdesk.Domain.Common;
 using Helpdesk.Domain.Tickets;
-using Helpdesk.DomainModels.Common;
 using Helpdesk.Services.Extensions;
 using Helpdesk.Services.Tickets.Factories.UpdateTicket;
 using Helpdesk.Services.Tickets.Results;
@@ -37,7 +37,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
                 Assert.AreEqual(ticketId, result.TicketId, "Should equal passed in ticketId.");
                 Assert.IsNull(result.ValidationFailures, "Should be null.");
                 Assert.IsNull(result.PropertyChanges, "Should be null.");
-                Assert.IsNull(result.Workflow, "Should be null.");
             });
         }
 
@@ -58,7 +57,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
                 Assert.AreEqual(ticket.TicketId, result.TicketId, "Should equal passed through ticket's TicketId .");
                 Assert.IsNull(result.ValidationFailures, "Should be null.");
                 Assert.AreEqual(changes, result.PropertyChanges, "Should equal passed through changes.");
-                Assert.IsNull(result.Workflow, "Should be null.");
             });
         }
 
@@ -76,7 +74,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
                 Assert.AreEqual(ticketId, result.TicketId, "Should equal passed through ticketId .");
                 Assert.AreEqual(validationFailures.GroupPropertyWithErrors(), result.ValidationFailures, "Should equal the grouped set of the passed through validationFailures.");
                 Assert.IsNull(result.PropertyChanges, "Should be null.");
-                Assert.IsNull(result.Workflow, "Should be null.");
             });
         }
     }

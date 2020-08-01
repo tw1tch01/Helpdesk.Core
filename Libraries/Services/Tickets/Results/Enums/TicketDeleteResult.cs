@@ -3,7 +3,6 @@
     public enum TicketDeleteResult
     {
         Deleted,
-        TicketNotFound,
-        WorkflowFailed
+        TicketNotFound
     }
 }

@@ -17,7 +17,7 @@ namespace Helpdesk.Domain.Users
         {
             if (!string.IsNullOrEmpty(Alias)) return Alias;
 
-            return Name + " " + Surname;
+            return $"{Name} {Surname}";
         }
 
         #endregion Public Methods

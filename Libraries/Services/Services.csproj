@@ -6,7 +6,7 @@
     <RootNamespace>Helpdesk.Services</RootNamespace>
     <Authors>Robert Breedt</Authors>
     <Product>Helpdesk.Core</Product>
-    <Version>1.0.4</Version>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,20 +14,14 @@
     <Compile Remove="Projects\**" />
     <Compile Remove="Tickets\Commands\ApproveTicket\**" />
     <Compile Remove="Tickets\Commands\RequestApproval\**" />
-    <Compile Remove="Tickets\Events\ApproveTicket\**" />
-    <Compile Remove="Tickets\Events\RequestApproval\**" />
     <EmbeddedResource Remove="Clients\**" />
     <EmbeddedResource Remove="Projects\**" />
     <EmbeddedResource Remove="Tickets\Commands\ApproveTicket\**" />
     <EmbeddedResource Remove="Tickets\Commands\RequestApproval\**" />
-    <EmbeddedResource Remove="Tickets\Events\ApproveTicket\**" />
-    <EmbeddedResource Remove="Tickets\Events\RequestApproval\**" />
     <None Remove="Clients\**" />
     <None Remove="Projects\**" />
     <None Remove="Tickets\Commands\ApproveTicket\**" />
     <None Remove="Tickets\Commands\RequestApproval\**" />
-    <None Remove="Tickets\Events\ApproveTicket\**" />
-    <None Remove="Tickets\Events\RequestApproval\**" />
   </ItemGroup>
 
   <ItemGroup>

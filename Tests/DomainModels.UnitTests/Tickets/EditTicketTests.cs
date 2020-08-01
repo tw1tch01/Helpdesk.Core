@@ -29,20 +29,14 @@ namespace Helpdesk.DomainModels.UnitTests.Tickets
         public void NullObjectReturnsNull()
         {
             EditTicket editTicket = null;
-            var item = _mapper.Map<Ticket>(editTicket);
-            Assert.IsNull(item);
+            var ticket = _mapper.Map<Ticket>(editTicket);
+            Assert.IsNull(ticket);
         }
 
         [Test]
-        public void MapsOpenTicketDtoToTicket()
+        public void MapsEditTicketToTicket()
         {
-            var editTicket = new EditTicket
-            {
-                Name = _fixture.Create<string>(),
-                Description = _fixture.Create<string>(),
-                Severity = _fixture.Create<Severity?>(),
-                Priority = _fixture.Create<Priority?>(),
-            };
+            var editTicket = _fixture.Create<EditTicket>();
             var ticket = _mapper.Map<Ticket>(editTicket);
 
             Assert.Multiple(() =>

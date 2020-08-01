@@ -8,11 +8,8 @@ using FluentValidation.Results;
 using Helpdesk.Domain.Tickets;
 using Helpdesk.DomainModels.Tickets;
 using Helpdesk.Services.Common.Contexts;
-using Helpdesk.Services.Notifications;
 using Helpdesk.Services.Tickets.Commands.OpenTicket;
-using Helpdesk.Services.Tickets.Events.OpenTicket;
 using Helpdesk.Services.Tickets.Factories.OpenTicket;
-using Helpdesk.Services.Workflows;
 using Moq;
 using NUnit.Framework;
 
@@ -84,7 +81,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
 
             mockValidator.Setup(m => m.ValidateAsync(newTicket, It.IsAny<CancellationToken>())).ReturnsAsync(mockValidationResult.Object);
             mockValidationResult.Setup(m => m.IsValid).Returns(true);
-            //mockContext.Setup(m => m.SingleAsync(It.IsAny<GetClientById>())).ReturnsAsync(new Client());
             mockMapper.Setup(m => m.Map<Ticket>(newTicket)).Returns(ticket);
 
             var service = CreateService(
@@ -110,7 +106,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
 
             mockValidator.Setup(m => m.ValidateAsync(newTicket, It.IsAny<CancellationToken>())).ReturnsAsync(mockValidationResult.Object);
             mockValidationResult.Setup(m => m.IsValid).Returns(true);
-            //mockContext.Setup(m => m.SingleAsync(It.IsAny<GetClientById>())).ReturnsAsync(new Client());
             mockMapper.Setup(m => m.Map<Ticket>(newTicket)).Returns(ticket);
 
             var service = CreateService(
@@ -124,80 +119,20 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             mockFactory.Verify(v => v.Opened(ticket), Times.Once, "Should call the factory's Opened method.");
         }
 
-        [Test]
-        public async Task Open_WhenTicketIsAdded_VerifyTickeOpenedWorkflowIsProcessed()
-        {
-            var newTicket = new NewTicket();
-            var ticket = new Ticket();
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
-            var mockMapper = new Mock<IMapper>();
-            var mockWorkflowService = new Mock<IWorkflowService>();
-            var mockValidator = new Mock<IValidator<NewTicket>>();
-            var mockValidationResult = new Mock<ValidationResult>();
-
-            mockValidator.Setup(m => m.ValidateAsync(newTicket, It.IsAny<CancellationToken>())).ReturnsAsync(mockValidationResult.Object);
-            mockValidationResult.Setup(m => m.IsValid).Returns(true);
-            //mockContext.Setup(m => m.SingleAsync(It.IsAny<GetClientById>())).ReturnsAsync(new Client());
-            mockMapper.Setup(m => m.Map<Ticket>(newTicket)).Returns(ticket);
-
-            var service = CreateService(
-                mockContext: mockContext,
-                mockMapper: mockMapper,
-                mockWorkflowService: mockWorkflowService,
-                mockValidator: mockValidator);
-
-            var result = await service.Open(newTicket);
-
-            mockWorkflowService.Verify(v => v.Process(It.Is<TicketOpenedWorkflow>(a => a.TicketId == ticket.TicketId)), Times.Once, "Should process a new TicketOpenedWorkflow.");
-        }
-
-        [Test]
-        public async Task Open_WhenTicketIsAdded_VerifyTickeOpenedNotificationIsQueued()
-        {
-            var newTicket = new NewTicket();
-            var ticket = new Ticket();
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
-            var mockMapper = new Mock<IMapper>();
-            var mockNotificationService = new Mock<INotificationService>();
-            var mockValidator = new Mock<IValidator<NewTicket>>();
-            var mockValidationResult = new Mock<ValidationResult>();
-
-            mockValidator.Setup(m => m.ValidateAsync(newTicket, It.IsAny<CancellationToken>())).ReturnsAsync(mockValidationResult.Object);
-            mockValidationResult.Setup(m => m.IsValid).Returns(true);
-            //mockContext.Setup(m => m.SingleAsync(It.IsAny<GetClientById>())).ReturnsAsync(new Client());
-            mockMapper.Setup(m => m.Map<Ticket>(newTicket)).Returns(ticket);
-
-            var service = CreateService(
-                mockContext: mockContext,
-                mockMapper: mockMapper,
-                mockNotificationService: mockNotificationService,
-                mockValidator: mockValidator);
-
-            var result = await service.Open(newTicket);
-
-            mockNotificationService.Verify(v => v.Queue(It.Is<TicketOpenedNotification>(a => a.TicketId == ticket.TicketId)), Times.Once, "Should queue a new TicketOpenedNotification.");
-        }
-
         private OpenTicketService CreateService(
             Mock<IContextRepository<ITicketContext>> mockContext = null,
             Mock<IMapper> mockMapper = null,
-            Mock<INotificationService> mockNotificationService = null,
-            Mock<IWorkflowService> mockWorkflowService = null,
             Mock<IOpenTicketResultFactory> mockFactory = null,
             Mock<IValidator<NewTicket>> mockValidator = null)
         {
             mockContext ??= new Mock<IContextRepository<ITicketContext>>();
             mockMapper ??= new Mock<IMapper>();
-            mockNotificationService ??= new Mock<INotificationService>();
-            mockWorkflowService ??= new Mock<IWorkflowService>();
             mockFactory ??= new Mock<IOpenTicketResultFactory>();
             mockValidator ??= new Mock<IValidator<NewTicket>>();
 
             return new OpenTicketService(
                 mockContext.Object,
                 mockMapper.Object,
-                mockNotificationService.Object,
-                mockWorkflowService.Object,
                 mockFactory.Object,
                 mockValidator.Object);
         }

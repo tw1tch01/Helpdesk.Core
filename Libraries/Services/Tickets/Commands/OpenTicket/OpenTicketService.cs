@@ -6,11 +6,8 @@ using FluentValidation;
 using Helpdesk.Domain.Tickets;
 using Helpdesk.DomainModels.Tickets;
 using Helpdesk.Services.Common.Contexts;
-using Helpdesk.Services.Notifications;
-using Helpdesk.Services.Tickets.Events.OpenTicket;
 using Helpdesk.Services.Tickets.Factories.OpenTicket;
 using Helpdesk.Services.Tickets.Results;
-using Helpdesk.Services.Workflows;
 
 namespace Helpdesk.Services.Tickets.Commands.OpenTicket
 {
@@ -18,23 +15,17 @@ namespace Helpdesk.Services.Tickets.Commands.OpenTicket
     {
         private readonly IContextRepository<ITicketContext> _repository;
         private readonly IMapper _mapper;
-        private readonly INotificationService _notificationService;
-        private readonly IWorkflowService _workflowService;
         private readonly IOpenTicketResultFactory _factory;
         private readonly IValidator<NewTicket> _validator;
 
         public OpenTicketService(
             IContextRepository<ITicketContext> repository,
             IMapper mapper,
-            INotificationService notificationService,
-            IWorkflowService workflowService,
             IOpenTicketResultFactory factory,
             IValidator<NewTicket> validator)
         {
             _repository = repository;
             _mapper = mapper;
-            _notificationService = notificationService;
-            _workflowService = workflowService;
             _factory = factory;
             _validator = validator;
         }
@@ -51,10 +42,6 @@ namespace Helpdesk.Services.Tickets.Commands.OpenTicket
 
             await _repository.AddAsync(ticket);
             await _repository.SaveAsync();
-
-            var workflow = _workflowService.Process(new TicketOpenedWorkflow(ticket.TicketId, ticket.UserGuid));
-            var notification = _notificationService.Queue(new TicketOpenedNotification(ticket.TicketId, ticket.UserGuid));
-            await Task.WhenAll(workflow, notification);
 
             return _factory.Opened(ticket);
         }

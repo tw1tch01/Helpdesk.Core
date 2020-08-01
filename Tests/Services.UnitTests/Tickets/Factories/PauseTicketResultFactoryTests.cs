@@ -1,7 +1,6 @@
 ﻿using System;
 using AutoFixture;
 using Helpdesk.Domain.Tickets;
-using Helpdesk.Services.Tickets.Events.PauseTicket;
 using Helpdesk.Services.Tickets.Factories.PauseTicket;
 using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Tickets.Results.Enums;
@@ -42,7 +41,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
                 Assert.IsNull(result.ClosedBy, "Should be null.");
                 Assert.IsNull(result.ClosedOn, "Should be null.");
                 Assert.AreEqual(ticket.PausedOn, result.PausedOn, "Should equal the passed in ticket's PausedOn.");
-                Assert.IsNull(result.Workflow, "Should be null.");
             });
         }
 
@@ -69,7 +67,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
                 Assert.AreEqual(ticket.ClosedBy, result.ClosedBy, "Should equal the passed in ticket's ClosedBy.");
                 Assert.AreEqual(ticket.ClosedOn, result.ClosedOn, "Should equal the passed in ticket's ClosedOn.");
                 Assert.IsNull(result.PausedOn, "Should be null.");
-                Assert.IsNull(result.Workflow, "Should be null.");
             });
         }
 
@@ -95,7 +92,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
                 Assert.IsNull(result.ClosedBy, "Should be null.");
                 Assert.IsNull(result.ClosedOn, "Should be null.");
                 Assert.AreEqual(ticket.PausedOn, result.PausedOn, "Should equal the passed in ticket's PausedOn.");
-                Assert.IsNull(result.Workflow, "Should be null.");
             });
         }
 
@@ -122,7 +118,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
                 Assert.IsNull(result.ClosedOn, "Should be null.");
                 Assert.IsNull(result.ClosedBy, "Should be null.");
                 Assert.IsNull(result.PausedOn, "Should be null.");
-                Assert.IsNull(result.Workflow, "Should be null.");
             });
         }
 
@@ -144,31 +139,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
                 Assert.IsNull(result.ClosedBy, "Should be null.");
                 Assert.IsNull(result.ClosedOn, "Should be null.");
                 Assert.IsNull(result.PausedOn, "Should be null.");
-                Assert.IsNull(result.Workflow, "Should be null.");
-            });
-        }
-
-        [Test]
-        public void WorkflowFailed()
-        {
-            var ticketId = _fixture.Create<int>();
-            var userGuid = _fixture.Create<Guid>();
-            var workflow = new BeforeTicketPausedWorkflow(ticketId, userGuid);
-
-            var result = _factory.WorkflowFailed(ticketId, userGuid, workflow);
-
-            Assert.Multiple(() =>
-            {
-                Assert.AreEqual(TicketPauseResult.WorkflowFailed, result.Result, $"Should return {TicketPauseResult.WorkflowFailed}.");
-                Assert.AreEqual(ResultMessages.WorkflowFailed, result.Message, $"Should return {ResultMessages.WorkflowFailed}.");
-                Assert.AreEqual(ticketId, result.TicketId, "Should equal the passed in ticketId.");
-                Assert.AreEqual(userGuid, result.UserGuid, "Should equal the passed in userGuid.");
-                Assert.IsNull(result.ResolvedOn, "Should be null.");
-                Assert.IsNull(result.ResolvedBy, "Should be null.");
-                Assert.IsNull(result.ClosedOn, "Should be null.");
-                Assert.IsNull(result.ClosedBy, "Should be null.");
-                Assert.IsNull(result.PausedOn, "Should be null.");
-                Assert.AreEqual(workflow, result.Workflow, "Should equal the passed in workflow.");
             });
         }
     }

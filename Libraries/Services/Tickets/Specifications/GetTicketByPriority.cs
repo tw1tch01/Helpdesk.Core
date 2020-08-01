@@ -8,16 +8,16 @@ namespace Helpdesk.Services.Tickets.Specifications
 {
     public class GetTicketByPriority : LinqSpecification<Ticket>
     {
-        private readonly Priority _priority;
-
         public GetTicketByPriority(Priority priority)
         {
-            _priority = priority;
+            Priority = priority;
         }
+
+        public Priority Priority { get; }
 
         public override Expression<Func<Ticket, bool>> AsExpression()
         {
-            return ticket => ticket.Priority == _priority;
+            return ticket => ticket.Priority == Priority;
         }
     }
 }

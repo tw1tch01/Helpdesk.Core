@@ -1,7 +1,5 @@
-﻿using System;
-using Helpdesk.Domain.Tickets;
+﻿using Helpdesk.Domain.Tickets;
 using Helpdesk.Services.Tickets.Results;
-using Helpdesk.Services.Workflows;
 
 namespace Helpdesk.Services.Tickets.Factories.ResolveTicket
 {
@@ -14,7 +12,5 @@ namespace Helpdesk.Services.Tickets.Factories.ResolveTicket
         ResolveTicketResult TicketAlreadyClosed(Ticket ticket);
 
         ResolveTicketResult TicketNotFound(int ticketId);
-
-        ResolveTicketResult WorkflowFailed(int ticketId, Guid userGuid, IWorkflowProcess workflow);
     }
 }

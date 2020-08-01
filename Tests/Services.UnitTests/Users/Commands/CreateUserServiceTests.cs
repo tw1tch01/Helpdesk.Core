@@ -63,7 +63,7 @@ namespace Helpdesk.Services.UnitTests.Users.Commands
 
             await service.Create(newUser);
 
-            mockRepository.Verify(v => v.SingleAsync(It.Is<GetUserByUsername>(a => a._username == newUser.Username)), Times.Once, "Should call the SingleAsync method exactly once for GetUserByUsername.");
+            mockRepository.Verify(v => v.SingleAsync(It.Is<GetUserByUsername>(a => a.Username == newUser.Username)), Times.Once, "Should call the SingleAsync method exactly once for GetUserByUsername.");
         }
 
         [Test]
