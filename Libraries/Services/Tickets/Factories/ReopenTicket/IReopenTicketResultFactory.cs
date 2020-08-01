@@ -1,7 +1,6 @@
 ﻿using System;
 using Helpdesk.Domain.Tickets;
 using Helpdesk.Services.Tickets.Results;
-using Helpdesk.Services.Workflows;
 
 namespace Helpdesk.Services.Tickets.Factories.ReopenTicket
 {
@@ -10,7 +9,5 @@ namespace Helpdesk.Services.Tickets.Factories.ReopenTicket
         ReopenTicketResult Reopened(Ticket ticket, Guid userGuid);
 
         ReopenTicketResult TicketNotFound(int ticketId);
-
-        ReopenTicketResult WorkflowFailed(int ticketId, Guid userGuid, IWorkflowProcess workflow);
     }
 }

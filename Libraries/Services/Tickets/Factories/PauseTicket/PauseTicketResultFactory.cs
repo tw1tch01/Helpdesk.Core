@@ -1,8 +1,6 @@
-﻿using System;
-using Helpdesk.Domain.Tickets;
+﻿using Helpdesk.Domain.Tickets;
 using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Tickets.Results.Enums;
-using Helpdesk.Services.Workflows;
 
 namespace Helpdesk.Services.Tickets.Factories.PauseTicket
 {
@@ -51,16 +49,6 @@ namespace Helpdesk.Services.Tickets.Factories.PauseTicket
             return new PauseTicketResult(TicketPauseResult.TicketNotFound)
             {
                 TicketId = ticketId
-            };
-        }
-
-        public PauseTicketResult WorkflowFailed(int ticketId, Guid userGuid, IWorkflowProcess workflow)
-        {
-            return new PauseTicketResult(TicketPauseResult.WorkflowFailed)
-            {
-                TicketId = ticketId,
-                UserGuid = userGuid,
-                Workflow = workflow
             };
         }
     }

@@ -9,8 +9,8 @@ namespace Helpdesk.DomainModels.Users.Validation
             RuleFor(r => r.Name).NotEmpty().MaximumLength(64);
             RuleFor(r => r.Surname).NotEmpty().MaximumLength(64);
             RuleFor(r => r.Username).NotEmpty().MaximumLength(128);
-            RuleFor(r => r.Alias).NotEmpty().MaximumLength(128);
-            RuleFor(r => r.Email).EmailAddress();
+            RuleFor(r => r.Alias).MaximumLength(128);
+            RuleFor(r => r.Email).NotEmpty().EmailAddress();
         }
     }
 }

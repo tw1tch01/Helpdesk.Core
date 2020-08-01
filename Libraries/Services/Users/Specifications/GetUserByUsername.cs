@@ -10,16 +10,16 @@ namespace Helpdesk.Services.Users.Specifications
 {
     public class GetUserByUsername : LinqSpecification<User>
     {
-        internal readonly string _username;
-
         public GetUserByUsername(string username)
         {
-            _username = username;
+            Username = username;
         }
+
+        public string Username { get; }
 
         public override Expression<Func<User, bool>> AsExpression()
         {
-            return user => user.Username == _username;
+            return user => user.Username == Username;
         }
     }
 }

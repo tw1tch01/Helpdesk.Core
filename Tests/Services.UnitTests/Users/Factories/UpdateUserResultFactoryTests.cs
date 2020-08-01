@@ -2,8 +2,8 @@
 using System.Linq;
 using AutoFixture;
 using FluentValidation.Results;
+using Helpdesk.Domain.Common;
 using Helpdesk.Domain.Users;
-using Helpdesk.DomainModels.Common;
 using Helpdesk.Services.Extensions;
 using Helpdesk.Services.Users.Factories.UpdateUser;
 using Helpdesk.Services.Users.Results;

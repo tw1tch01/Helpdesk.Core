@@ -1,6 +1,5 @@
 ﻿using Helpdesk.Services.TicketLinks.Results;
 using Helpdesk.Services.TicketLinks.Results.Enums;
-using Helpdesk.Services.Workflows;
 
 namespace Helpdesk.Services.TicketLinks.Factories.UnlinkTickets
 {
@@ -21,16 +20,6 @@ namespace Helpdesk.Services.TicketLinks.Factories.UnlinkTickets
             {
                 FromTicketId = fromTicketId,
                 ToTicketId = toTicketId
-            };
-        }
-
-        public UnlinkTicketsResult WorkflowFailed(int fromTicketId, int toTicketId, IWorkflowProcess workflow)
-        {
-            return new UnlinkTicketsResult(TicketsUnlinkResult.Unlinked)
-            {
-                FromTicketId = fromTicketId,
-                ToTicketId = toTicketId,
-                Workflow = workflow
             };
         }
     }

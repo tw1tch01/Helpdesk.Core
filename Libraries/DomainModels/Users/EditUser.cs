@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using AutoMapper;
+using Helpdesk.Domain.Common;
 using Helpdesk.Domain.Users;
-using Helpdesk.DomainModels.Common;
 using Helpdesk.DomainModels.Mappings;
 
 namespace Helpdesk.DomainModels.Users

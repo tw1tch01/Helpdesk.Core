@@ -1,11 +1,10 @@
 ﻿using System;
 using Helpdesk.Services.Common.Results;
 using Helpdesk.Services.Tickets.Results.Enums;
-using Helpdesk.Services.Workflows;
 
 namespace Helpdesk.Services.Tickets.Results
 {
-    public class CloseTicketResult : IProcessResult<TicketCloseResult>, IWorkflowResult
+    public class CloseTicketResult : IProcessResult<TicketCloseResult>
     {
         public CloseTicketResult(TicketCloseResult result)
         {
@@ -20,7 +19,6 @@ namespace Helpdesk.Services.Tickets.Results
         public Guid? ResolvedBy { get; set; }
         public DateTimeOffset? ClosedOn { get; set; }
         public Guid? ClosedBy { get; set; }
-        public IWorkflowProcess Workflow { get; set; }
 
         #region Methods
 
@@ -30,7 +28,6 @@ namespace Helpdesk.Services.Tickets.Results
             TicketCloseResult.TicketNotFound => ResultMessages.TicketNotFound,
             TicketCloseResult.TicketAlreadyResolved => ResultMessages.TicketAlreadyResolved,
             TicketCloseResult.TicketAlreadyClosed => ResultMessages.TicketAlreadyClosed,
-            TicketCloseResult.WorkflowFailed => ResultMessages.WorkflowFailed,
             _ => Result.ToString()
         };
 

@@ -7,16 +7,16 @@ namespace Helpdesk.Services.Users.Specifications
 {
     public class UserUsernameContainsTerm : LinqSpecification<User>
     {
-        internal readonly string _term;
-
         public UserUsernameContainsTerm(string term)
         {
-            _term = term;
+            Term = term;
         }
+
+        public string Term { get; }
 
         public override Expression<Func<User, bool>> AsExpression()
         {
-            return user => user.Username.Contains(_term);
+            return user => user.Username.Contains(Term);
         }
     }
 }

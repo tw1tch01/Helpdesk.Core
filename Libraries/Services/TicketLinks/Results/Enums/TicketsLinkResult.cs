@@ -3,7 +3,6 @@
     public enum TicketsLinkResult
     {
         Linked,
-        TicketsAlreadyLinked,
-        WorkflowFailed
+        TicketsAlreadyLinked
     }
 }

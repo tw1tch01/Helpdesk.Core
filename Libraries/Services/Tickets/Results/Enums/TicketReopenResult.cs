@@ -3,7 +3,6 @@
     public enum TicketReopenResult
     {
         Reopened,
-        TicketNotFound,
-        WorkflowFailed
+        TicketNotFound
     }
 }

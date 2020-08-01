@@ -1,7 +1,6 @@
 ﻿using System;
 using AutoFixture;
 using Helpdesk.Domain.Tickets;
-using Helpdesk.Services.Tickets.Events.CloseTicket;
 using Helpdesk.Services.Tickets.Factories.CloseTicket;
 using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Tickets.Results.Enums;
@@ -42,7 +41,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
                 Assert.IsNull(result.ResolvedOn, "Should be null.");
                 Assert.AreEqual(ticket.ClosedBy, result.ClosedBy, "Should equal the ticket's ClosedBy.");
                 Assert.AreEqual(ticket.ClosedOn, result.ClosedOn, "Should equal the ticket's ClosedOn.");
-                Assert.IsNull(result.Workflow, "Should be null.");
             });
         }
 
@@ -67,7 +65,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
                 Assert.IsNull(result.ResolvedOn, "Should be null.");
                 Assert.AreEqual(ticket.ClosedBy, result.ClosedBy, "Should equal the ticket's ClosedBy.");
                 Assert.AreEqual(ticket.ClosedOn, result.ClosedOn, "Should equal the ticket's ClosedOn.");
-                Assert.IsNull(result.Workflow, "Should be null.");
             });
         }
 
@@ -92,7 +89,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
                 Assert.AreEqual(result.ResolvedOn, result.ResolvedOn, "Should equal ticket's ResvoledOn.");
                 Assert.IsNull(result.ClosedBy, "Should be null.");
                 Assert.IsNull(result.ClosedOn, "Should be null.");
-                Assert.IsNull(result.Workflow, "Should be null.");
             });
         }
 
@@ -112,29 +108,6 @@ namespace Helpdesk.Services.UnitTests.Tickets.Factories
                 Assert.IsNull(result.ResolvedOn, "Should be null.");
                 Assert.IsNull(result.ClosedBy, "Should be null.");
                 Assert.IsNull(result.ClosedOn, "Should be null.");
-                Assert.IsNull(result.Workflow, "Should be null.");
-            });
-        }
-
-        [Test]
-        public void WorkflowFailed()
-        {
-            var ticketId = _fixture.Create<int>();
-            var userGuid = _fixture.Create<Guid>();
-            var beforeTicketClosedWorkflow = new BeforeTicketClosedWorkflow(ticketId, userGuid);
-            var result = _factory.WorkflowFailed(ticketId, userGuid, beforeTicketClosedWorkflow);
-
-            Assert.Multiple(() =>
-            {
-                Assert.AreEqual(TicketCloseResult.WorkflowFailed, result.Result, $"Should be {TicketCloseResult.WorkflowFailed}.");
-                Assert.AreEqual(ResultMessages.WorkflowFailed, result.Message, $"Should return the {nameof(ResultMessages.WorkflowFailed)} message.");
-                Assert.AreEqual(ticketId, result.TicketId, "Should equal passed in ticketId.");
-                Assert.AreEqual(userGuid, result.UserGuid, "Should equal passed in userGuid.");
-                Assert.IsNull(result.ResolvedBy, "Should be null.");
-                Assert.IsNull(result.ResolvedOn, "Should be null.");
-                Assert.IsNull(result.ClosedBy, "Should be null.");
-                Assert.IsNull(result.ClosedOn, "Should be null.");
-                Assert.AreEqual(beforeTicketClosedWorkflow, result.Workflow, "Should equal the failed workflow process.");
             });
         }
     }

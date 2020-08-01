@@ -6,8 +6,8 @@ namespace Helpdesk.Services.Common
     public abstract class AbstractLookup<TEntity> where TEntity : class
     {
         protected LinqSpecification<TEntity> _specification;
-        protected int _defaultPageSize = 25;
-        protected int _maximumPageSize = 100;
+        protected readonly int _defaultPageSize = 25;
+        protected readonly int _maximumPageSize = 100;
 
         protected AbstractLookup(LinqSpecification<TEntity> specification)
         {

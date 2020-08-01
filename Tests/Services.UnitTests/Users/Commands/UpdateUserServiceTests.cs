@@ -7,8 +7,8 @@ using AutoMapper;
 using Data.Repositories;
 using FluentValidation;
 using FluentValidation.Results;
+using Helpdesk.Domain.Common;
 using Helpdesk.Domain.Users;
-using Helpdesk.DomainModels.Common;
 using Helpdesk.DomainModels.Users;
 using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Users.Commands.UpdateUser;
@@ -70,7 +70,7 @@ namespace Helpdesk.Services.UnitTests.Users.Commands
 
             await service.Update(userId, editUser);
 
-            mockRepository.Verify(v => v.SingleAsync(It.Is<GetUserById>(a => a._userId == userId)), Times.Once, "Should call the repository's SingleAsync method for GetUserById exactly once.");
+            mockRepository.Verify(v => v.SingleAsync(It.Is<GetUserById>(a => a.UserId == userId)), Times.Once, "Should call the repository's SingleAsync method for GetUserById exactly once.");
         }
 
         [Test]
@@ -146,7 +146,7 @@ namespace Helpdesk.Services.UnitTests.Users.Commands
 
             await service.Update(userId, editUser);
 
-            mockRepository.Verify(v => v.SingleAsync(It.Is<GetUserByUsername>(a => a._username == editUser.Username)), Times.Once, "Should call the SingleAsync method exactly once for GetUserByUsername.");
+            mockRepository.Verify(v => v.SingleAsync(It.Is<GetUserByUsername>(a => a.Username == editUser.Username)), Times.Once, "Should call the SingleAsync method exactly once for GetUserByUsername.");
         }
 
         [Test]

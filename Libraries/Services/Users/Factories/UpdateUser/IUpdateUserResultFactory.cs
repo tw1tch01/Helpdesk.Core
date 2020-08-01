@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using FluentValidation.Results;
+using Helpdesk.Domain.Common;
 using Helpdesk.Domain.Users;
-using Helpdesk.DomainModels.Common;
 using Helpdesk.Services.Users.Results;
 
 namespace Helpdesk.Services.Users.Factories.UpdateUser

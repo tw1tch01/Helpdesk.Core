@@ -37,7 +37,5 @@ namespace Helpdesk.Services.Tickets.Results
         public const string Updated = "Ticket has been updated.";
 
         public const string ValidationFailure = "One or more validation failures have occurred.";
-
-        public const string WorkflowFailed = "Workflow has failed.";
     }
 }

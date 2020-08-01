@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using Helpdesk.DomainModels.Common;
+using Helpdesk.Domain.Common;
 using Helpdesk.Services.Common.Results;
 using Helpdesk.Services.Tickets.Results.Enums;
-using Helpdesk.Services.Workflows;
 
 namespace Helpdesk.Services.Tickets.Results
 {
-    public class UpdateTicketResult : IProcessResult<TicketUpdateResult>, IValidationResult, IUpdateResult, IWorkflowResult
+    public class UpdateTicketResult : IProcessResult<TicketUpdateResult>, IValidationResult, IUpdateResult
     {
         public UpdateTicketResult(TicketUpdateResult result)
         {
@@ -18,7 +17,6 @@ namespace Helpdesk.Services.Tickets.Results
         public int TicketId { get; set; }
         public Dictionary<string, List<string>> ValidationFailures { get; set; }
         public IReadOnlyDictionary<string, ValueChange> PropertyChanges { get; set; }
-        public IWorkflowProcess Workflow { get; set; }
 
         #region Methods
 

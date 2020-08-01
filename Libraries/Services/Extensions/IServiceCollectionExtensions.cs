@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using Data.Extensions;
 using Helpdesk.DomainModels.Extensions;
-using Helpdesk.Services.Notifications;
 using Helpdesk.Services.Tickets.Commands.CloseTicket;
 using Helpdesk.Services.Tickets.Commands.DeleteTicket;
 using Helpdesk.Services.Tickets.Commands.OpenTicket;
@@ -20,7 +19,6 @@ using Helpdesk.Services.Tickets.Factories.StartTicket;
 using Helpdesk.Services.Tickets.Factories.UpdateTicket;
 using Helpdesk.Services.Tickets.Queries.GetTicket;
 using Helpdesk.Services.Tickets.Queries.LookupTickets;
-using Helpdesk.Services.Workflows;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -72,12 +70,9 @@ namespace Helpdesk.Services.Extensions
 
             #endregion Tickets
 
-            #region Event Handlers
+            #region TicketLinks
 
-            services.AddTransient<INotificationService, NotificationService>();
-            services.AddTransient<IWorkflowService, WorkflowService>();
-
-            #endregion Event Handlers
+            #endregion
 
             return services;
         }

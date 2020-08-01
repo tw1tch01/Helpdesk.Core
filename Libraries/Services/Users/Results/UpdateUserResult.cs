@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Helpdesk.DomainModels.Common;
+using Helpdesk.Domain.Common;
 using Helpdesk.Services.Common.Results;
 using Helpdesk.Services.Users.Results.Enums;
 

@@ -3,7 +3,6 @@
     public enum TicketsUnlinkResult
     {
         Unlinked,
-        TicketsNotLinked,
-        WorkflowFailed
+        TicketsNotLinked
     }
 }

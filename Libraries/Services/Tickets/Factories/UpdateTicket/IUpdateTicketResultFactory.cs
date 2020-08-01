@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using FluentValidation.Results;
+using Helpdesk.Domain.Common;
 using Helpdesk.Domain.Tickets;
-using Helpdesk.DomainModels.Common;
 using Helpdesk.Services.Tickets.Results;
-using Helpdesk.Services.Workflows;
 
 namespace Helpdesk.Services.Tickets.Factories.UpdateTicket
 {
@@ -14,7 +13,5 @@ namespace Helpdesk.Services.Tickets.Factories.UpdateTicket
         UpdateTicketResult Updated(Ticket ticket, IReadOnlyDictionary<string, ValueChange> changes);
 
         UpdateTicketResult ValidationFailure(int ticketId, IList<ValidationFailure> errors);
-
-        UpdateTicketResult WorkflowFailed(int ticketId, IWorkflowProcess workflow);
     }
 }

@@ -10,7 +10,7 @@ namespace Helpdesk.Services.UnitTests.Common.Specifications
         [Test]
         public void IsSatisfiedBy_WhenModifiedBeforeIsNull_ReturnsFalse()
         {
-            var modifiedBefore = DateTime.UtcNow;
+            var modifiedBefore = DateTimeOffset.UtcNow;
             var item = new TestEntity
             {
                 ModifiedOn = null
@@ -23,7 +23,7 @@ namespace Helpdesk.Services.UnitTests.Common.Specifications
         [Test]
         public void IsSatisfiedBy_WhenModifiedBeforeIsAfterValue_ReturnsFalse()
         {
-            var modifiedBefore = DateTime.UtcNow;
+            var modifiedBefore = DateTimeOffset.UtcNow;
             var item = new TestEntity
             {
                 ModifiedOn = modifiedBefore
@@ -36,7 +36,7 @@ namespace Helpdesk.Services.UnitTests.Common.Specifications
         [Test]
         public void IsSatisfiedBy_WhenModifiedBeforeIsBeforeValue_ReturnsTrue()
         {
-            var modifiedBefore = DateTime.UtcNow;
+            var modifiedBefore = DateTimeOffset.UtcNow;
             var item = new TestEntity
             {
                 ModifiedOn = modifiedBefore

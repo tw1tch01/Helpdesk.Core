@@ -7,16 +7,16 @@ namespace Helpdesk.Services.Common.Specifications
 {
     public class CreatedBefore<T> : LinqSpecification<T> where T : class, ICreatedAudit
     {
-        private readonly DateTimeOffset _createdBefore;
-
         public CreatedBefore(DateTimeOffset createdBefore)
         {
-            _createdBefore = createdBefore;
+            CreatedDate = createdBefore;
         }
+
+        public DateTimeOffset CreatedDate { get; }
 
         public override Expression<Func<T, bool>> AsExpression()
         {
-            return entity => entity.CreatedOn <= _createdBefore;
+            return entity => entity.CreatedOn <= CreatedDate;
         }
     }
 }

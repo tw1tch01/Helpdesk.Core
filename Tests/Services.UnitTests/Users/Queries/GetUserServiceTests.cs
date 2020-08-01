@@ -29,7 +29,7 @@ namespace Helpdesk.Services.UnitTests.Users.Queries
 
             await service.GetUser(userId);
 
-            mockRepository.Verify(v => v.SingleAsync(It.Is<GetUserById>(i => i._userId == userId)), Times.Once, "Should call the repository's SingleAssync method of GetUserById exactly once.");
+            mockRepository.Verify(v => v.SingleAsync(It.Is<GetUserById>(i => i.UserId == userId)), Times.Once, "Should call the repository's SingleAssync method of GetUserById exactly once.");
         }
 
         [Test]
@@ -96,7 +96,7 @@ namespace Helpdesk.Services.UnitTests.Users.Queries
 
             await service.GetUser(userGuid);
 
-            mockRepository.Verify(v => v.SingleAsync(It.Is<GetUserByIdentifier>(i => i._identifier == userGuid)), Times.Once, "Should call the repository's SingleAssync method of GetUserByIdentifier exactly once.");
+            mockRepository.Verify(v => v.SingleAsync(It.Is<GetUserByIdentifier>(i => i.Identifier == userGuid)), Times.Once, "Should call the repository's SingleAssync method of GetUserByIdentifier exactly once.");
         }
 
         [Test]

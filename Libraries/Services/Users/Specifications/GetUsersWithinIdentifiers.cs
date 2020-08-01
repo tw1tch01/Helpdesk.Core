@@ -8,16 +8,16 @@ namespace Helpdesk.Services.Users.Specifications
 {
     public class GetUsersWithinIdentifiers : LinqSpecification<User>
     {
-        private readonly IList<Guid> _identifiers;
-
         public GetUsersWithinIdentifiers(IList<Guid> identifiers)
         {
-            _identifiers = identifiers;
+            Identifiers = identifiers;
         }
+
+        public IList<Guid> Identifiers { get; }
 
         public override Expression<Func<User, bool>> AsExpression()
         {
-            return user => _identifiers.Contains(user.Identifier);
+            return user => Identifiers.Contains(user.Identifier);
         }
     }
 }
