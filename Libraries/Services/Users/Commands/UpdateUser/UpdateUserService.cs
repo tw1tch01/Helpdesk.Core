@@ -11,7 +11,7 @@ using Helpdesk.Services.Users.Specifications;
 
 namespace Helpdesk.Services.Users.Commands.UpdateUser
 {
-    public class UpdateUserService
+    public class UpdateUserService : IUpdateUserService
     {
         private readonly IContextRepository<IUserContext> _repository;
         private readonly IMapper _mapper;

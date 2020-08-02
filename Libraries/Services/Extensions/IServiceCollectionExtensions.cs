@@ -1,8 +1,9 @@
-﻿using System.Reflection;
-using Data.Extensions;
+﻿using Data.Extensions;
 using Helpdesk.DomainModels.Extensions;
 using Helpdesk.Services.TicketLinks.Commands.LinkTickets;
 using Helpdesk.Services.TicketLinks.Commands.UnlinkTickets;
+using Helpdesk.Services.TicketLinks.Factories.LinkTickets;
+using Helpdesk.Services.TicketLinks.Factories.UnlinkTickets;
 using Helpdesk.Services.Tickets.Commands.CloseTicket;
 using Helpdesk.Services.Tickets.Commands.DeleteTicket;
 using Helpdesk.Services.Tickets.Commands.OpenTicket;
@@ -21,7 +22,12 @@ using Helpdesk.Services.Tickets.Factories.StartTicket;
 using Helpdesk.Services.Tickets.Factories.UpdateTicket;
 using Helpdesk.Services.Tickets.Queries.GetTicket;
 using Helpdesk.Services.Tickets.Queries.LookupTickets;
-using MediatR;
+using Helpdesk.Services.Users.Commands.CreateUser;
+using Helpdesk.Services.Users.Commands.DeleteUser;
+using Helpdesk.Services.Users.Commands.UpdateUser;
+using Helpdesk.Services.Users.Factories.CreateUser;
+using Helpdesk.Services.Users.Factories.DeleteUser;
+using Helpdesk.Services.Users.Factories.UpdateUser;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Helpdesk.Services.Extensions
@@ -33,19 +39,15 @@ namespace Helpdesk.Services.Extensions
             services.AddDataDependencies();
             services.AddDomainModels();
 
-            var assembly = Assembly.GetExecutingAssembly();
-
-            services.AddMediatR(assembly);
-
-            AddServicesImplementations(services);
+            AddTicketServices(services);
+            AddTicketLinkServices(services);
+            AddUserServices(services);
 
             return services;
         }
 
-        private static IServiceCollection AddServicesImplementations(IServiceCollection services)
+        private static IServiceCollection AddTicketServices(IServiceCollection services)
         {
-            #region Tickets
-
             // Commands
             services.AddTransient<ICloseTicketService, CloseTicketService>();
             services.AddTransient<IDeleteTicketService, DeleteTicketService>();
@@ -70,14 +72,33 @@ namespace Helpdesk.Services.Extensions
             services.AddTransient<IGetTicketService, GetTicketService>();
             services.AddTransient<ILookupTicketsService, LookupTicketsService>();
 
-            #endregion Tickets
+            return services;
+        }
 
-            #region TicketLinks
-
+        private static IServiceCollection AddTicketLinkServices(IServiceCollection services)
+        {
+            // Commands
             services.AddTransient<ILinkTicketService, LinkTicketService>();
             services.AddTransient<IUnlinkTicketService, UnlinkTicketService>();
 
-            #endregion TicketLinks
+            // Factories
+            services.AddTransient<ILinkTicketsResultFactory, LinkTicketsResultFactory>();
+            services.AddTransient<IUnlinkTicketsResultFactory, UnlinkTicketsResultFactory>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddUserServices(IServiceCollection services)
+        {
+            // Commands
+            services.AddTransient<ICreateUserService, CreateUserService>();
+            services.AddTransient<IDeleteUserService, DeleteUserService>();
+            services.AddTransient<IUpdateUserService, UpdateUserService>();
+
+            // Factories
+            services.AddTransient<ICreateUserResultFactory, CreateUserResultFactory>();
+            services.AddTransient<IDeleteUserResultFactory, DeleteUserResultFactory>();
+            services.AddTransient<IUpdateUserResultFactory, UpdateUserResultFactory>();
 
             return services;
         }

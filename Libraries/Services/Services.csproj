@@ -6,7 +6,7 @@
     <RootNamespace>Helpdesk.Services</RootNamespace>
     <Authors>Robert Breedt</Authors>
     <Product>Helpdesk.Core</Product>
-    <Version>1.2.1</Version>
+    <Version>1.2.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,8 +32,6 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Data" Version="1.5.3" />
     <PackageReference Include="FluentValidation" Version="8.6.2" />
-    <PackageReference Include="MediatR" Version="8.0.1" />
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
