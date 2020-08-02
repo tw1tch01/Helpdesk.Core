@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using Data.Extensions;
 using Helpdesk.DomainModels.Extensions;
+using Helpdesk.Services.TicketLinks.Commands.LinkTickets;
+using Helpdesk.Services.TicketLinks.Commands.UnlinkTickets;
 using Helpdesk.Services.Tickets.Commands.CloseTicket;
 using Helpdesk.Services.Tickets.Commands.DeleteTicket;
 using Helpdesk.Services.Tickets.Commands.OpenTicket;
@@ -72,7 +74,10 @@ namespace Helpdesk.Services.Extensions
 
             #region TicketLinks
 
-            #endregion
+            services.AddTransient<ILinkTicketService, LinkTicketService>();
+            services.AddTransient<IUnlinkTicketService, UnlinkTicketService>();
+
+            #endregion TicketLinks
 
             return services;
         }

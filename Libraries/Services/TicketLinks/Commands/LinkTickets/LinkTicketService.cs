@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using Data.Repositories;
-using Helpdesk.Domain.Entities;
+using Helpdesk.Domain.Tickets;
 using Helpdesk.DomainModels.TicketLinks;
 using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.TicketLinks.Factories.LinkTickets;

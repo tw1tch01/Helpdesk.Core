@@ -1,5 +1,4 @@
 ﻿using Data.Contexts;
-using Helpdesk.Domain.Entities;
 using Helpdesk.Domain.Tickets;
 using Microsoft.EntityFrameworkCore;
 

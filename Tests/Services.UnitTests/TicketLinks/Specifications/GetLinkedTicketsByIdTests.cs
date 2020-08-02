@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using Helpdesk.Domain.Entities;
+using Helpdesk.Domain.Tickets;
 using Helpdesk.Services.TicketLinks.Specifications;
 using NUnit.Framework;
 

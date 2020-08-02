@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Helpdesk.Domain.Entities;
+using Helpdesk.Domain.Tickets;
 using Helpdesk.Domain.Tickets.Enums;
 using Helpdesk.DomainModels.Mappings;
 

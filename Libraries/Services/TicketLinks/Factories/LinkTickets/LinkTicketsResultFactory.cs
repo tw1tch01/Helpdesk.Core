@@ -1,4 +1,4 @@
-﻿using Helpdesk.Domain.Entities;
+﻿using Helpdesk.Domain.Tickets;
 using Helpdesk.Services.TicketLinks.Results;
 using Helpdesk.Services.TicketLinks.Results.Enums;
 

@@ -4,7 +4,7 @@ using AutoFixture;
 using AutoMapper;
 using Data.Repositories;
 using Data.Specifications;
-using Helpdesk.Domain.Entities;
+using Helpdesk.Domain.Tickets;
 using Helpdesk.DomainModels.TicketLinks;
 using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.TicketLinks.Commands.UnlinkTickets;

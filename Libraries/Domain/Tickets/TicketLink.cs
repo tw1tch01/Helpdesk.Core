@@ -1,9 +1,8 @@
 ﻿using System;
 using Helpdesk.Domain.Common;
-using Helpdesk.Domain.Tickets;
 using Helpdesk.Domain.Tickets.Enums;
 
-namespace Helpdesk.Domain.Entities
+namespace Helpdesk.Domain.Tickets
 {
     public class TicketLink : ICreatedAudit
     {

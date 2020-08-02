@@ -1,4 +1,4 @@
-﻿using Helpdesk.Domain.Entities;
+﻿using Helpdesk.Domain.Tickets;
 using Helpdesk.Services.TicketLinks.Results;
 
 namespace Helpdesk.Services.TicketLinks.Factories.LinkTickets

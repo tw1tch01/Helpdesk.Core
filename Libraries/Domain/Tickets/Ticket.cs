@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Helpdesk.Domain.Common;
-using Helpdesk.Domain.Entities;
 using Helpdesk.Domain.Tickets.Enums;
 
 namespace Helpdesk.Domain.Tickets
