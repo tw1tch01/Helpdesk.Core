@@ -16,13 +16,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Libraries\Domain\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainModels", "Libraries\DomainModels\DomainModels.csproj", "{CE81B481-11B4-4F7C-879E-21EE923DCC62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Libraries\Services\Services.csproj", "{33E03AB2-96C6-4EED-8F18-0705F5E92445}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Libraries\Services\Services.csproj", "{33E03AB2-96C6-4EED-8F18-0705F5E92445}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.UnitTests", "Tests\Domain.UnitTests\Domain.UnitTests.csproj", "{DC850719-AD54-43B0-92FA-74D5E954C787}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.UnitTests", "Tests\Domain.UnitTests\Domain.UnitTests.csproj", "{DC850719-AD54-43B0-92FA-74D5E954C787}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomainModels.UnitTests", "Tests\DomainModels.UnitTests\DomainModels.UnitTests.csproj", "{50A6E14C-0652-47E3-98EC-DFAD7FB5C157}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainModels.UnitTests", "Tests\DomainModels.UnitTests\DomainModels.UnitTests.csproj", "{50A6E14C-0652-47E3-98EC-DFAD7FB5C157}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.UnitTests", "Tests\Services.UnitTests\Services.UnitTests.csproj", "{5E42557D-6D35-49D0-AE71-7428CAC41AB6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.UnitTests", "Tests\Services.UnitTests\Services.UnitTests.csproj", "{5E42557D-6D35-49D0-AE71-7428CAC41AB6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
