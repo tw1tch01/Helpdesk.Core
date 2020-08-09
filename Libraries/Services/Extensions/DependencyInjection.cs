@@ -22,17 +22,11 @@ using Helpdesk.Services.Tickets.Factories.StartTicket;
 using Helpdesk.Services.Tickets.Factories.UpdateTicket;
 using Helpdesk.Services.Tickets.Queries.GetTicket;
 using Helpdesk.Services.Tickets.Queries.LookupTickets;
-using Helpdesk.Services.Users.Commands.CreateUser;
-using Helpdesk.Services.Users.Commands.DeleteUser;
-using Helpdesk.Services.Users.Commands.UpdateUser;
-using Helpdesk.Services.Users.Factories.CreateUser;
-using Helpdesk.Services.Users.Factories.DeleteUser;
-using Helpdesk.Services.Users.Factories.UpdateUser;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Helpdesk.Services.Extensions
 {
-    public static class IServiceCollectionExtensions
+    public static class DependencyInjection
     {
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
@@ -41,7 +35,6 @@ namespace Helpdesk.Services.Extensions
 
             AddTicketServices(services);
             AddTicketLinkServices(services);
-            AddUserServices(services);
 
             return services;
         }
@@ -84,21 +77,6 @@ namespace Helpdesk.Services.Extensions
             // Factories
             services.AddTransient<ILinkTicketsResultFactory, LinkTicketsResultFactory>();
             services.AddTransient<IUnlinkTicketsResultFactory, UnlinkTicketsResultFactory>();
-
-            return services;
-        }
-
-        private static IServiceCollection AddUserServices(IServiceCollection services)
-        {
-            // Commands
-            services.AddTransient<ICreateUserService, CreateUserService>();
-            services.AddTransient<IDeleteUserService, DeleteUserService>();
-            services.AddTransient<IUpdateUserService, UpdateUserService>();
-
-            // Factories
-            services.AddTransient<ICreateUserResultFactory, CreateUserResultFactory>();
-            services.AddTransient<IDeleteUserResultFactory, DeleteUserResultFactory>();
-            services.AddTransient<IUpdateUserResultFactory, UpdateUserResultFactory>();
 
             return services;
         }

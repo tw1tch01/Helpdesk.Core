@@ -6,7 +6,7 @@
     <RootNamespace>Helpdesk.Services</RootNamespace>
     <Authors>Robert Breedt</Authors>
     <Product>Helpdesk.Core</Product>
-    <Version>1.2.2</Version>
+    <Version>1.3.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

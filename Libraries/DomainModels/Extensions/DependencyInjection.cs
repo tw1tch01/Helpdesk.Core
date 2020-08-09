@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Helpdesk.DomainModels.Extensions
 {
-    public static class IServiceCollectionExtensions
+    public static class DependencyInjection
     {
         public static IServiceCollection AddDomainModels(this IServiceCollection services)
         {

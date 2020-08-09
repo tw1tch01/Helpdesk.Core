@@ -12,8 +12,11 @@
 
   <ItemGroup>
     <Compile Remove="Projects\**" />
+    <Compile Remove="Users\**" />
     <EmbeddedResource Remove="Projects\**" />
+    <EmbeddedResource Remove="Users\**" />
     <None Remove="Projects\**" />
+    <None Remove="Users\**" />
   </ItemGroup>
 
   <ItemGroup>
