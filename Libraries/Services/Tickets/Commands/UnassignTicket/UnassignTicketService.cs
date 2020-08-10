@@ -12,12 +12,12 @@ namespace Helpdesk.Services.Tickets.Commands.UnassignTicket
 {
     public class UnassignTicketService : IUnassignTicketService
     {
-        private readonly IContextRepository<ITicketContext> _repository;
+        private readonly IEntityRepository<ITicketContext> _repository;
         private readonly IUnassignTicketResultFactory _factory;
         private readonly IEventService _eventService;
 
         public UnassignTicketService(
-            IContextRepository<ITicketContext> repository,
+            IEntityRepository<ITicketContext> repository,
             IUnassignTicketResultFactory factory,
             IEventService eventService)
         {

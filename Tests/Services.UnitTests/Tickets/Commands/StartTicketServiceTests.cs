@@ -24,7 +24,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Start_VerifySingleAsyncforGetTicketByIsCalled()
         {
             var ticketId = _fixture.Create<int>();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
 
             var service = CreateService(mockRepository: mockRepository);
 
@@ -37,7 +37,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Start_WhenTicketRecordINull_ReturnsFactoryTicketNotFound()
         {
             var ticketId = _fixture.Create<int>();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
             var mockFactory = new Mock<IStartTicketResultFactory>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync((Ticket)null);
@@ -55,7 +55,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Start_WhenTicketIsResolved_ReturnsFactoryTicketAlreadyResolved()
         {
             var mockTicket = new Mock<Ticket>();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
             var mockFactory = new Mock<IStartTicketResultFactory>();
 
             mockTicket.Setup(s => s.GetStatus()).Returns(TicketStatus.Resolved);
@@ -74,7 +74,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Start_WhenTicketIsClosed_ReturnsFactoryTicketAlreadyClosed()
         {
             var mockTicket = new Mock<Ticket>();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
             var mockFactory = new Mock<IStartTicketResultFactory>();
 
             mockTicket.Setup(s => s.GetStatus()).Returns(TicketStatus.Closed);
@@ -93,7 +93,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Start_WhenTicketIsInProgress_ReturnsFactoryTicketAlreadyStarted()
         {
             var mockTicket = new Mock<Ticket>();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
             var mockFactory = new Mock<IStartTicketResultFactory>();
 
             mockTicket.Setup(s => s.GetStatus()).Returns(TicketStatus.InProgress);
@@ -113,7 +113,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         {
             var userGuid = It.IsAny<Guid>();
             var mockTicket = new Mock<Ticket>();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(mockTicket.Object);
 
@@ -128,7 +128,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         [Test]
         public async Task Start_VerifySaveAsyncIsCalled()
         {
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
 
@@ -143,7 +143,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         [Test]
         public async Task Start_WhenTicketIsStarted_VerifyEventIsRaised()
         {
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
             var mockEventService = new Mock<IEventService>();
 
             mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
@@ -161,7 +161,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Start_WhenTicketIsStarted_VerifyFactoryStartedIsReturned()
         {
             var ticket = new Ticket();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
             var mockFactory = new Mock<IStartTicketResultFactory>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(ticket);
@@ -176,11 +176,11 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         private StartTicketService CreateService(
-            IMock<IContextRepository<ITicketContext>> mockRepository = null,
+            IMock<IEntityRepository<ITicketContext>> mockRepository = null,
             IMock<IStartTicketResultFactory> mockFactory = null,
             IMock<IEventService> mockEventService = null)
         {
-            mockRepository ??= new Mock<IContextRepository<ITicketContext>>();
+            mockRepository ??= new Mock<IEntityRepository<ITicketContext>>();
             mockFactory ??= new Mock<IStartTicketResultFactory>();
             mockEventService ??= new Mock<IEventService>();
 

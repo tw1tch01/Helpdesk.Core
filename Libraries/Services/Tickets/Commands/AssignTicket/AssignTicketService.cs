@@ -13,12 +13,12 @@ namespace Helpdesk.Services.Tickets.Commands.AssignTicket
 {
     public class AssignTicketService : IAssignTicketService
     {
-        private readonly IContextRepository<ITicketContext> _repository;
+        private readonly IEntityRepository<ITicketContext> _repository;
         private readonly IAssignTicketResultFactory _factory;
         private readonly IEventService _eventService;
 
         public AssignTicketService(
-            IContextRepository<ITicketContext> repository,
+            IEntityRepository<ITicketContext> repository,
             IAssignTicketResultFactory factory,
             IEventService eventService)
         {

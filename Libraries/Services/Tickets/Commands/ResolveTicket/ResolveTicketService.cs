@@ -13,12 +13,12 @@ namespace Helpdesk.Services.Tickets.Commands.ResolveTicket
 {
     public class ResolveTicketService : IResolveTicketService
     {
-        private readonly IContextRepository<ITicketContext> _repository;
+        private readonly IEntityRepository<ITicketContext> _repository;
         private readonly IResolveTicketResultFactory _factory;
         private readonly IEventService _eventService;
 
         public ResolveTicketService(
-            IContextRepository<ITicketContext> repository,
+            IEntityRepository<ITicketContext> repository,
             IResolveTicketResultFactory factory,
             IEventService eventService)
         {

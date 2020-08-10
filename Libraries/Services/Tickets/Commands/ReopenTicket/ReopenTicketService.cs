@@ -12,12 +12,12 @@ namespace Helpdesk.Services.Tickets.Commands.ReopenTicket
 {
     public class ReopenTicketService : IReopenTicketService
     {
-        private readonly IContextRepository<ITicketContext> _repository;
+        private readonly IEntityRepository<ITicketContext> _repository;
         private readonly IReopenTicketResultFactory _factory;
         private readonly IEventService _eventService;
 
         public ReopenTicketService(
-            IContextRepository<ITicketContext> repository,
+            IEntityRepository<ITicketContext> repository,
             IReopenTicketResultFactory factory,
             IEventService eventService)
         {

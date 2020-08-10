@@ -15,13 +15,13 @@ namespace Helpdesk.Services.TicketLinks.Commands.LinkTickets
 {
     public class LinkTicketService : ILinkTicketService
     {
-        private readonly IContextRepository<ITicketContext> _repository;
+        private readonly IEntityRepository<ITicketContext> _repository;
         private readonly IMapper _mapper;
         private readonly ILinkTicketsResultFactory _factory;
         private readonly IEventService _eventService;
 
         public LinkTicketService(
-            IContextRepository<ITicketContext> repository,
+            IEntityRepository<ITicketContext> repository,
             IMapper mapper,
             ILinkTicketsResultFactory factory,
             IEventService eventService)

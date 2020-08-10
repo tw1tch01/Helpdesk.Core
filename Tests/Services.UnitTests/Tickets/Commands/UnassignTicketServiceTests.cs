@@ -23,7 +23,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task UnassignUser_VerifyThatSingleAsyncForGetTicketByIdIsCalled()
         {
             var ticketId = _fixture.Create<int>();
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
 
             var service = CreateService(mockContext: mockContext);
 
@@ -36,7 +36,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task UnassignUser_WhenTicketRecordIsNull_VerifyFactoryTicketNotFoundIsReturned()
         {
             var ticketId = _fixture.Create<int>();
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
             var mockFactory = new Mock<IUnassignTicketResultFactory>();
 
             mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync((Ticket)null);
@@ -55,7 +55,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         {
             var userGuid = _fixture.Create<Guid>();
             var mockTicket = new Mock<Ticket>();
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
 
             mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(mockTicket.Object);
 
@@ -70,7 +70,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         [Test]
         public async Task UnassignUser_WhenTicketIsUnassigned_VerifySaveAsyncIsCalled()
         {
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
 
             mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
 
@@ -85,7 +85,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         [Test]
         public async Task Unassign_WhenTicketIsUnassigned_VerifyEventIsRaised()
         {
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
             var mockEventService = new Mock<IEventService>();
 
             mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
@@ -104,7 +104,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         {
             var ticketId = _fixture.Create<int>();
             var userGuid = _fixture.Create<Guid>();
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
             var mockFactory = new Mock<IUnassignTicketResultFactory>();
 
             var ticket = new Ticket();
@@ -120,11 +120,11 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         private UnassignTicketService CreateService(
-            IMock<IContextRepository<ITicketContext>> mockContext = null,
+            IMock<IEntityRepository<ITicketContext>> mockContext = null,
             IMock<IUnassignTicketResultFactory> mockFactory = null,
             IMock<IEventService> mockEventService = null)
         {
-            mockContext ??= new Mock<IContextRepository<ITicketContext>>();
+            mockContext ??= new Mock<IEntityRepository<ITicketContext>>();
             mockFactory ??= new Mock<IUnassignTicketResultFactory>();
             mockEventService ??= new Mock<IEventService>();
 

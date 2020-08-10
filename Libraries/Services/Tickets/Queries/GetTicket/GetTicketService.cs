@@ -9,11 +9,11 @@ namespace Helpdesk.Services.Tickets.Queries.GetTicket
 {
     public class GetTicketService : IGetTicketService
     {
-        private readonly IContextRepository<ITicketContext> _repository;
+        private readonly IEntityRepository<ITicketContext> _repository;
         private readonly IMapper _mapper;
 
         public GetTicketService(
-            IContextRepository<ITicketContext> repository,
+            IEntityRepository<ITicketContext> repository,
             IMapper mapper)
         {
             _repository = repository;

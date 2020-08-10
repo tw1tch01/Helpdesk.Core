@@ -23,7 +23,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Reopen_VerifySingleAsyncForGetTicketByIdIsCalled()
         {
             var ticketId = _fixture.Create<int>();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
 
             var service = CreateService(mockRepository: mockRepository);
 
@@ -36,7 +36,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Reopen_WhenTicketRecordIsNull_VerifyFactoryTicketNotFoundIsReturned()
         {
             var ticketId = _fixture.Create<int>();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
             var mockFactory = new Mock<IReopenTicketResultFactory>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync((Ticket)null);
@@ -54,7 +54,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Reopen_VerifyTicketReopenIsCalled()
         {
             var mockTicket = new Mock<Ticket>();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(mockTicket.Object);
 
@@ -69,7 +69,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         [Test]
         public async Task Reopen_VerifySaveAsyncIsCalled()
         {
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
 
@@ -84,7 +84,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         [Test]
         public async Task Reopen_WhenTicketIsReopened_VerifyEventIsRaised()
         {
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
             var mockEventService = new Mock<IEventService>();
 
             mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
@@ -103,7 +103,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         {
             var ticket = new Ticket();
             var userGuid = It.IsAny<Guid>();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
             var mockFactory = new Mock<IReopenTicketResultFactory>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(ticket);
@@ -118,11 +118,11 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         private ReopenTicketService CreateService(
-            IMock<IContextRepository<ITicketContext>> mockRepository = null,
+            IMock<IEntityRepository<ITicketContext>> mockRepository = null,
             IMock<IReopenTicketResultFactory> mockFactory = null,
             IMock<IEventService> mockEventService = null)
         {
-            mockRepository ??= new Mock<IContextRepository<ITicketContext>>();
+            mockRepository ??= new Mock<IEntityRepository<ITicketContext>>();
             mockFactory ??= new Mock<IReopenTicketResultFactory>();
             mockEventService ??= new Mock<IEventService>();
 

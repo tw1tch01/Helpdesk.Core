@@ -24,7 +24,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Pause_VerifySingleAsyncforGetTicketByIsCalled()
         {
             var ticketId = _fixture.Create<int>();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
 
             var service = CreateService(mockRepository: mockRepository);
 
@@ -37,7 +37,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Pause_WhenTicketRecordINull_ReturnsFactoryTicketNotFound()
         {
             var ticketId = _fixture.Create<int>();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
             var mockFactory = new Mock<IPauseTicketResultFactory>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync((Ticket)null);
@@ -55,7 +55,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Pause_WhenTicketIsResolved_ReturnsFactoryTicketAlreadyResolved()
         {
             var mockTicket = new Mock<Ticket>();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
             var mockFactory = new Mock<IPauseTicketResultFactory>();
 
             mockTicket.Setup(s => s.GetStatus()).Returns(TicketStatus.Resolved);
@@ -74,7 +74,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Pause_WhenTicketIsOnHold_ReturnsFactoryTicketAlreadyPaused()
         {
             var mockTicket = new Mock<Ticket>();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
             var mockFactory = new Mock<IPauseTicketResultFactory>();
 
             mockTicket.Setup(s => s.GetStatus()).Returns(TicketStatus.OnHold);
@@ -93,7 +93,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Pause_WhenTicketIsClosed_ReturnsFactoryTicketAlreadyClosed()
         {
             var mockTicket = new Mock<Ticket>();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
             var mockFactory = new Mock<IPauseTicketResultFactory>();
 
             mockTicket.Setup(s => s.GetStatus()).Returns(TicketStatus.Closed);
@@ -113,7 +113,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         {
             var userGuid = It.IsAny<Guid>();
             var mockTicket = new Mock<Ticket>();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(mockTicket.Object);
 
@@ -128,7 +128,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         [Test]
         public async Task Pause_VerifySaveAsyncIsCalled()
         {
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
 
@@ -143,7 +143,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         [Test]
         public async Task Pause_WhenTicketIsPaused_VerifyEventIsRaised()
         {
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
             var mockEventService = new Mock<IEventService>();
 
             mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
@@ -161,7 +161,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Pause_WhenTicketIsPaused_VerifyFactoryPausedIsReturned()
         {
             var ticket = new Ticket();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
             var mockFactory = new Mock<IPauseTicketResultFactory>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(ticket);
@@ -176,11 +176,11 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         private PauseTicketService CreateService(
-            IMock<IContextRepository<ITicketContext>> mockRepository = null,
+            IMock<IEntityRepository<ITicketContext>> mockRepository = null,
             IMock<IPauseTicketResultFactory> mockFactory = null,
             IMock<IEventService> mockEventService = null)
         {
-            mockRepository ??= new Mock<IContextRepository<ITicketContext>>();
+            mockRepository ??= new Mock<IEntityRepository<ITicketContext>>();
             mockFactory ??= new Mock<IPauseTicketResultFactory>();
             mockEventService ??= new Mock<IEventService>();
 

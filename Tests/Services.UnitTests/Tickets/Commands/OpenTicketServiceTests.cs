@@ -52,7 +52,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         {
             var newTicket = new NewTicket();
             var ticket = new Ticket();
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
             var mockMapper = new Mock<IMapper>();
             var mockValidator = new Mock<IValidator<NewTicket>>();
             var mockValidationResult = new Mock<ValidationResult>();
@@ -76,7 +76,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         {
             var newTicket = new NewTicket();
             var ticket = new Ticket();
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
             var mockMapper = new Mock<IMapper>();
             var mockValidator = new Mock<IValidator<NewTicket>>();
             var mockValidationResult = new Mock<ValidationResult>();
@@ -100,7 +100,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         {
             var newTicket = new NewTicket();
             var ticket = new Ticket();
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
             var mockMapper = new Mock<IMapper>();
             var mockFactory = new Mock<IOpenTicketResultFactory>();
             var mockValidator = new Mock<IValidator<NewTicket>>();
@@ -128,7 +128,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         {
             var newTicket = new NewTicket();
             var ticket = new Ticket();
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
             var mockMapper = new Mock<IMapper>();
             var mockFactory = new Mock<IOpenTicketResultFactory>();
             var mockValidator = new Mock<IValidator<NewTicket>>();
@@ -150,13 +150,13 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         private OpenTicketService CreateService(
-            IMock<IContextRepository<ITicketContext>> mockContext = null,
+            IMock<IEntityRepository<ITicketContext>> mockContext = null,
             IMock<IMapper> mockMapper = null,
             IMock<IOpenTicketResultFactory> mockFactory = null,
             IMock<IValidator<NewTicket>> mockValidator = null,
             IMock<IEventService> mockEventService = null)
         {
-            mockContext ??= new Mock<IContextRepository<ITicketContext>>();
+            mockContext ??= new Mock<IEntityRepository<ITicketContext>>();
             mockMapper ??= new Mock<IMapper>();
             mockFactory ??= new Mock<IOpenTicketResultFactory>();
             mockValidator ??= new Mock<IValidator<NewTicket>>();

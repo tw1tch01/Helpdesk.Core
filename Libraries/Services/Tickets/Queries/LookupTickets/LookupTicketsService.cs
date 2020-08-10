@@ -13,11 +13,11 @@ namespace Helpdesk.Services.Tickets.Queries.LookupTickets
 {
     public class LookupTicketsService : AbstractTicketsLookup, ILookupTicketsService
     {
-        private readonly IContextRepository<ITicketContext> _repository;
+        private readonly IEntityRepository<ITicketContext> _repository;
         private readonly IMapper _mapper;
 
         public LookupTicketsService(
-            IContextRepository<ITicketContext> repository,
+            IEntityRepository<ITicketContext> repository,
             IMapper mapper)
             : base(GetDefaultSpecification())
         {

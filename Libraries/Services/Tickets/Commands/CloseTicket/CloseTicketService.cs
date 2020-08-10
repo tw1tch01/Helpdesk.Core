@@ -13,12 +13,12 @@ namespace Helpdesk.Services.Tickets.Commands.CloseTicket
 {
     public class CloseTicketService : ICloseTicketService
     {
-        private readonly IContextRepository<ITicketContext> _repository;
+        private readonly IEntityRepository<ITicketContext> _repository;
         private readonly ICloseTicketResultFactory _factory;
         private readonly IEventService _eventService;
 
         public CloseTicketService(
-            IContextRepository<ITicketContext> repository,
+            IEntityRepository<ITicketContext> repository,
             ICloseTicketResultFactory factory,
             IEventService eventService)
         {

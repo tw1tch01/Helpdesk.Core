@@ -59,7 +59,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         {
             var ticketId = _fixture.Create<int>();
             var updateTicket = new EditTicket();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
             var mockValidator = new Mock<IValidator<EditTicket>>();
             var mockValidationResult = new Mock<ValidationResult>();
 
@@ -80,7 +80,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         {
             var ticketId = _fixture.Create<int>();
             var updateTicket = new EditTicket();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
             var mockFactory = new Mock<IUpdateTicketResultFactory>();
             var mockValidator = new Mock<IValidator<EditTicket>>();
             var mockValidationResult = new Mock<ValidationResult>();
@@ -105,7 +105,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             var ticketId = _fixture.Create<int>();
             var updateTicket = new EditTicket();
             var ticket = new Ticket();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
             var mockMapper = new Mock<IMapper>();
             var mockValidator = new Mock<IValidator<EditTicket>>();
             var mockValidationResult = new Mock<ValidationResult>();
@@ -132,7 +132,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             var ticketId = _fixture.Create<int>();
             var updateTicket = new EditTicket();
             var ticket = new Ticket();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
             var mockMapper = new Mock<IMapper>();
             var mockValidator = new Mock<IValidator<EditTicket>>();
             var mockValidationResult = new Mock<ValidationResult>();
@@ -160,7 +160,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
             var ticketId = _fixture.Create<int>();
             var updateTicket = new EditTicket();
             var ticket = new Ticket();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
             var mockMapper = new Mock<IMapper>();
             var mockFactory = new Mock<IUpdateTicketResultFactory>();
             var mockValidator = new Mock<IValidator<EditTicket>>();
@@ -183,13 +183,13 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         private UpdateTicketService CreateService(
-            IMock<IContextRepository<ITicketContext>> mockRepository = null,
+            IMock<IEntityRepository<ITicketContext>> mockRepository = null,
             IMock<IMapper> mockMapper = null,
             IMock<IUpdateTicketResultFactory> mockFactory = null,
             IMock<IValidator<EditTicket>> mockValidator = null,
             IMock<IEventService> mockEventService = null)
         {
-            mockRepository ??= new Mock<IContextRepository<ITicketContext>>();
+            mockRepository ??= new Mock<IEntityRepository<ITicketContext>>();
             mockMapper ??= new Mock<IMapper>();
             mockFactory ??= new Mock<IUpdateTicketResultFactory>();
             mockValidator ??= new Mock<IValidator<EditTicket>>();

@@ -15,14 +15,14 @@ namespace Helpdesk.Services.Tickets.Commands.UpdateTicket
 {
     public class UpdateTicketService : IUpdateTicketService
     {
-        private readonly IContextRepository<ITicketContext> _repository;
+        private readonly IEntityRepository<ITicketContext> _repository;
         private readonly IMapper _mapper;
         private readonly IUpdateTicketResultFactory _factory;
         private readonly IValidator<EditTicket> _validator;
         private readonly IEventService _eventService;
 
         public UpdateTicketService(
-            IContextRepository<ITicketContext> repository,
+            IEntityRepository<ITicketContext> repository,
             IMapper mapper,
             IUpdateTicketResultFactory factory,
             IValidator<EditTicket> validator,

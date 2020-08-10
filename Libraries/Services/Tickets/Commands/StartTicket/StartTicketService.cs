@@ -13,12 +13,12 @@ namespace Helpdesk.Services.Tickets.Commands.StartTicket
 {
     public class StartTicketService : IStartTicketService
     {
-        private readonly IContextRepository<ITicketContext> _repository;
+        private readonly IEntityRepository<ITicketContext> _repository;
         private readonly IStartTicketResultFactory _factory;
         private readonly IEventService _eventService;
 
         public StartTicketService(
-            IContextRepository<ITicketContext> repository,
+            IEntityRepository<ITicketContext> repository,
             IStartTicketResultFactory factory,
             IEventService eventService)
         {

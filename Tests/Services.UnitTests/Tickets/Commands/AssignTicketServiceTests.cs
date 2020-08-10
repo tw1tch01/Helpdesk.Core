@@ -24,7 +24,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task AssignUser_VerifyThatSingleAsyncForGetTicketByIdIsCalled()
         {
             var ticketId = _fixture.Create<int>();
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
 
             var service = CreateService(mockContext: mockContext);
 
@@ -37,7 +37,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task AssignUser_WhenTicketRecordIsNull_VerifyFactoryTicketNotFoundIsReturned()
         {
             var ticketId = _fixture.Create<int>();
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
             var mockFactory = new Mock<IAssignTicketResultFactory>();
 
             mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync((Ticket)null);
@@ -55,7 +55,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task AssignUser_WhenTicketIsResolved_VerifyFactoryTicketAlreadyResolvedIsReturned()
         {
             var mockTicket = new Mock<Ticket>();
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
             var mockFactory = new Mock<IAssignTicketResultFactory>();
 
             mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(mockTicket.Object);
@@ -74,7 +74,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task AssignUser_WhenTicketIsAssigned_VerifyFactoryTicketAlreadyAssignedIsReturned()
         {
             var mockTicket = new Mock<Ticket>();
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
             var mockFactory = new Mock<IAssignTicketResultFactory>();
 
             mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(mockTicket.Object);
@@ -94,7 +94,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         {
             var userGuid = _fixture.Create<Guid>();
             var mockTicket = new Mock<Ticket>();
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
 
             mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(mockTicket.Object);
 
@@ -109,7 +109,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         [Test]
         public async Task AssignUser_WhenTicketIsAssigned_VerifySaveAsyncIsCalled()
         {
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
 
             mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
 
@@ -124,7 +124,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         [Test]
         public async Task AssignUser_WhenTicketIsAssigned_VerifyEventIsRaised()
         {
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
             var mockEventService = new Mock<IEventService>();
 
             mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
@@ -141,7 +141,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         [Test]
         public async Task AssignUser_WhenTicketIsAssigned_VerifyFactoryAssignedIsReturned()
         {
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
             var mockFactory = new Mock<IAssignTicketResultFactory>();
 
             var ticket = new Ticket();
@@ -157,11 +157,11 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         private AssignTicketService CreateService(
-            IMock<IContextRepository<ITicketContext>> mockContext = null,
+            IMock<IEntityRepository<ITicketContext>> mockContext = null,
             IMock<IAssignTicketResultFactory> mockFactory = null,
             IMock<IEventService> mockEventService = null)
         {
-            mockContext ??= new Mock<IContextRepository<ITicketContext>>();
+            mockContext ??= new Mock<IEntityRepository<ITicketContext>>();
             mockFactory ??= new Mock<IAssignTicketResultFactory>();
             mockEventService ??= new Mock<IEventService>();
 

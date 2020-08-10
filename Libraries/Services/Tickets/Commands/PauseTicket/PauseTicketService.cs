@@ -13,12 +13,12 @@ namespace Helpdesk.Services.Tickets.Commands.PauseTicket
 {
     public class PauseTicketService : IPauseTicketService
     {
-        private readonly IContextRepository<ITicketContext> _repository;
+        private readonly IEntityRepository<ITicketContext> _repository;
         private readonly IPauseTicketResultFactory _factory;
         private readonly IEventService _eventService;
 
         public PauseTicketService(
-            IContextRepository<ITicketContext> repository,
+            IEntityRepository<ITicketContext> repository,
             IPauseTicketResultFactory factory,
             IEventService eventService)
         {

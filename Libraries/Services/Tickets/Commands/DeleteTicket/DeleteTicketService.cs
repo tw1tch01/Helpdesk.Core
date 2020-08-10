@@ -12,12 +12,12 @@ namespace Helpdesk.Services.Tickets.Commands.DeleteTicket
 {
     public class DeleteTicketService : IDeleteTicketService
     {
-        private readonly IContextRepository<ITicketContext> _repository;
+        private readonly IEntityRepository<ITicketContext> _repository;
         private readonly IDeleteTicketResultFactory _factory;
         private readonly IEventService _eventService;
 
         public DeleteTicketService(
-            IContextRepository<ITicketContext> repository,
+            IEntityRepository<ITicketContext> repository,
             IDeleteTicketResultFactory factory,
             IEventService eventService)
         {

@@ -23,7 +23,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Delete_VerifySingleAsyncForGetTicketByIdIsCalled()
         {
             var ticketId = _fixture.Create<int>();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
 
             var service = CreateService(mockRepository: mockRepository);
 
@@ -36,7 +36,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Delete_WhenTicketRecordIsNull_VerifyFactoryTicketNotFoundIsReturned()
         {
             var ticketId = _fixture.Create<int>();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
             var mockFactory = new Mock<IDeleteTicketResultFactory>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync((Ticket)null);
@@ -54,7 +54,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         public async Task Delete_VerifyRemoveForTicketIsCalled()
         {
             var ticket = new Ticket();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(ticket);
 
@@ -69,7 +69,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         [Test]
         public async Task Delete_VerifySaveAsyncIsCalled()
         {
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
 
@@ -84,7 +84,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         [Test]
         public async Task Delete_WhenTicketIsDeleted_VerifyEventIsRaised()
         {
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
             var mockEventService = new Mock<IEventService>();
 
             mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
@@ -103,7 +103,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         {
             var ticketId = _fixture.Create<int>();
             var userGuid = _fixture.Create<Guid>();
-            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockRepository = new Mock<IEntityRepository<ITicketContext>>();
             var mockFactory = new Mock<IDeleteTicketResultFactory>();
 
             mockRepository.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
@@ -118,11 +118,11 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         private DeleteTicketService CreateService(
-            IMock<IContextRepository<ITicketContext>> mockRepository = null,
+            IMock<IEntityRepository<ITicketContext>> mockRepository = null,
             IMock<IDeleteTicketResultFactory> mockFactory = null,
             IMock<IEventService> mockEventService = null)
         {
-            mockRepository ??= new Mock<IContextRepository<ITicketContext>>();
+            mockRepository ??= new Mock<IEntityRepository<ITicketContext>>();
             mockFactory ??= new Mock<IDeleteTicketResultFactory>();
             mockEventService ??= new Mock<IEventService>();
 

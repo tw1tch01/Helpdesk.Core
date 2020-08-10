@@ -15,14 +15,14 @@ namespace Helpdesk.Services.Tickets.Commands.OpenTicket
 {
     public class OpenTicketService : IOpenTicketService
     {
-        private readonly IContextRepository<ITicketContext> _repository;
+        private readonly IEntityRepository<ITicketContext> _repository;
         private readonly IMapper _mapper;
         private readonly IOpenTicketResultFactory _factory;
         private readonly IValidator<NewTicket> _validator;
         private readonly IEventService _eventService;
 
         public OpenTicketService(
-            IContextRepository<ITicketContext> repository,
+            IEntityRepository<ITicketContext> repository,
             IMapper mapper,
             IOpenTicketResultFactory factory,
             IValidator<NewTicket> validator,

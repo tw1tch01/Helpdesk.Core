@@ -13,12 +13,12 @@ namespace Helpdesk.Services.TicketLinks.Commands.UnlinkTickets
 {
     public class UnlinkTicketService : IUnlinkTicketService
     {
-        private readonly IContextRepository<ITicketContext> _repository;
+        private readonly IEntityRepository<ITicketContext> _repository;
         private readonly IUnlinkTicketsResultFactory _factory;
         private readonly IEventService _eventService;
 
         public UnlinkTicketService(
-            IContextRepository<ITicketContext> repository,
+            IEntityRepository<ITicketContext> repository,
             IUnlinkTicketsResultFactory factory,
             IEventService eventService)
         {

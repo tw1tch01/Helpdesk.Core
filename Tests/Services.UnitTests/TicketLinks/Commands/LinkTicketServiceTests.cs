@@ -40,7 +40,7 @@ namespace Helpdesk.Services.UnitTests.TicketLinks.Commands
         public async Task Link_VerifyThatSingleAsyncForAnOrSpecOfGetLinkedTicketsByIdIsCalled()
         {
             var linkTicket = _fixture.Create<LinkTicket>();
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
 
             var service = CreateService(mockContext: mockContext);
 
@@ -54,7 +54,7 @@ namespace Helpdesk.Services.UnitTests.TicketLinks.Commands
         {
             var linkTicket = _fixture.Create<LinkTicket>();
             var ticketLink = new TicketLink();
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
             var mockFactory = new Mock<ILinkTicketsResultFactory>();
 
             mockContext.Setup(s => s.SingleAsync(It.IsAny<LinqSpecification<TicketLink>>())).ReturnsAsync(ticketLink);
@@ -73,7 +73,7 @@ namespace Helpdesk.Services.UnitTests.TicketLinks.Commands
         {
             var linkTicket = _fixture.Create<LinkTicket>();
             var ticketLink = new TicketLink();
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
             var mockMapper = new Mock<IMapper>();
 
             mockMapper.Setup(m => m.Map<TicketLink>(linkTicket)).Returns(ticketLink);
@@ -92,7 +92,7 @@ namespace Helpdesk.Services.UnitTests.TicketLinks.Commands
         {
             var linkTicket = _fixture.Create<LinkTicket>();
             var ticketLink = new TicketLink();
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
             var mockMapper = new Mock<IMapper>();
 
             mockMapper.Setup(m => m.Map<TicketLink>(linkTicket)).Returns(ticketLink);
@@ -111,7 +111,7 @@ namespace Helpdesk.Services.UnitTests.TicketLinks.Commands
         {
             var linkTicket = _fixture.Create<LinkTicket>();
             var ticketLink = new TicketLink();
-            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockContext = new Mock<IEntityRepository<ITicketContext>>();
             var mockMapper = new Mock<IMapper>();
             var mockEventService = new Mock<IEventService>();
 
@@ -146,12 +146,12 @@ namespace Helpdesk.Services.UnitTests.TicketLinks.Commands
         }
 
         private LinkTicketService CreateService(
-            IMock<IContextRepository<ITicketContext>> mockContext = null,
+            IMock<IEntityRepository<ITicketContext>> mockContext = null,
             IMock<IMapper> mockMapper = null,
             IMock<ILinkTicketsResultFactory> mockFactory = null,
             IMock<IEventService> mockEventService = null)
         {
-            mockContext ??= new Mock<IContextRepository<ITicketContext>>();
+            mockContext ??= new Mock<IEntityRepository<ITicketContext>>();
             mockMapper ??= new Mock<IMapper>();
             mockFactory ??= new Mock<ILinkTicketsResultFactory>();
             mockEventService ??= new Mock<IEventService>();
