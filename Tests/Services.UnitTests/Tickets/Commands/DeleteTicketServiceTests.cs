@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using AutoFixture;
 using Data.Repositories;
 using Helpdesk.Domain.Tickets;
+using Helpdesk.Domain.Tickets.Events;
+using Helpdesk.Services.Common;
 using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Tickets.Commands.DeleteTicket;
 using Helpdesk.Services.Tickets.Factories.DeleteTicket;
@@ -80,6 +82,23 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         [Test]
+        public async Task Delete_WhenTicketIsDeleted_VerifyEventIsRaised()
+        {
+            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockEventService = new Mock<IEventService>();
+
+            mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
+
+            var service = CreateService(
+                mockRepository: mockContext,
+                mockEventService: mockEventService);
+
+            await service.Delete(It.IsAny<int>(), It.IsAny<Guid>());
+
+            mockEventService.Verify(v => v.Publish(It.IsAny<TicketDeletedEvent>()), Times.Once, "Should publish a TicketDeletedEvent.");
+        }
+
+        [Test]
         public async Task Delete_WhenTicketIsDeleted_VerifyFactoryDeletedIsReturned()
         {
             var ticketId = _fixture.Create<int>();
@@ -99,15 +118,18 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         private DeleteTicketService CreateService(
-            Mock<IContextRepository<ITicketContext>> mockRepository = null,
-            Mock<IDeleteTicketResultFactory> mockFactory = null)
+            IMock<IContextRepository<ITicketContext>> mockRepository = null,
+            IMock<IDeleteTicketResultFactory> mockFactory = null,
+            IMock<IEventService> mockEventService = null)
         {
             mockRepository ??= new Mock<IContextRepository<ITicketContext>>();
             mockFactory ??= new Mock<IDeleteTicketResultFactory>();
+            mockEventService ??= new Mock<IEventService>();
 
             return new DeleteTicketService(
                 mockRepository.Object,
-                mockFactory.Object);
+                mockFactory.Object,
+                mockEventService.Object);
         }
     }
 }

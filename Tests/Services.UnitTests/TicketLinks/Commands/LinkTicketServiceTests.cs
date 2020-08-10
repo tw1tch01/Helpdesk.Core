@@ -5,7 +5,9 @@ using AutoMapper;
 using Data.Repositories;
 using Data.Specifications;
 using Helpdesk.Domain.Tickets;
+using Helpdesk.Domain.Tickets.Events;
 using Helpdesk.DomainModels.TicketLinks;
+using Helpdesk.Services.Common;
 using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.TicketLinks.Commands.LinkTickets;
 using Helpdesk.Services.TicketLinks.Factories.LinkTickets;
@@ -105,18 +107,36 @@ namespace Helpdesk.Services.UnitTests.TicketLinks.Commands
         }
 
         [Test]
-        public async Task Link_WhenTicketLinkIsAdded_VerifyFactoryLinkedIsReturned()
+        public async Task Link_WhenTicketIsLinked_VerifyEventIsRaised()
         {
             var linkTicket = _fixture.Create<LinkTicket>();
             var ticketLink = new TicketLink();
             var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockMapper = new Mock<IMapper>();
+            var mockEventService = new Mock<IEventService>();
+
+            mockMapper.Setup(m => m.Map<TicketLink>(linkTicket)).Returns(ticketLink);
+
+            var service = CreateService(
+                mockContext: mockContext,
+                mockEventService: mockEventService);
+
+            await service.Link(linkTicket);
+
+            mockEventService.Verify(v => v.Publish(It.IsAny<TicketsLinkedEvent>()), Times.Once, "Should publish a TicketsLinkedEvent.");
+        }
+
+        [Test]
+        public async Task Link_WhenTicketLinkIsAdded_VerifyFactoryLinkedIsReturned()
+        {
+            var linkTicket = _fixture.Create<LinkTicket>();
+            var ticketLink = new TicketLink();
             var mockMapper = new Mock<IMapper>();
             var mockFactory = new Mock<ILinkTicketsResultFactory>();
 
             mockMapper.Setup(m => m.Map<TicketLink>(linkTicket)).Returns(ticketLink);
 
             var service = CreateService(
-                mockContext: mockContext,
                 mockMapper: mockMapper,
                 mockFactory: mockFactory);
 
@@ -128,16 +148,19 @@ namespace Helpdesk.Services.UnitTests.TicketLinks.Commands
         private LinkTicketService CreateService(
             IMock<IContextRepository<ITicketContext>> mockContext = null,
             IMock<IMapper> mockMapper = null,
-            IMock<ILinkTicketsResultFactory> mockFactory = null)
+            IMock<ILinkTicketsResultFactory> mockFactory = null,
+            IMock<IEventService> mockEventService = null)
         {
             mockContext ??= new Mock<IContextRepository<ITicketContext>>();
             mockMapper ??= new Mock<IMapper>();
             mockFactory ??= new Mock<ILinkTicketsResultFactory>();
+            mockEventService ??= new Mock<IEventService>();
 
             return new LinkTicketService(
                 mockContext.Object,
                 mockMapper.Object,
-                mockFactory.Object);
+                mockFactory.Object,
+                mockEventService.Object);
         }
     }
 }

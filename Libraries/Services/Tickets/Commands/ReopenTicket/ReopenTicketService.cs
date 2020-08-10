@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Data.Repositories;
+using Helpdesk.Domain.Tickets.Events;
+using Helpdesk.Services.Common;
 using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Tickets.Factories.ReopenTicket;
 using Helpdesk.Services.Tickets.Results;
@@ -12,13 +14,16 @@ namespace Helpdesk.Services.Tickets.Commands.ReopenTicket
     {
         private readonly IContextRepository<ITicketContext> _repository;
         private readonly IReopenTicketResultFactory _factory;
+        private readonly IEventService _eventService;
 
         public ReopenTicketService(
             IContextRepository<ITicketContext> repository,
-            IReopenTicketResultFactory factory)
+            IReopenTicketResultFactory factory,
+            IEventService eventService)
         {
             _repository = repository;
             _factory = factory;
+            _eventService = eventService;
         }
 
         public virtual async Task<ReopenTicketResult> Reopen(int ticketId, Guid userGuid)
@@ -29,6 +34,8 @@ namespace Helpdesk.Services.Tickets.Commands.ReopenTicket
 
             ticket.Reopen();
             await _repository.SaveAsync();
+
+            await _eventService.Publish(new TicketReopenedEvent(ticketId, userGuid));
 
             return _factory.Reopened(ticket, userGuid);
         }

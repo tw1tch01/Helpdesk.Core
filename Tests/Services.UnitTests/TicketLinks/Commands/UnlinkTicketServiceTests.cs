@@ -5,10 +5,11 @@ using AutoMapper;
 using Data.Repositories;
 using Data.Specifications;
 using Helpdesk.Domain.Tickets;
+using Helpdesk.Domain.Tickets.Events;
 using Helpdesk.DomainModels.TicketLinks;
+using Helpdesk.Services.Common;
 using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.TicketLinks.Commands.UnlinkTickets;
-using Helpdesk.Services.TicketLinks.Factories.UnlinkTickets;
 using Helpdesk.Services.TicketLinks.Factories.UnlinkTickets;
 using Moq;
 using NUnit.Framework;
@@ -21,7 +22,7 @@ namespace Helpdesk.Services.UnitTests.TicketLinks.Commands
         private readonly IFixture _fixture = new Fixture();
 
         [Test]
-        public void Unlink_WhenLinkTicketIsSelfUnlink_ThrowsArgumentException()
+        public void UnUnlink_WhenLinkTicketIsSelfUnUnlink_ThrowsArgumentException()
         {
             var ticketId = _fixture.Create<int>();
             var unlinkTicket = new UnlinkTicket
@@ -36,7 +37,7 @@ namespace Helpdesk.Services.UnitTests.TicketLinks.Commands
         }
 
         [Test]
-        public async Task Link_VerifyThatSingleAsyncForAnOrSpecOfGetLinkedTicketsByIdIsCalled()
+        public async Task Unlink_VerifyThatSingleAsyncForAnOrSpecOfGetLinkedTicketsByIdIsCalled()
         {
             var unlinkTicket = _fixture.Create<UnlinkTicket>();
             var mockContext = new Mock<IContextRepository<ITicketContext>>();
@@ -49,7 +50,7 @@ namespace Helpdesk.Services.UnitTests.TicketLinks.Commands
         }
 
         [Test]
-        public async Task Link_WhenTicketLinkRecordIsNull_VerifyFactoryTicketsNotLinkedIsReturned()
+        public async Task Unlink_WhenTicketLinkRecordIsNull_VerifyFactoryTicketsNotLinkedIsReturned()
         {
             var unlinkTicket = _fixture.Create<UnlinkTicket>();
             var mockContext = new Mock<IContextRepository<ITicketContext>>();
@@ -67,14 +68,13 @@ namespace Helpdesk.Services.UnitTests.TicketLinks.Commands
         }
 
         [Test]
-        public async Task Link_WhenTicketLinkExists_VerifyRemoveIsCalled()
+        public async Task Unlink_WhenTicketLinkExists_VerifyRemoveIsCalled()
         {
             var unlinkTicket = _fixture.Create<UnlinkTicket>();
             var ticketLink = new TicketLink();
             var mockContext = new Mock<IContextRepository<ITicketContext>>();
 
             mockContext.Setup(s => s.SingleAsync(It.IsAny<LinqSpecification<TicketLink>>())).ReturnsAsync(ticketLink);
-
 
             var service = CreateService(
                 mockContext: mockContext);
@@ -85,12 +85,11 @@ namespace Helpdesk.Services.UnitTests.TicketLinks.Commands
         }
 
         [Test]
-        public async Task Link_VerifySaveAsyncIsCalled()
+        public async Task Unlink_VerifySaveAsyncIsCalled()
         {
             var unlinkTicket = _fixture.Create<UnlinkTicket>();
             var ticketLink = new TicketLink();
             var mockContext = new Mock<IContextRepository<ITicketContext>>();
-            var mockMapper = new Mock<IMapper>();
 
             mockContext.Setup(s => s.SingleAsync(It.IsAny<LinqSpecification<TicketLink>>())).ReturnsAsync(ticketLink);
 
@@ -103,7 +102,26 @@ namespace Helpdesk.Services.UnitTests.TicketLinks.Commands
         }
 
         [Test]
-        public async Task Link_WhenTicketLinkIsRemoved_VerifyFactoryUnlinkedIsReturned()
+        public async Task Unlink_WhenTicketsAreUninked_VerifyEventIsRaised()
+        {
+            var unlinkTicket = _fixture.Create<UnlinkTicket>();
+            var ticketLink = new TicketLink();
+            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockEventService = new Mock<IEventService>();
+
+            mockContext.Setup(s => s.SingleAsync(It.IsAny<LinqSpecification<TicketLink>>())).ReturnsAsync(ticketLink);
+
+            var service = CreateService(
+                mockContext: mockContext,
+                mockEventService: mockEventService);
+
+            await service.Unlink(unlinkTicket);
+
+            mockEventService.Verify(v => v.Publish(It.IsAny<TicketsUnlinkedEvent>()), Times.Once, "Should publish a TicketsUnlinkedEvent.");
+        }
+
+        [Test]
+        public async Task Unlink_WhenTicketLinkIsRemoved_VerifyFactoryUnlinkedIsReturned()
         {
             var unlinkTicket = _fixture.Create<UnlinkTicket>();
             var ticketLink = new TicketLink();
@@ -123,14 +141,17 @@ namespace Helpdesk.Services.UnitTests.TicketLinks.Commands
 
         private UnlinkTicketService CreateService(
             IMock<IContextRepository<ITicketContext>> mockContext = null,
-            IMock<IUnlinkTicketsResultFactory> mockFactory = null)
+            IMock<IUnlinkTicketsResultFactory> mockFactory = null,
+            IMock<IEventService> mockEventService = null)
         {
             mockContext ??= new Mock<IContextRepository<ITicketContext>>();
             mockFactory ??= new Mock<IUnlinkTicketsResultFactory>();
+            mockEventService ??= new Mock<IEventService>();
 
             return new UnlinkTicketService(
                 mockContext.Object,
-                mockFactory.Object);
+                mockFactory.Object,
+                mockEventService.Object);
         }
     }
 }

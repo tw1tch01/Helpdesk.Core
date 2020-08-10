@@ -21,6 +21,12 @@ namespace Helpdesk.DomainModels.Tickets
             profile.CreateMap<NewTicket, Ticket>(MemberList.Source)
                 .ForMember(m => m.UserGuid, o => o.MapFrom(m => m.Client))
                 .ForMember(m => m.AssignedUserGuid, o => o.MapFrom(m => m.Assignee))
+                .ForMember(m => m.AssignedOn, o =>
+                {
+                    o.Condition(m => m.Assignee.HasValue);
+                    o.MapFrom(m => DateTimeOffset.UtcNow);
+                    o.MapAtRuntime();
+                })
                 .ForMember(m => m.Name, o => o.MapFrom(m => m.Name))
                 .ForMember(m => m.Description, o => o.MapFrom(m => m.Description))
                 .ForMember(m => m.DueDate, o => o.MapFrom(m => m.DueDate))

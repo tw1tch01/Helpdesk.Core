@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Data.Repositories;
 using Helpdesk.Domain.Tickets.Enums;
+using Helpdesk.Domain.Tickets.Events;
+using Helpdesk.Services.Common;
 using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Tickets.Factories.CloseTicket;
 using Helpdesk.Services.Tickets.Results;
@@ -13,13 +15,16 @@ namespace Helpdesk.Services.Tickets.Commands.CloseTicket
     {
         private readonly IContextRepository<ITicketContext> _repository;
         private readonly ICloseTicketResultFactory _factory;
+        private readonly IEventService _eventService;
 
         public CloseTicketService(
             IContextRepository<ITicketContext> repository,
-            ICloseTicketResultFactory factory)
+            ICloseTicketResultFactory factory,
+            IEventService eventService)
         {
             _repository = repository;
             _factory = factory;
+            _eventService = eventService;
         }
 
         public virtual async Task<CloseTicketResult> Close(int ticketId, Guid userGuid)
@@ -39,6 +44,8 @@ namespace Helpdesk.Services.Tickets.Commands.CloseTicket
 
             ticket.Close(userGuid);
             await _repository.SaveAsync();
+
+            await _eventService.Publish(new TicketClosedEvent(ticketId, userGuid));
 
             return _factory.Closed(ticket);
         }

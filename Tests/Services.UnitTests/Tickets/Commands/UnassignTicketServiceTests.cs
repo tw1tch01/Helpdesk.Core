@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using AutoFixture;
 using Data.Repositories;
 using Helpdesk.Domain.Tickets;
+using Helpdesk.Domain.Tickets.Events;
+using Helpdesk.Services.Common;
 using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Tickets.Commands.UnassignTicket;
 using Helpdesk.Services.Tickets.Factories.UnassignTicket;
@@ -81,6 +83,23 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         [Test]
+        public async Task Unassign_WhenTicketIsUnassigned_VerifyEventIsRaised()
+        {
+            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockEventService = new Mock<IEventService>();
+
+            mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
+
+            var service = CreateService(
+                mockContext: mockContext,
+                mockEventService: mockEventService);
+
+            await service.UnassignUser(It.IsAny<int>(), It.IsAny<Guid>());
+
+            mockEventService.Verify(v => v.Publish(It.IsAny<TicketUnassignedEvent>()), Times.Once, "Should publish a TicketUnassignedEvent.");
+        }
+
+        [Test]
         public async Task UnassignUser_WhenTicketIsUnassigned_VerifyFactoryUnassignedIsReturned()
         {
             var ticketId = _fixture.Create<int>();
@@ -102,14 +121,17 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
 
         private UnassignTicketService CreateService(
             IMock<IContextRepository<ITicketContext>> mockContext = null,
-            IMock<IUnassignTicketResultFactory> mockFactory = null)
+            IMock<IUnassignTicketResultFactory> mockFactory = null,
+            IMock<IEventService> mockEventService = null)
         {
             mockContext ??= new Mock<IContextRepository<ITicketContext>>();
             mockFactory ??= new Mock<IUnassignTicketResultFactory>();
+            mockEventService ??= new Mock<IEventService>();
 
             return new UnassignTicketService(
                 mockContext.Object,
-                mockFactory.Object);
+                mockFactory.Object,
+                mockEventService.Object);
         }
     }
 }

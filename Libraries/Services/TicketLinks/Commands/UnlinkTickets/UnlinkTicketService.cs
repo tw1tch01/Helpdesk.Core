@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Data.Repositories;
+using Helpdesk.Domain.Tickets.Events;
 using Helpdesk.DomainModels.TicketLinks;
+using Helpdesk.Services.Common;
 using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.TicketLinks.Factories.UnlinkTickets;
 using Helpdesk.Services.TicketLinks.Results;
@@ -13,13 +15,16 @@ namespace Helpdesk.Services.TicketLinks.Commands.UnlinkTickets
     {
         private readonly IContextRepository<ITicketContext> _repository;
         private readonly IUnlinkTicketsResultFactory _factory;
+        private readonly IEventService _eventService;
 
         public UnlinkTicketService(
             IContextRepository<ITicketContext> repository,
-            IUnlinkTicketsResultFactory factory)
+            IUnlinkTicketsResultFactory factory,
+            IEventService eventService)
         {
             _repository = repository;
             _factory = factory;
+            _eventService = eventService;
         }
 
         public virtual async Task<UnlinkTicketsResult> Unlink(UnlinkTicket unlink)
@@ -35,6 +40,8 @@ namespace Helpdesk.Services.TicketLinks.Commands.UnlinkTickets
 
             _repository.Remove(ticketLink);
             await _repository.SaveAsync();
+
+            await _eventService.Publish(new TicketsUnlinkedEvent(unlink.FromTicketId, unlink.ToTicketId));
 
             return _factory.Unlinked(unlink.FromTicketId, unlink.ToTicketId);
         }

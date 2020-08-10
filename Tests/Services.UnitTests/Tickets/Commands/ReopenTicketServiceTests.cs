@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using AutoFixture;
 using Data.Repositories;
 using Helpdesk.Domain.Tickets;
+using Helpdesk.Domain.Tickets.Events;
+using Helpdesk.Services.Common;
 using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Tickets.Commands.ReopenTicket;
 using Helpdesk.Services.Tickets.Factories.ReopenTicket;
@@ -80,6 +82,23 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         [Test]
+        public async Task Reopen_WhenTicketIsReopened_VerifyEventIsRaised()
+        {
+            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockEventService = new Mock<IEventService>();
+
+            mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
+
+            var service = CreateService(
+                mockRepository: mockContext,
+                mockEventService: mockEventService);
+
+            await service.Reopen(It.IsAny<int>(), It.IsAny<Guid>());
+
+            mockEventService.Verify(v => v.Publish(It.IsAny<TicketReopenedEvent>()), Times.Once, "Should publish a TicketReopenedEvent.");
+        }
+
+        [Test]
         public async Task Reopen_WhenTicketIsReopened_VerifyFactoryReopenedIsReturned()
         {
             var ticket = new Ticket();
@@ -99,15 +118,18 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         private ReopenTicketService CreateService(
-            Mock<IContextRepository<ITicketContext>> mockRepository = null,
-            Mock<IReopenTicketResultFactory> mockFactory = null)
+            IMock<IContextRepository<ITicketContext>> mockRepository = null,
+            IMock<IReopenTicketResultFactory> mockFactory = null,
+            IMock<IEventService> mockEventService = null)
         {
             mockRepository ??= new Mock<IContextRepository<ITicketContext>>();
             mockFactory ??= new Mock<IReopenTicketResultFactory>();
+            mockEventService ??= new Mock<IEventService>();
 
             return new ReopenTicketService(
                 mockRepository.Object,
-                mockFactory.Object);
+                mockFactory.Object,
+                mockEventService.Object);
         }
     }
 }

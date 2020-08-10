@@ -3,7 +3,7 @@ using Helpdesk.Domain.Common;
 
 namespace Helpdesk.Domain.Tickets.Events
 {
-    public class TicketUpdatedEvent
+    public class TicketUpdatedEvent : DomainEvent
     {
         public TicketUpdatedEvent(int ticketId)
         {

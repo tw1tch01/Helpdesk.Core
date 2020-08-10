@@ -1,10 +1,6 @@
-﻿using System.Runtime.CompilerServices;
-
-[assembly: InternalsVisibleTo("Helpdesk.Services.UnitTests")]
-
-namespace Helpdesk.Services.Tickets.Results
+﻿namespace Helpdesk.Services.Tickets.Results
 {
-    internal static class ResultMessages
+    public static class ResultMessages
     {
         public const string Assigned = "Ticket has been assigned.";
 

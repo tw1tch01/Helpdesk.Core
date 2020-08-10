@@ -1,8 +1,9 @@
 ﻿using System;
+using Helpdesk.Domain.Common;
 
 namespace Helpdesk.Domain.Tickets.Events
 {
-    public class TicketStartedEvent
+    public class TicketStartedEvent : DomainEvent
     {
         public TicketStartedEvent(int ticketId, Guid userGuid)
         {

@@ -4,6 +4,8 @@ using AutoFixture;
 using Data.Repositories;
 using Helpdesk.Domain.Tickets;
 using Helpdesk.Domain.Tickets.Enums;
+using Helpdesk.Domain.Tickets.Events;
+using Helpdesk.Services.Common;
 using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Tickets.Commands.StartTicket;
 using Helpdesk.Services.Tickets.Factories.StartTicket;
@@ -139,6 +141,23 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         [Test]
+        public async Task Start_WhenTicketIsStarted_VerifyEventIsRaised()
+        {
+            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockEventService = new Mock<IEventService>();
+
+            mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
+
+            var service = CreateService(
+                mockRepository: mockContext,
+                mockEventService: mockEventService);
+
+            await service.Start(It.IsAny<int>(), It.IsAny<Guid>());
+
+            mockEventService.Verify(v => v.Publish(It.IsAny<TicketStartedEvent>()), Times.Once, "Should publish a TicketStartedEvent.");
+        }
+
+        [Test]
         public async Task Start_WhenTicketIsStarted_VerifyFactoryStartedIsReturned()
         {
             var ticket = new Ticket();
@@ -157,15 +176,18 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         private StartTicketService CreateService(
-            Mock<IContextRepository<ITicketContext>> mockRepository = null,
-            Mock<IStartTicketResultFactory> mockFactory = null)
+            IMock<IContextRepository<ITicketContext>> mockRepository = null,
+            IMock<IStartTicketResultFactory> mockFactory = null,
+            IMock<IEventService> mockEventService = null)
         {
             mockRepository ??= new Mock<IContextRepository<ITicketContext>>();
             mockFactory ??= new Mock<IStartTicketResultFactory>();
+            mockEventService ??= new Mock<IEventService>();
 
             return new StartTicketService(
                 mockRepository.Object,
-                mockFactory.Object);
+                mockFactory.Object,
+                mockEventService.Object);
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Data.Repositories;
+using Helpdesk.Domain.Tickets.Events;
+using Helpdesk.Services.Common;
 using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Tickets.Factories.UnassignTicket;
 using Helpdesk.Services.Tickets.Results;
@@ -12,13 +14,16 @@ namespace Helpdesk.Services.Tickets.Commands.UnassignTicket
     {
         private readonly IContextRepository<ITicketContext> _repository;
         private readonly IUnassignTicketResultFactory _factory;
+        private readonly IEventService _eventService;
 
         public UnassignTicketService(
             IContextRepository<ITicketContext> repository,
-            IUnassignTicketResultFactory factory)
+            IUnassignTicketResultFactory factory,
+            IEventService eventService)
         {
             _repository = repository;
             _factory = factory;
+            _eventService = eventService;
         }
 
         public virtual async Task<UnassignTicketResult> UnassignUser(int ticketId, Guid userGuid)
@@ -29,6 +34,8 @@ namespace Helpdesk.Services.Tickets.Commands.UnassignTicket
 
             ticket.UnassignUser();
             await _repository.SaveAsync();
+
+            await _eventService.Publish(new TicketUnassignedEvent(ticketId, userGuid));
 
             return _factory.Unassigned(ticketId, userGuid);
         }

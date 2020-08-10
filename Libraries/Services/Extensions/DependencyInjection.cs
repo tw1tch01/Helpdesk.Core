@@ -1,5 +1,6 @@
 ﻿using Data.Extensions;
 using Helpdesk.DomainModels.Extensions;
+using Helpdesk.Services.Common;
 using Helpdesk.Services.TicketLinks.Commands.LinkTickets;
 using Helpdesk.Services.TicketLinks.Commands.UnlinkTickets;
 using Helpdesk.Services.TicketLinks.Factories.LinkTickets;
@@ -33,13 +34,21 @@ namespace Helpdesk.Services.Extensions
             services.AddDataDependencies();
             services.AddDomainModels();
 
-            AddTicketServices(services);
-            AddTicketLinkServices(services);
+            services.AddCommonServices();
+            services.AddTicketServices();
+            services.AddTicketLinkServices();
 
             return services;
         }
 
-        private static IServiceCollection AddTicketServices(IServiceCollection services)
+        private static IServiceCollection AddCommonServices(this IServiceCollection services)
+        {
+            services.AddTransient<IEventService, EmptyEventService>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddTicketServices(this IServiceCollection services)
         {
             // Commands
             services.AddTransient<ICloseTicketService, CloseTicketService>();
@@ -68,7 +77,7 @@ namespace Helpdesk.Services.Extensions
             return services;
         }
 
-        private static IServiceCollection AddTicketLinkServices(IServiceCollection services)
+        private static IServiceCollection AddTicketLinkServices(this IServiceCollection services)
         {
             // Commands
             services.AddTransient<ILinkTicketService, LinkTicketService>();

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Data.Repositories;
+using Helpdesk.Domain.Tickets.Events;
+using Helpdesk.Services.Common;
 using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Tickets.Factories.DeleteTicket;
 using Helpdesk.Services.Tickets.Results;
@@ -12,13 +14,16 @@ namespace Helpdesk.Services.Tickets.Commands.DeleteTicket
     {
         private readonly IContextRepository<ITicketContext> _repository;
         private readonly IDeleteTicketResultFactory _factory;
+        private readonly IEventService _eventService;
 
         public DeleteTicketService(
             IContextRepository<ITicketContext> repository,
-            IDeleteTicketResultFactory factory)
+            IDeleteTicketResultFactory factory,
+            IEventService eventService)
         {
             _repository = repository;
             _factory = factory;
+            _eventService = eventService;
         }
 
         public virtual async Task<DeleteTicketResult> Delete(int ticketId, Guid userGuid)
@@ -29,6 +34,8 @@ namespace Helpdesk.Services.Tickets.Commands.DeleteTicket
 
             _repository.Remove(ticket);
             await _repository.SaveAsync();
+
+            await _eventService.Publish(new TicketDeletedEvent(ticketId, userGuid));
 
             return _factory.Deleted(ticketId, userGuid);
         }

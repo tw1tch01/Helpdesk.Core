@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Data.Repositories;
 using Helpdesk.Domain.Tickets.Enums;
+using Helpdesk.Domain.Tickets.Events;
+using Helpdesk.Services.Common;
 using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Tickets.Factories.PauseTicket;
 using Helpdesk.Services.Tickets.Results;
@@ -13,13 +15,16 @@ namespace Helpdesk.Services.Tickets.Commands.PauseTicket
     {
         private readonly IContextRepository<ITicketContext> _repository;
         private readonly IPauseTicketResultFactory _factory;
+        private readonly IEventService _eventService;
 
         public PauseTicketService(
             IContextRepository<ITicketContext> repository,
-            IPauseTicketResultFactory factory)
+            IPauseTicketResultFactory factory,
+            IEventService eventService)
         {
             _repository = repository;
             _factory = factory;
+            _eventService = eventService;
         }
 
         public virtual async Task<PauseTicketResult> Pause(int ticketId, Guid userGuid)
@@ -42,6 +47,8 @@ namespace Helpdesk.Services.Tickets.Commands.PauseTicket
 
             ticket.Pause(userGuid);
             await _repository.SaveAsync();
+
+            await _eventService.Publish(new TicketPausedEvent(ticketId, userGuid));
 
             return _factory.Paused(ticket);
         }

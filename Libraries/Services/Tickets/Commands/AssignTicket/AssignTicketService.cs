@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Data.Repositories;
 using Helpdesk.Domain.Tickets.Enums;
+using Helpdesk.Domain.Tickets.Events;
+using Helpdesk.Services.Common;
 using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Tickets.Factories.AssignTicket;
 using Helpdesk.Services.Tickets.Results;
@@ -13,13 +15,16 @@ namespace Helpdesk.Services.Tickets.Commands.AssignTicket
     {
         private readonly IContextRepository<ITicketContext> _repository;
         private readonly IAssignTicketResultFactory _factory;
+        private readonly IEventService _eventService;
 
         public AssignTicketService(
             IContextRepository<ITicketContext> repository,
-            IAssignTicketResultFactory factory)
+            IAssignTicketResultFactory factory,
+            IEventService eventService)
         {
             _repository = repository;
             _factory = factory;
+            _eventService = eventService;
         }
 
         public virtual async Task<AssignTicketResult> AssignUser(int ticketId, Guid userGuid)
@@ -39,6 +44,8 @@ namespace Helpdesk.Services.Tickets.Commands.AssignTicket
 
             ticket.AssignUser(userGuid);
             await _repository.SaveAsync();
+
+            await _eventService.Publish(new TicketAssignedEvent(ticketId, userGuid));
 
             return _factory.Assigned(ticket);
         }

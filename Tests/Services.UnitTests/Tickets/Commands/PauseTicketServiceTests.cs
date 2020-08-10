@@ -4,6 +4,8 @@ using AutoFixture;
 using Data.Repositories;
 using Helpdesk.Domain.Tickets;
 using Helpdesk.Domain.Tickets.Enums;
+using Helpdesk.Domain.Tickets.Events;
+using Helpdesk.Services.Common;
 using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Tickets.Commands.PauseTicket;
 using Helpdesk.Services.Tickets.Factories.PauseTicket;
@@ -139,6 +141,23 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         [Test]
+        public async Task Pause_WhenTicketIsPaused_VerifyEventIsRaised()
+        {
+            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockEventService = new Mock<IEventService>();
+
+            mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
+
+            var service = CreateService(
+                mockRepository: mockContext,
+                mockEventService: mockEventService);
+
+            await service.Pause(It.IsAny<int>(), It.IsAny<Guid>());
+
+            mockEventService.Verify(v => v.Publish(It.IsAny<TicketPausedEvent>()), Times.Once, "Should publish a TicketPausedEvent.");
+        }
+
+        [Test]
         public async Task Pause_WhenTicketIsPaused_VerifyFactoryPausedIsReturned()
         {
             var ticket = new Ticket();
@@ -157,15 +176,18 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         private PauseTicketService CreateService(
-            Mock<IContextRepository<ITicketContext>> mockRepository = null,
-            Mock<IPauseTicketResultFactory> mockFactory = null)
+            IMock<IContextRepository<ITicketContext>> mockRepository = null,
+            IMock<IPauseTicketResultFactory> mockFactory = null,
+            IMock<IEventService> mockEventService = null)
         {
             mockRepository ??= new Mock<IContextRepository<ITicketContext>>();
             mockFactory ??= new Mock<IPauseTicketResultFactory>();
+            mockEventService ??= new Mock<IEventService>();
 
             return new PauseTicketService(
                 mockRepository.Object,
-                mockFactory.Object);
+                mockFactory.Object,
+                mockEventService.Object);
         }
     }
 }

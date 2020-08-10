@@ -1,6 +1,8 @@
-﻿namespace Helpdesk.Domain.Tickets.Events
+﻿using Helpdesk.Domain.Common;
+
+namespace Helpdesk.Domain.Tickets.Events
 {
-    public class TicketsUnlinkedEvent
+    public class TicketsUnlinkedEvent : DomainEvent
     {
         public TicketsUnlinkedEvent(int fromTicketId, int toTicketId)
         {

@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Data.Repositories;
 using Helpdesk.Domain.Tickets;
+using Helpdesk.Domain.Tickets.Events;
 using Helpdesk.DomainModels.TicketLinks;
+using Helpdesk.Services.Common;
 using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.TicketLinks.Factories.LinkTickets;
 using Helpdesk.Services.TicketLinks.Results;
@@ -16,15 +18,18 @@ namespace Helpdesk.Services.TicketLinks.Commands.LinkTickets
         private readonly IContextRepository<ITicketContext> _repository;
         private readonly IMapper _mapper;
         private readonly ILinkTicketsResultFactory _factory;
+        private readonly IEventService _eventService;
 
         public LinkTicketService(
             IContextRepository<ITicketContext> repository,
             IMapper mapper,
-            ILinkTicketsResultFactory factory)
+            ILinkTicketsResultFactory factory,
+            IEventService eventService)
         {
             _repository = repository;
             _mapper = mapper;
             _factory = factory;
+            _eventService = eventService;
         }
 
         public virtual async Task<LinkTicketsResult> Link(LinkTicket newLink)
@@ -42,6 +47,8 @@ namespace Helpdesk.Services.TicketLinks.Commands.LinkTickets
 
             await _repository.AddAsync(ticketLink);
             await _repository.SaveAsync();
+
+            await _eventService.Publish(new TicketsLinkedEvent(newLink.FromTicketId, newLink.ToTicketId, newLink.LinkType));
 
             return _factory.Linked(ticketLink);
         }

@@ -9,7 +9,9 @@ using FluentValidation;
 using FluentValidation.Results;
 using Helpdesk.Domain.Common;
 using Helpdesk.Domain.Tickets;
+using Helpdesk.Domain.Tickets.Events;
 using Helpdesk.DomainModels.Tickets;
+using Helpdesk.Services.Common;
 using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Tickets.Commands.UpdateTicket;
 using Helpdesk.Services.Tickets.Factories.UpdateTicket;
@@ -25,14 +27,14 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         private readonly IFixture _fixture = new Fixture();
 
         [Test]
-        public void Open_WhenUpdateTicketDtoIsNull_ThrowsArgumentNullException()
+        public void Update_WhenUpdateTicketDtoIsNull_ThrowsArgumentNullException()
         {
             var service = CreateService();
             Assert.ThrowsAsync<ArgumentNullException>(async () => await service.Update(It.IsAny<int>(), null));
         }
 
         [Test]
-        public async Task Open_WhenUpdateTicketDtoIsNotValid_VerifyFactoryValidationFailureIsReturned()
+        public async Task Update_WhenUpdateTicketDtoIsNotValid_VerifyFactoryValidationFailureIsReturned()
         {
             var ticketId = _fixture.Create<int>();
             var updateTicket = new EditTicket();
@@ -53,7 +55,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         [Test]
-        public async Task Open_VerifySingleAsyncForGetTicketByIdIsCalled()
+        public async Task Update_VerifySingleAsyncForGetTicketByIdIsCalled()
         {
             var ticketId = _fixture.Create<int>();
             var updateTicket = new EditTicket();
@@ -74,7 +76,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         [Test]
-        public async Task Open_WhenClientRecordIsNull_VerifyFactoryTicketNotFoundIsReturned()
+        public async Task Update_WhenClientRecordIsNull_VerifyFactoryTicketNotFoundIsReturned()
         {
             var ticketId = _fixture.Create<int>();
             var updateTicket = new EditTicket();
@@ -98,7 +100,7 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         [Test]
-        public async Task Open_VerifySaveAsyncIsCalled()
+        public async Task Update_VerifySaveAsyncIsCalled()
         {
             var ticketId = _fixture.Create<int>();
             var updateTicket = new EditTicket();
@@ -125,7 +127,35 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         [Test]
-        public async Task Open_WhenTicketIsAdded_VerifyFactoryUpdatedIsReturned()
+        public async Task Update_WhenTicketIsUpdated_VerifyEventIsRaised()
+        {
+            var ticketId = _fixture.Create<int>();
+            var updateTicket = new EditTicket();
+            var ticket = new Ticket();
+            var mockRepository = new Mock<IContextRepository<ITicketContext>>();
+            var mockMapper = new Mock<IMapper>();
+            var mockValidator = new Mock<IValidator<EditTicket>>();
+            var mockValidationResult = new Mock<ValidationResult>();
+            var mockEventService = new Mock<IEventService>();
+
+            mockValidator.Setup(m => m.ValidateAsync(updateTicket, It.IsAny<CancellationToken>())).ReturnsAsync(mockValidationResult.Object);
+            mockValidationResult.Setup(m => m.IsValid).Returns(true);
+            mockRepository.Setup(m => m.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(ticket);
+            mockMapper.Setup(m => m.Map<Ticket>(updateTicket)).Returns(ticket);
+
+            var service = CreateService(
+                mockRepository: mockRepository,
+                mockMapper: mockMapper,
+                mockValidator: mockValidator,
+                mockEventService: mockEventService);
+
+            var result = await service.Update(ticketId, updateTicket);
+
+            mockEventService.Verify(v => v.Publish(It.IsAny<TicketUpdatedEvent>()), Times.Once, "Should publish a TicketUpdatedEvent.");
+        }
+
+        [Test]
+        public async Task Update_WhenTicketIsUpdated_VerifyFactoryUpdatedIsReturned()
         {
             var ticketId = _fixture.Create<int>();
             var updateTicket = new EditTicket();
@@ -153,21 +183,24 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         private UpdateTicketService CreateService(
-            Mock<IContextRepository<ITicketContext>> mockRepository = null,
-            Mock<IMapper> mockMapper = null,
-            Mock<IUpdateTicketResultFactory> mockFactory = null,
-            Mock<IValidator<EditTicket>> mockValidator = null)
+            IMock<IContextRepository<ITicketContext>> mockRepository = null,
+            IMock<IMapper> mockMapper = null,
+            IMock<IUpdateTicketResultFactory> mockFactory = null,
+            IMock<IValidator<EditTicket>> mockValidator = null,
+            IMock<IEventService> mockEventService = null)
         {
             mockRepository ??= new Mock<IContextRepository<ITicketContext>>();
             mockMapper ??= new Mock<IMapper>();
             mockFactory ??= new Mock<IUpdateTicketResultFactory>();
             mockValidator ??= new Mock<IValidator<EditTicket>>();
+            mockEventService ??= new Mock<IEventService>();
 
             return new UpdateTicketService(
                 mockRepository.Object,
                 mockMapper.Object,
                 mockFactory.Object,
-                mockValidator.Object);
+                mockValidator.Object,
+                mockEventService.Object);
         }
     }
 }

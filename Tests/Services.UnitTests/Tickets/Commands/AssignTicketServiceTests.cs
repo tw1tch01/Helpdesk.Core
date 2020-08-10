@@ -4,6 +4,8 @@ using AutoFixture;
 using Data.Repositories;
 using Helpdesk.Domain.Tickets;
 using Helpdesk.Domain.Tickets.Enums;
+using Helpdesk.Domain.Tickets.Events;
+using Helpdesk.Services.Common;
 using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Tickets.Commands.AssignTicket;
 using Helpdesk.Services.Tickets.Factories.AssignTicket;
@@ -120,6 +122,23 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
         }
 
         [Test]
+        public async Task AssignUser_WhenTicketIsAssigned_VerifyEventIsRaised()
+        {
+            var mockContext = new Mock<IContextRepository<ITicketContext>>();
+            var mockEventService = new Mock<IEventService>();
+
+            mockContext.Setup(s => s.SingleAsync(It.IsAny<GetTicketById>())).ReturnsAsync(new Ticket());
+
+            var service = CreateService(
+                mockContext: mockContext,
+                mockEventService: mockEventService);
+
+            await service.AssignUser(It.IsAny<int>(), It.IsAny<Guid>());
+
+            mockEventService.Verify(v => v.Publish(It.IsAny<TicketAssignedEvent>()), Times.Once, "Should publish a TicketAssignedEvent.");
+        }
+
+        [Test]
         public async Task AssignUser_WhenTicketIsAssigned_VerifyFactoryAssignedIsReturned()
         {
             var mockContext = new Mock<IContextRepository<ITicketContext>>();
@@ -139,14 +158,17 @@ namespace Helpdesk.Services.UnitTests.Tickets.Commands
 
         private AssignTicketService CreateService(
             IMock<IContextRepository<ITicketContext>> mockContext = null,
-            IMock<IAssignTicketResultFactory> mockFactory = null)
+            IMock<IAssignTicketResultFactory> mockFactory = null,
+            IMock<IEventService> mockEventService = null)
         {
             mockContext ??= new Mock<IContextRepository<ITicketContext>>();
             mockFactory ??= new Mock<IAssignTicketResultFactory>();
+            mockEventService ??= new Mock<IEventService>();
 
             return new AssignTicketService(
                 mockContext.Object,
-                mockFactory.Object);
+                mockFactory.Object,
+                mockEventService.Object);
         }
     }
 }

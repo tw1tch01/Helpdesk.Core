@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using AutoMapper;
+﻿using AutoMapper;
 using FluentValidation;
 using Helpdesk.DomainModels.Mappings;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +9,7 @@ namespace Helpdesk.DomainModels.Extensions
     {
         public static IServiceCollection AddDomainModels(this IServiceCollection services)
         {
-            var assembly = Assembly.GetExecutingAssembly();
+            var assembly = typeof(DependencyInjection).Assembly;
 
             #region Automapper
 

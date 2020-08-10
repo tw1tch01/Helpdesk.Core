@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Data.Repositories;
 using FluentValidation;
+using Helpdesk.Domain.Tickets.Events;
 using Helpdesk.DomainModels.Tickets;
+using Helpdesk.Services.Common;
 using Helpdesk.Services.Common.Contexts;
 using Helpdesk.Services.Tickets.Factories.UpdateTicket;
 using Helpdesk.Services.Tickets.Results;
@@ -17,17 +19,20 @@ namespace Helpdesk.Services.Tickets.Commands.UpdateTicket
         private readonly IMapper _mapper;
         private readonly IUpdateTicketResultFactory _factory;
         private readonly IValidator<EditTicket> _validator;
+        private readonly IEventService _eventService;
 
         public UpdateTicketService(
             IContextRepository<ITicketContext> repository,
             IMapper mapper,
             IUpdateTicketResultFactory factory,
-            IValidator<EditTicket> validator)
+            IValidator<EditTicket> validator,
+            IEventService eventService)
         {
             _repository = repository;
             _mapper = mapper;
             _factory = factory;
             _validator = validator;
+            _eventService = eventService;
         }
 
         public virtual async Task<UpdateTicketResult> Update(int ticketId, EditTicket editTicket)
@@ -46,6 +51,8 @@ namespace Helpdesk.Services.Tickets.Commands.UpdateTicket
 
             _mapper.Map(editTicket, ticket);
             await _repository.SaveAsync();
+
+            await _eventService.Publish(new TicketUpdatedEvent(ticketId, changes));
 
             return _factory.Updated(ticket, changes);
         }
