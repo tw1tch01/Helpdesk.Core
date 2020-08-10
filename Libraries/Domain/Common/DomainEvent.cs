@@ -1,8 +1,9 @@
 ﻿using System;
+using MediatR;
 
 namespace Helpdesk.Domain.Common
 {
-    public abstract class DomainEvent
+    public abstract class DomainEvent : INotification
     {
         protected DomainEvent()
         {
